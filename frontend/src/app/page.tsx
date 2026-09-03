@@ -5,11 +5,13 @@ import { Badge } from "@/components/ui/Badge";
 import { ArrowRight, CheckCircle2, AlertTriangle, ShieldCheck } from "lucide-react";
 import DashboardChart from "@/components/DashboardChart";
 import { useAuth } from "@/lib/AuthContext";
+import { useProposals } from "@/lib/ProposalContext";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
 export default function Dashboard() {
   const { role } = useAuth();
+  const { proposals } = useProposals();
   const router = useRouter();
 
   useEffect(() => {
@@ -18,6 +20,34 @@ export default function Dashboard() {
     else if (role === 'Admin') router.push('/matching');
   }, [role, router]);
 
+  const activePetitionsCount = proposals.filter(p => p.status === 'Submitted' || p.status === 'Draft').length + 24;
+  const validatedCount = proposals.filter(p => p.status === 'NGO Validated').length + 8;
+  const newEscrowFunds = proposals.filter(p => ['Escrow Funded', 'Active', 'Completed'].includes(p.status)).reduce((sum, p) => sum + p.totalFunding, 0);
+
+  const formatCurrency = (val: number) => {
+    if (val >= 1000000) return `₹${(val / 1000000).toFixed(1)}M`;
+    if (val >= 1000) return `₹${(val / 1000).toFixed(1)}K`;
+    return `₹${val}`;
+  };
+
+  const dynamicEscrowList = proposals.filter(p => ['Escrow Funded', 'Active', 'Completed', 'NGO Validated'].includes(p.status)).map(p => {
+    const releasedSum = p.milestones.filter(m => m.status === 'Released').reduce((s, m) => s + m.amount, 0);
+    const progress = p.totalFunding ? Math.round((releasedSum / p.totalFunding) * 100) : 0;
+    return {
+      id: p.id,
+      name: p.title,
+      ngo: p.ngoName,
+      status: p.status,
+      amount: `₹${p.totalFunding.toLocaleString()}`,
+      progress
+    };
+  });
+
+  const displayList = [...dynamicEscrowList,
+  { name: "Clean Water Initiative - Pune", ngo: "Jal Seva NGO", status: "Active", amount: "₹50,000", progress: 40 },
+  { name: "Solar Panel Installation - Rural Tech", ngo: "Green Earth Foundation", status: "Escrow Funded", amount: "₹120,000", progress: 75 },
+  ].slice(0, 5);
+
   return (
     <div className="p-8 pb-20">
       <header className="mb-8 flex justify-between items-center">
@@ -25,7 +55,7 @@ export default function Dashboard() {
           <h1 className="text-3xl font-bold tracking-tight text-slate-900">Platform Overview</h1>
           <p className="text-slate-500 mt-1">Real-time CSR impact and escrow status.</p>
         </div>
-        <button className="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-lg font-medium transition-colors shadow-sm flex items-center gap-2">
+        <button onClick={() => router.push('/proposals/new')} className="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-lg font-medium transition-colors shadow-sm flex items-center gap-2">
           New CSR Proposal
         </button>
       </header>
@@ -33,9 +63,9 @@ export default function Dashboard() {
       {/* Stats row */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
         {[
-          { title: "Active Petitions", value: "24", label: "From communities" },
-          { title: "NGOs Validated", value: "8", label: "Ready for funding" },
-          { title: "CSR Funds Escrowed", value: "₹1.2M", label: "Across 12 projects" },
+          { title: "Active Petitions", value: activePetitionsCount.toString(), label: "From communities" },
+          { title: "NGOs Validated", value: validatedCount.toString(), label: "Ready for funding" },
+          { title: "CSR Funds Escrowed", value: formatCurrency(1200000 + newEscrowFunds), label: "Across active projects" },
           { title: "Milestones Cleared", value: "42", label: "Funds released" },
         ].map((stat, i) => (
           <Card key={i} className="border border-slate-200 shadow-sm leading-normal">
@@ -53,22 +83,18 @@ export default function Dashboard() {
           {/* Active Projects */}
           <Card className="border border-slate-200 shadow-sm">
             <CardHeader className="border-b border-slate-100 bg-slate-50/50 pb-4">
-              <CardTitle className="text-lg">Active Escrow Projects</CardTitle>
+              <CardTitle className="text-lg">Active Projects Feed</CardTitle>
             </CardHeader>
             <CardContent className="p-0">
               <div className="divide-y divide-slate-100">
-                {[
-                  { name: "Clean Water Initiative - Pune", ngo: "Jal Seva NGO", status: "Escrow Active", amount: "₹50,000", progress: 40 },
-                  { name: "Solar Panel Installation - Rural Tech", ngo: "Green Earth Foundation", status: "Milestone Review", amount: "₹120,000", progress: 75 },
-                  { name: "School Rebuilding Project - Bihar", ngo: "EduCare Org", status: "Evaluating NGO", amount: "₹85,000", progress: 10 },
-                ].map((item, i) => (
+                {displayList.map((item, i) => (
                   <div key={i} className="p-5 flex items-center justify-between hover:bg-slate-50 transition-colors">
                     <div className="flex-1">
                       <h4 className="font-semibold text-slate-900">{item.name}</h4>
                       <div className="text-sm text-slate-500 flex items-center gap-2 mt-1">
                         <span>{item.ngo}</span>
                         <span>•</span>
-                        <Badge variant={item.status === 'Escrow Active' ? 'success' : item.status === 'Milestone Review' ? 'warning' : 'neutral'}>
+                        <Badge variant={item.status === 'Escrow Funded' || item.status === 'Active' ? 'success' : item.status === 'NGO Validated' ? 'warning' : 'neutral'}>
                           {item.status}
                         </Badge>
                       </div>
