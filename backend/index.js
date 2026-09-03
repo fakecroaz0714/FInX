@@ -19,6 +19,10 @@ const {
     evaluateCorporateGoalMatch
 } = require('./services/proposalVerificationEngine');
 
+const {
+    runMultiModelVerification
+} = require('./ai-verification-engine');
+
 const app = express();
 const PORT = process.env.PORT || 5001;
 
@@ -985,7 +989,312 @@ app.post('/api/demo/proposal-scenario', (req, res) => {
     });
 });
 
+// =========================================================================
+// STANDARD /api/finx/* ENDPOINTS (Section 21 Specification)
+// =========================================================================
+
+// POST /api/finx/projects/:id/ai-verify - Run Multi-Model Verification
+app.post('/api/finx/projects/:id/ai-verify', (req, res) => {
+    const projectId = req.params.id;
+    const proposal = store.proposals[projectId] || store.proposals['FINX-PR-00241'];
+    const project = store.projects[projectId] || store.projects['PROJ-CLEAN-WATER-PUNE'];
+    const ngo = store.ngoProfiles[proposal ? proposal.ngoId : 'NGO-ABC-001'] || { name: 'ABC Foundation', registrationNumber: 'REG-MH-2018-9941', darpanId: 'MH/2018/0192841', tax80gCertified: true };
+    const docs = store.proposalDocs[projectId] || store.proposalDocs['FINX-PR-00241'] || [];
+    const budget = store.proposalBudgets[projectId] || store.proposalBudgets['FINX-PR-00241'] || [];
+
+    const verification = runMultiModelVerification({
+        proposalData: proposal || project,
+        ngoData: ngo,
+        uploadedDocs: docs,
+        budgetItems: budget,
+        existingProposals: Object.values(store.proposals),
+        baselineData: project,
+        isFraudDemo: req.body ? req.body.isFraudDemo : null
+    });
+
+    store.verifications[projectId] = verification;
+    logAudit('FINX AI Verification Engine', `Executed Multi-Model Verification (Score: ${verification.overall_score}/100, Risk: ${verification.risk_level})`, projectId, null, { score: verification.overall_score });
+
+    res.json({
+        success: true,
+        projectId,
+        verification
+    });
+});
+
+// GET /api/finx/projects/:id/verification - Fetch Latest Verification
+app.get('/api/finx/projects/:id/verification', (req, res) => {
+    const projectId = req.params.id;
+    const verification = store.verifications[projectId] || null;
+    res.json({ success: true, projectId, verification });
+});
+
+// GET /api/finx/projects/:id/verification/live - Live Real-Time Visualizer State
+app.get('/api/finx/projects/:id/verification/live', (req, res) => {
+    const projectId = req.params.id;
+    res.json({
+        success: true,
+        projectId,
+        stages: [
+            { stage: 1, name: 'Model 1 — NGO / Document Verification', status: 'COMPLETED' },
+            { stage: 2, name: 'Model 2 — CSR Compliance Engine', status: 'COMPLETED' },
+            { stage: 3, name: 'Model 3 — Budget Intelligence', status: 'COMPLETED' },
+            { stage: 4, name: 'Model 4 — Duplicate Project Detection', status: 'COMPLETED' },
+            { stage: 5, name: 'Model 5 — Anomaly Detection', status: 'COMPLETED' },
+            { stage: 6, name: 'Model 6 — Geolocation Verification', status: 'COMPLETED' },
+            { stage: 7, name: 'Model 7 — Vision / Evidence Analysis', status: 'COMPLETED' },
+            { stage: 8, name: 'Risk Aggregation & Decision Engine', status: 'COMPLETED' }
+        ]
+    });
+});
+
+// POST /api/finx/projects/:id/form1 - Save CSR Form 1
+app.post('/api/finx/projects/:id/form1', (req, res) => {
+    const projectId = req.params.id;
+    const form1Data = req.body;
+    store.csrForms = store.csrForms || {};
+    store.csrForms[projectId] = { ...store.csrForms[projectId], form1: form1Data, submittedAt: new Date().toISOString() };
+
+    logAudit('NGO Inspector', 'Created and Submitted CSR Form 1', projectId, null, form1Data);
+
+    res.json({
+        success: true,
+        message: 'CSR Form 1 submitted successfully.',
+        projectId,
+        form1: form1Data
+    });
+});
+
+// POST /api/finx/projects/:id/form2/approve - Corporate Form 2 Scope Approval
+app.post('/api/finx/projects/:id/form2/approve', (req, res) => {
+    const projectId = req.params.id;
+    const { approvedBy = 'Corporate CSR Officer', notes = 'Project scope and objectives approved.' } = req.body;
+
+    store.csrForms = store.csrForms || {};
+    store.csrForms[projectId] = {
+        ...store.csrForms[projectId],
+        form2: { approved: true, approvedBy, notes, approvedAt: new Date().toISOString() }
+    };
+
+    logAudit(approvedBy, 'Approved Corporate CSR Form 2 (Scope & Objectives)', projectId, null, { notes });
+
+    res.json({
+        success: true,
+        message: 'CSR Form 2 approved by Corporate.',
+        projectId,
+        form2: store.csrForms[projectId].form2
+    });
+});
+
+// POST /api/finx/projects/:id/form3/authorize - Corporate Form 3 Funding Authorization
+app.post('/api/finx/projects/:id/form3/authorize', (req, res) => {
+    const projectId = req.params.id;
+    const { authorizedBy = 'Corporate CSR Officer', notes = 'Milestone funding escrow authorized.' } = req.body;
+
+    store.csrForms = store.csrForms || {};
+    store.csrForms[projectId] = {
+        ...store.csrForms[projectId],
+        form3: { authorized: true, authorizedBy, notes, authorizedAt: new Date().toISOString() }
+    };
+
+    logAudit(authorizedBy, 'Authorized Corporate CSR Form 3 (Milestone Funding Escrow)', projectId, null, { notes });
+
+    res.json({
+        success: true,
+        message: 'CSR Form 3 authorized by Corporate. Milestone funding enabled.',
+        projectId,
+        form3: store.csrForms[projectId].form3
+    });
+});
+
+// POST /api/finx/projects/:id/milestones - Configure Milestones
+app.post('/api/finx/projects/:id/milestones', (req, res) => {
+    const projectId = req.params.id;
+    const { milestones } = req.body;
+    store.milestones[projectId] = milestones;
+    logAudit('Corporate CSR Officer', 'Configured Project Milestones', projectId, null, { count: milestones ? milestones.length : 0 });
+    res.json({ success: true, projectId, milestones });
+});
+
+// POST /api/finx/milestones/:id/activate - Activate Milestone
+app.post('/api/finx/milestones/:id/activate', (req, res) => {
+    const milestoneId = req.params.id;
+    let found = null;
+    Object.values(store.milestones).forEach(list => {
+        const m = list.find(item => item.id === milestoneId);
+        if (m) {
+            m.status = 'ACTIVE';
+            found = m;
+        }
+    });
+
+    if (!found) return res.status(404).json({ success: false, error: 'Milestone not found' });
+
+    logAudit('System Engine', `Activated Milestone ${found.milestoneNumber || milestoneId}`, found.projectId, found.id);
+    res.json({ success: true, milestone: found });
+});
+
+// POST /api/finx/milestones/:id/evidence - Submit Geotagged Evidence
+app.post('/api/finx/milestones/:id/evidence', (req, res) => {
+    const milestoneId = req.params.id;
+    const evidenceObj = {
+        id: `EVID-${Date.now()}`,
+        milestoneId,
+        ...req.body,
+        uploadedAt: new Date().toISOString()
+    };
+    store.evidence[milestoneId] = evidenceObj;
+    logAudit(evidenceObj.uploadedBy || 'NGO Inspector', 'Submitted Geotagged Milestone Evidence', evidenceObj.projectId, milestoneId, evidenceObj);
+    res.json({ success: true, evidence: evidenceObj });
+});
+
+// POST /api/finx/milestones/:id/verify - Run Milestone AI Verification
+app.post('/api/finx/milestones/:id/verify', async (req, res) => {
+    const milestoneId = req.params.id;
+    const { isFraudDemo, projectId = 'PROJ-CLEAN-WATER-PUNE' } = req.body;
+    const project = store.projects[projectId] || store.projects['PROJ-CLEAN-WATER-PUNE'];
+    const milestones = store.milestones[project.id] || [];
+    const milestone = milestones.find(m => m.id === milestoneId) || milestones[0];
+    const evidence = store.evidence[milestoneId] || req.body.evidence || {
+        latitude: req.body.latitude || project.latitude,
+        longitude: req.body.longitude || project.longitude,
+        photoUrl: req.body.photoUrl || 'https://images.unsplash.com/photo-1541888946425-d0fbb186a5b2?q=80&w=800&auto=format&fit=crop'
+    };
+
+    const verification = evaluateEvidenceVerification({
+        project,
+        milestone,
+        evidence,
+        existingHashes: Array.from(store.hashes),
+        allowedRadiusMeters: project.allowedRadiusMeters,
+        isFraudDemo
+    });
+
+    store.verifications[milestoneId] = verification;
+    milestone.status = verification.finalStatus;
+
+    logAudit('AI Multi-Model Engine', `Evaluated Milestone ${milestone.milestoneNumber || milestoneId} (Score: ${verification.verificationScore}%, Status: ${verification.finalStatus})`, project.id, milestoneId, { score: verification.verificationScore });
+
+    res.json({
+        success: true,
+        verification,
+        milestone
+    });
+});
+
+// POST /api/finx/milestones/:id/approve - Human Approval Gate
+app.post('/api/finx/milestones/:id/approve', (req, res) => {
+    const milestoneId = req.params.id;
+    const { action, notes, reviewer = 'Corporate CSR Officer' } = req.body;
+
+    let milestone = null;
+    let projId = null;
+    Object.keys(store.milestones).forEach(pId => {
+        const m = store.milestones[pId].find(item => item.id === milestoneId);
+        if (m) {
+            milestone = m;
+            projId = pId;
+        }
+    });
+
+    if (!milestone) return res.status(404).json({ success: false, error: 'Milestone not found' });
+
+    if (action === 'APPROVE') milestone.status = 'VERIFIED';
+    else if (action === 'REQUEST_CHANGES') milestone.status = 'REVISION_REQUIRED';
+    else if (action === 'REJECT') milestone.status = 'VERIFICATION_FAILED';
+
+    logAudit(reviewer, `Human Approval Gate Action: ${action}`, projId, milestoneId, { notes });
+
+    res.json({ success: true, action, milestone });
+});
+
+// POST /api/finx/milestones/:id/release-fund - Internal Fund Release
+app.post('/api/finx/milestones/:id/release-fund', (req, res) => {
+    const milestoneId = req.params.id;
+    const { authorizedBy = 'Corporate CSR Officer', projectId = 'PROJ-CLEAN-WATER-PUNE' } = req.body;
+
+    const project = store.projects[projectId] || store.projects['PROJ-CLEAN-WATER-PUNE'];
+    const milestones = store.milestones[project.id] || [];
+    const milestoneIndex = milestones.findIndex(m => m.id === milestoneId);
+    const milestone = milestones[milestoneIndex];
+
+    if (!milestone) return res.status(404).json({ success: false, error: 'Milestone not found' });
+
+    if (milestone.status !== 'VERIFIED') {
+        return res.status(400).json({
+            success: false,
+            error: `FUNDING LOCKED — Milestone state is '${milestone.status}'. Human-approved VERIFIED status is required.`
+        });
+    }
+
+    const txId = `TXN-ESCROW-${Date.now().toString().slice(-6)}`;
+    const releaseTx = {
+        id: `REL-${Date.now()}`,
+        transactionId: txId,
+        projectId: project.id,
+        milestoneId: milestone.id,
+        milestoneNumber: milestone.milestoneNumber,
+        amount: milestone.amount,
+        status: 'RELEASED',
+        authorizedBy,
+        releasedAt: new Date().toISOString()
+    };
+
+    store.fundReleases.push(releaseTx);
+    milestone.status = 'FUND_RELEASED';
+
+    let nextUnlocked = null;
+    if (milestoneIndex + 1 < milestones.length) {
+        nextUnlocked = milestones[milestoneIndex + 1];
+        nextUnlocked.status = 'ACTIVE';
+    } else {
+        milestone.status = 'COMPLETED';
+    }
+
+    logAudit(authorizedBy, `Released Funds (₹${milestone.amount.toLocaleString()}) for Milestone ${milestone.milestoneNumber}`, project.id, milestone.id, { txId });
+
+    res.json({
+        success: true,
+        message: `₹${milestone.amount.toLocaleString()} Milestone Fund Released`,
+        releaseTx,
+        currentMilestone: milestone,
+        nextUnlocked
+    });
+});
+
+// GET /api/finx/projects/:id/audit - Immutable Audit Trail
+app.get('/api/finx/projects/:id/audit', (req, res) => {
+    const projectId = req.params.id;
+    const logs = store.auditLogs.filter(a => a.projectId === projectId);
+    res.json({ success: true, projectId, auditTrail: logs });
+});
+
+// POST /api/finx/demo/reset - Reset Demo State
+app.post('/api/finx/demo/reset', (req, res) => {
+    const project = store.projects['PROJ-CLEAN-WATER-PUNE'];
+    const milestones = store.milestones['PROJ-CLEAN-WATER-PUNE'] || [];
+
+    milestones.forEach((m, idx) => {
+        m.status = idx === 0 ? 'ACTIVE' : 'LOCKED';
+        m.previousPhotoUrl = null;
+    });
+
+    store.riskFlags = [];
+    store.fundReleases = [];
+    store.evidence = {};
+    store.verifications = {};
+    store.hashes.clear();
+
+    logAudit('Demo Admin', 'Reset FINX Hackathon Demo State to Initial Clean State', project ? project.id : 'PROJ-CLEAN-WATER-PUNE', null);
+
+    res.json({
+        success: true,
+        message: 'FINX Hackathon Demo reset successfully to initial state.'
+    });
+});
+
 app.listen(PORT, () => {
     console.log(`FINX Verified Milestone Funding Engine listening on port ${PORT}`);
 });
+
 
