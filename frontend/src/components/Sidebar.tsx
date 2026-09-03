@@ -10,19 +10,17 @@ import {
     FileCheck2,
     MapPin,
     ShieldCheck,
-    BarChart4
+    BarChart4,
+    Network
 } from 'lucide-react';
 
 const navItems = [
     { name: 'Dashboard', href: '/', icon: LayoutDashboard },
+    { name: 'Workflow Engine', href: '/matching', icon: Network },
     { name: 'Citizen Hub', href: '/citizen-dashboard', icon: MapPin },
-    { name: 'NGO Network', href: '/ngos', icon: Users },
     { name: 'NGO Validator', href: '/validator', icon: ShieldCheck },
     { name: 'Corporate Hub', href: '/corporate-dashboard', icon: Briefcase },
-    { name: 'Escrow & Milestones', href: '/escrow', icon: FileCheck2 },
-    { name: 'On-Chain Demo', href: '/demo', icon: ShieldCheck },
-    { name: 'Corporate Partners', href: '/corporate', icon: Building2 },
-    { name: 'Impact Reports', href: '/impact', icon: BarChart4 },
+    { name: 'On-Chain Demo', href: '/demo', icon: FileCheck2 },
 ];
 
 export default function Sidebar() {
