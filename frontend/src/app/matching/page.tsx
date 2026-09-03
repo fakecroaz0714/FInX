@@ -7,8 +7,10 @@ import {
     Network, ArrowRight, CheckCircle2, Zap, BrainCircuit, X, Check,
     Building2, MapPin, Target, Sparkles, ShieldCheck
 } from 'lucide-react';
+import { useLanguage } from '@/lib/LanguageContext';
 
 export default function MatchingEngine() {
+    const { t } = useLanguage();
     const [matches, setMatches] = useState([
         {
             id: 1,
@@ -28,18 +30,25 @@ export default function MatchingEngine() {
             id: 3,
             petition: { title: "Clinic Medical Supplies", location: "Mumbai, MH", category: "Healthcare" },
             ngo: { name: "Urban Health Initiative", rating: 45, verified: false },
-            corporate: { name: "GlobalRetail", budget: "₹800K", matchScore: 61 },
-            status: 'pending' // Due to low NGO rating, perhaps skip
+            corporate: { name: "PharmaCare CSR", budget: "₹0.8M", matchScore: 78 },
+            status: 'pending'
+        },
+        {
+            id: 4,
+            petition: { title: "Drinking Water Pipeline", location: "Nashik, MH", category: "Sanitation" },
+            ngo: { name: "Jal Seva NGO", rating: 91, verified: true },
+            corporate: { name: "Tata Power CSR", budget: "₹3.2M", matchScore: 95 },
+            status: 'pending'
         }
     ]);
 
-    const handleAction = (id: number, action: 'approve' | 'reject') => {
-        setMatches(matches.map(m => m.id === id ? { ...m, status: action } : m));
+    const handleAction = (id: number, status: string) => {
+        setMatches(matches.map(m => m.id === id ? { ...m, status } : m));
     };
 
     return (
-        <div className="p-4 md:p-8 pb-20 max-w-7xl mx-auto space-y-8">
-            <header className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 bg-gradient-to-r from-slate-900 via-indigo-900 p-8 rounded-2xl text-white shadow-lg overflow-hidden relative">
+        <div className="p-4 md:p-6 lg:p-8 max-w-7xl mx-auto space-y-6">
+            <header className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 p-6 md:p-8 text-white shadow-xl flex flex-col md:flex-row items-start md:items-center justify-between gap-6 border border-slate-800">
 
                 {/* Decorative background visual */}
                 <div className="absolute inset-0 opacity-10 pointer-events-none">
@@ -51,31 +60,31 @@ export default function MatchingEngine() {
                 <div className="relative z-10 w-full mb-4 md:mb-0">
                     <div className="flex items-center gap-2 mb-2">
                         <BrainCircuit className="w-6 h-6 text-indigo-400 mb-1" />
-                        <span className="text-sm font-bold text-indigo-300 uppercase tracking-widest">AI Workflow Engine</span>
+                        <span className="text-sm font-bold text-indigo-300 uppercase tracking-widest">{t('ai_workflow_engine', 'AI Workflow Engine')}</span>
                     </div>
-                    <h1 className="text-3xl md:text-4xl font-bold tracking-tight">Smart Mediation</h1>
+                    <h1 className="text-3xl md:text-4xl font-bold tracking-tight">{t('smart_mediation_title', 'Smart Mediation')}</h1>
                     <p className="text-indigo-100 mt-2 font-medium opacity-90 max-w-2xl">
-                        Automatically triaging Citizen Petitions &#10230; Verified NGOs &#10230; Corporate CSR Funds based on SDG categories and geographic heuristics.
+                        {t('smart_mediation_desc', 'Automatically triaging Citizen Petitions ➔ Verified NGOs ➔ Corporate CSR Funds based on SDG categories and geographic heuristics.')}
                     </p>
                 </div>
                 <button className="relative z-10 bg-indigo-500 text-white border border-indigo-400 px-6 py-3 rounded-xl font-bold shadow-md hover:bg-indigo-600 transition whitespace-nowrap flex items-center gap-2">
-                    <Sparkles className="w-5 h-5" /> Run Auto-Match Algorithm
+                    <Sparkles className="w-5 h-5" /> {t('run_auto_match', 'Run Auto-Match Algorithm')}
                 </button>
             </header>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <Card className="shadow-sm border-slate-200">
                     <CardContent className="p-6">
-                        <div className="text-sm font-semibold text-slate-500 uppercase tracking-wider">Unresolved Petitions</div>
+                        <div className="text-sm font-semibold text-slate-500 uppercase tracking-wider">{t('unresolved_petitions', 'Unresolved Petitions')}</div>
                         <div className="text-3xl font-bold text-slate-900 mt-2">1,204</div>
-                        <div className="mt-2 text-xs font-semibold text-indigo-600 flex items-center gap-1">+42 this week</div>
+                        <div className="mt-2 text-xs font-semibold text-indigo-600 flex items-center gap-1">{t('this_week_increase', '+42 this week')}</div>
                     </CardContent>
                 </Card>
                 <Card className="shadow-sm border-slate-200">
                     <CardContent className="p-6">
-                        <div className="text-sm font-semibold text-slate-500 uppercase tracking-wider">Available CSR Capital</div>
+                        <div className="text-sm font-semibold text-slate-500 uppercase tracking-wider">{t('available_csr_capital', 'Available CSR Capital')}</div>
                         <div className="text-3xl font-bold text-slate-900 mt-2 font-mono">₹82.5M</div>
-                        <div className="mt-2 text-xs font-semibold text-emerald-600 flex items-center gap-1">Across 14 Corporates</div>
+                        <div className="mt-2 text-xs font-semibold text-emerald-600 flex items-center gap-1">{t('across_14_corporates', 'Across 14 Corporates')}</div>
                     </CardContent>
                 </Card>
                 <Card className="shadow-sm border-slate-200">

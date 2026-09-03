@@ -268,23 +268,23 @@ export default function LiveHackathonWorkflowEngine() {
                         <div>
                             <div className="flex items-center gap-2 mb-1">
                                 <Sparkles className="w-4 h-4 text-amber-400 animate-pulse" />
-                                <h2 className="font-extrabold text-base text-white">FINX Multi-Model Verification & Escrow Milestone Engine</h2>
-                                <Badge className="bg-emerald-500/30 text-emerald-300 border-emerald-400 text-[10px] px-2 py-0.5">Live Hackathon Engine</Badge>
+                                <h2 className="font-extrabold text-base text-white">{t('workflow_engine_title', 'FINX Multi-Model Verification & Escrow Milestone Engine')}</h2>
+                                <Badge className="bg-emerald-500/30 text-emerald-300 border-emerald-400 text-[10px] px-2 py-0.5">{t('workflow_engine_badge', 'Live Hackathon Engine')}</Badge>
                             </div>
                             <p className="text-slate-300 text-xs italic font-medium">
-                                "AI analyzes. Evidence verifies. Humans approve. Funds follow progress."
+                                {t('workflow_engine_tagline', '"AI analyzes. Evidence verifies. Humans approve. Funds follow progress."')}
                             </p>
                         </div>
                         <div className="flex flex-wrap items-center gap-2 shrink-0">
                             <button
                                 onClick={handleCaptureBrowserGPS}
                                 className="bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold px-3 py-1.5 rounded transition-all shadow-sm flex items-center gap-1.5">
-                                <MapPin className="w-3.5 h-3.5" /> Auto-Capture GPS
+                                <MapPin className="w-3.5 h-3.5" /> {t('auto_capture_gps', 'Auto-Capture GPS')}
                             </button>
                             <button
                                 onClick={handleResetDemo}
                                 className="bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold px-3 py-1.5 rounded transition-all border border-slate-700 flex items-center gap-1.5">
-                                <RefreshCw className="w-3.5 h-3.5" /> Reset Hackathon Demo
+                                <RefreshCw className="w-3.5 h-3.5" /> {t('reset_hackathon_demo', 'Reset Hackathon Demo')}
                             </button>
                         </div>
                     </div>
@@ -292,11 +292,11 @@ export default function LiveHackathonWorkflowEngine() {
                     {/* 5-Step Hackathon Workflow Progress Tracker */}
                     <div className="grid grid-cols-2 md:grid-cols-5 gap-2 mt-4 pt-4 border-t border-slate-800 text-center">
                         {[
-                            { num: 1, title: '1. Village Petition & Form 1' },
-                            { num: 2, title: '2. Multi-Model AI Verify' },
-                            { num: 3, title: '3. Form 2 & Form 3 Approval' },
-                            { num: 4, title: '4. Milestone Escrow Control' },
-                            { num: 5, title: '5. Fund Release & Completion' }
+                            { num: 1, title: t('step_1_nav', '1. Village Petition & Form 1') },
+                            { num: 2, title: t('step_2_nav', '2. Multi-Model AI Verify') },
+                            { num: 3, title: t('step_3_nav', '3. Form 2 & Form 3 Approval') },
+                            { num: 4, title: t('step_4_nav', '4. Milestone Escrow Control') },
+                            { num: 5, title: t('step_5_nav', '5. Fund Release & Completion') }
                         ].map((s) => (
                             <button
                                 key={s.num}
@@ -318,16 +318,16 @@ export default function LiveHackathonWorkflowEngine() {
                     <CardHeader className="bg-slate-50 border-b border-slate-100 p-4">
                         <div className="flex justify-between items-center">
                             <div>
-                                <CardTitle className="text-sm font-bold text-slate-900">Step 1: Village Petition & NGO CSR Form 1 Entry</CardTitle>
-                                <CardDescription className="text-xs">Community road petition, NGO field inspection parameters, coordinates & quotation.</CardDescription>
+                                <CardTitle className="text-sm font-bold text-slate-900">{t('step_1_title', 'Step 1: Village Petition & NGO CSR Form 1 Entry')}</CardTitle>
+                                <CardDescription className="text-xs">{t('step_1_desc', 'Community road petition, NGO field inspection parameters, coordinates & quotation.')}</CardDescription>
                             </div>
-                            <Badge className="bg-indigo-100 text-indigo-800 text-xs">Form 1 Active</Badge>
+                            <Badge className="bg-indigo-100 text-indigo-800 text-xs">{t('form1_active', 'Form 1 Active')}</Badge>
                         </div>
                     </CardHeader>
                     <CardContent className="p-5 space-y-4">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
                             <div>
-                                <label className="font-semibold text-slate-700 block mb-1">Project Title</label>
+                                <label className="font-semibold text-slate-700 block mb-1">{t('project_title', 'Project Title')}</label>
                                 <input
                                     type="text"
                                     value={form1.title}
@@ -336,7 +336,7 @@ export default function LiveHackathonWorkflowEngine() {
                                 />
                             </div>
                             <div>
-                                <label className="font-semibold text-slate-700 block mb-1">Village & Location</label>
+                                <label className="font-semibold text-slate-700 block mb-1">{t('village_location', 'Village & Location')}</label>
                                 <input
                                     type="text"
                                     value={`${form1.village}, ${form1.districtState}`}
@@ -345,7 +345,7 @@ export default function LiveHackathonWorkflowEngine() {
                                 />
                             </div>
                             <div>
-                                <label className="font-semibold text-slate-700 block mb-1">Requested Budget (₹)</label>
+                                <label className="font-semibold text-slate-700 block mb-1">{t('requested_budget', 'Requested Budget (₹)')}</label>
                                 <input
                                     type="number"
                                     value={form1.requestedAmount}
@@ -354,7 +354,7 @@ export default function LiveHackathonWorkflowEngine() {
                                 />
                             </div>
                             <div>
-                                <label className="font-semibold text-slate-700 block mb-1">Beneficiaries & Road Scope</label>
+                                <label className="font-semibold text-slate-700 block mb-1">{t('beneficiaries_road_scope', 'Beneficiaries & Road Scope')}</label>
                                 <input
                                     type="text"
                                     value={`${form1.beneficiaries} Villagers • ${form1.roadLengthKm} km Road • ${form1.durationMonths} Months`}
@@ -368,13 +368,13 @@ export default function LiveHackathonWorkflowEngine() {
                         <div className="p-3 bg-indigo-50/50 border border-indigo-200 rounded-xl flex items-center justify-between text-xs">
                             <div className="flex items-center gap-2">
                                 <MapPin className="w-4 h-4 text-indigo-600" />
-                                <span className="font-bold text-indigo-900">Project Baseline Coordinates:</span>
+                                <span className="font-bold text-indigo-900">{t('project_baseline_coords', 'Project Baseline Coordinates:')}</span>
                                 <span className="font-mono text-indigo-700">{form1.latitude}, {form1.longitude}</span>
                             </div>
                             <button
                                 onClick={handleCaptureBrowserGPS}
                                 className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-[11px] px-3 py-1 rounded-lg">
-                                Refresh GPS
+                                {t('refresh_gps', 'Refresh GPS')}
                             </button>
                         </div>
 
@@ -382,16 +382,16 @@ export default function LiveHackathonWorkflowEngine() {
                         <div className="p-3 bg-slate-50 border rounded-xl flex justify-between items-center text-xs">
                             <div className="flex items-center gap-2">
                                 <FileText className="w-4 h-4 text-slate-500" />
-                                <span className="font-bold text-slate-800">Attached Quotation:</span>
+                                <span className="font-bold text-slate-800">{t('attached_quotation', 'Attached Quotation:')}</span>
                                 <span className="font-mono text-slate-600">{form1.quotationFile}</span>
                             </div>
-                            <Badge variant="success" className="text-[10px]">SHA-256 Verified</Badge>
+                            <Badge variant="success" className="text-[10px]">{t('sha256_verified', 'SHA-256 Verified')}</Badge>
                         </div>
 
                         <button
                             onClick={handleSubmitForm1}
                             className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs p-3 rounded-xl shadow-sm transition-all flex items-center justify-center gap-2">
-                            <span>SUBMIT NGO CSR FORM 1 & RUN AI VERIFICATION</span>
+                            <span>{t('submit_form1_run_ai', 'SUBMIT NGO CSR FORM 1 & RUN AI VERIFICATION')}</span>
                             <ArrowRight className="w-4 h-4" />
                         </button>
                     </CardContent>
@@ -404,10 +404,10 @@ export default function LiveHackathonWorkflowEngine() {
                     <CardHeader className="bg-slate-900 text-white p-5">
                         <div className="flex justify-between items-center">
                             <div>
-                                <CardTitle className="text-base font-bold text-white">Step 2: Real-Time Multi-Model AI Verification Engine</CardTitle>
-                                <CardDescription className="text-slate-300 text-xs mt-0.5">Modules A–H (Document Intel, CSR Compliance, Budget ML, Duplicate Check, Anomaly Engine).</CardDescription>
+                                <CardTitle className="text-base font-bold text-white">{t('step_2_title', 'Step 2: Real-Time Multi-Model AI Verification Engine')}</CardTitle>
+                                <CardDescription className="text-slate-300 text-xs mt-0.5">{t('step_2_desc', 'Modules A–H (Document Intel, CSR Compliance, Budget ML, Duplicate Check, Anomaly Engine).')}</CardDescription>
                             </div>
-                            <Badge className="bg-amber-500/30 text-amber-300 border-amber-400 text-[10px]">8-Stage Pipeline Active</Badge>
+                            <Badge className="bg-amber-500/30 text-amber-300 border-amber-400 text-[10px]">{t('eight_stage_pipeline_active', '8-Stage Pipeline Active')}</Badge>
                         </div>
                     </CardHeader>
 
@@ -416,7 +416,7 @@ export default function LiveHackathonWorkflowEngine() {
                         {aiVerifying && (
                             <div className="space-y-3">
                                 <div className="flex justify-between text-xs font-bold text-slate-700">
-                                    <span>Executing Stage {aiStage} of 8 Pipeline Modules...</span>
+                                    <span>{t('executing_stage', 'Executing Stage')} {aiStage} {t('of_8_pipeline_modules', 'of 8 Pipeline Modules...')}</span>
                                     <span>{Math.round((aiStage / 8) * 100)}%</span>
                                 </div>
                                 <div className="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
@@ -430,19 +430,19 @@ export default function LiveHackathonWorkflowEngine() {
                             <div className="space-y-4 text-xs">
                                 <div className="grid grid-cols-2 md:grid-cols-4 gap-3 bg-slate-50 p-4 rounded-xl border">
                                     <div>
-                                        <div className="text-slate-400 text-[10px]">Overall AI Score</div>
+                                        <div className="text-slate-400 text-[10px]">{t('overall_ai_score', 'Overall AI Score')}</div>
                                         <div className="text-xl font-extrabold font-mono text-emerald-600 mt-0.5">{form1Report.overallScore}/100</div>
                                     </div>
                                     <div>
-                                        <div className="text-slate-400 text-[10px]">Risk Level</div>
+                                        <div className="text-slate-400 text-[10px]">{t('risk_level', 'Risk Level')}</div>
                                         <Badge variant="success" className="mt-0.5 text-[10px]">{form1Report.riskLevel}</Badge>
                                     </div>
                                     <div>
-                                        <div className="text-slate-400 text-[10px]">Confidence</div>
+                                        <div className="text-slate-400 text-[10px]">{t('confidence', 'Confidence')}</div>
                                         <div className="font-mono font-bold text-slate-900 mt-0.5">{form1Report.confidenceRating || 94.2}%</div>
                                     </div>
                                     <div>
-                                        <div className="text-slate-400 text-[10px]">Recommendation</div>
+                                        <div className="text-slate-400 text-[10px]">{t('recommendation', 'Recommendation')}</div>
                                         <div className="font-bold text-indigo-700 mt-0.5">{form1Report.aiRecommendation}</div>
                                     </div>
                                 </div>
@@ -463,7 +463,7 @@ export default function LiveHackathonWorkflowEngine() {
                                 <button
                                     onClick={() => setCurrentStep(3)}
                                     className="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs p-3 rounded-xl transition-all shadow-sm flex items-center justify-center gap-2">
-                                    <span>PROCEED TO CORPORATE CSR FORM 2 & FORM 3 APPROVAL</span>
+                                    <span>{t('proceed_to_form2_form3', 'PROCEED TO CORPORATE CSR FORM 2 & FORM 3 APPROVAL')}</span>
                                     <ArrowRight className="w-4 h-4" />
                                 </button>
                             </div>
@@ -476,26 +476,26 @@ export default function LiveHackathonWorkflowEngine() {
             {currentStep === 3 && (
                 <Card className="border border-slate-200 shadow-sm">
                     <CardHeader className="bg-slate-50 border-b p-4">
-                        <CardTitle className="text-sm font-bold text-slate-900">Step 3: Corporate CSR Form 2 & Form 3 Funding Authorization</CardTitle>
-                        <CardDescription className="text-xs">Technical scope acceptance and Milestone Escrow Fund allocation.</CardDescription>
+                        <CardTitle className="text-sm font-bold text-slate-900">{t('step_3_title', 'Step 3: Corporate CSR Form 2 & Form 3 Funding Authorization')}</CardTitle>
+                        <CardDescription className="text-xs">{t('step_3_desc', 'Technical scope acceptance and Milestone Escrow Fund allocation.')}</CardDescription>
                     </CardHeader>
                     <CardContent className="p-5 space-y-4 text-xs">
                         <div className="p-4 bg-indigo-50/40 border border-indigo-200 rounded-xl space-y-2">
-                            <div className="font-bold text-indigo-900">CSR Form 2: Technical Scope Approval</div>
-                            <p className="text-slate-600">Corporate engineering committee has reviewed NGO Form 1 parameters, baseline photographs & AI verification report.</p>
-                            <Badge variant={form2Approved ? "success" : "neutral"}>{form2Approved ? "✓ CSR Form 2 Approved" : "Pending Corporate Signature"}</Badge>
+                            <div className="font-bold text-indigo-900">{t('csr_form2_title', 'CSR Form 2: Technical Scope Approval')}</div>
+                            <p className="text-slate-600">{t('csr_form2_desc', 'Corporate engineering committee has reviewed NGO Form 1 parameters, baseline photographs & AI verification report.')}</p>
+                            <Badge variant={form2Approved ? "success" : "neutral"}>{form2Approved ? t('csr_form2_approved', '✓ CSR Form 2 Approved') : t('pending_corp_signature', 'Pending Corporate Signature')}</Badge>
                         </div>
 
                         <div className="p-4 bg-emerald-50/40 border border-emerald-200 rounded-xl space-y-2">
-                            <div className="font-bold text-emerald-900">CSR Form 3: Escrow Funding Authorization</div>
-                            <p className="text-slate-600">Authorizes ₹10,00,000 Total CSR Capital into FINX Escrow. Funds are released strictly per verified milestone.</p>
-                            <Badge variant={form3Authorized ? "success" : "neutral"}>{form3Authorized ? "✓ CSR Form 3 Authorized" : "Pending Funding Commitment"}</Badge>
+                            <div className="font-bold text-emerald-900">{t('csr_form3_title', 'CSR Form 3: Escrow Funding Authorization')}</div>
+                            <p className="text-slate-600">{t('csr_form3_desc', 'Authorizes ₹10,00,000 Total CSR Capital into FINX Escrow. Funds are released strictly per verified milestone.')}</p>
+                            <Badge variant={form3Authorized ? "success" : "neutral"}>{form3Authorized ? t('csr_form3_authorized', '✓ CSR Form 3 Authorized') : t('pending_funding_commitment', 'Pending Funding Commitment')}</Badge>
                         </div>
 
                         <button
                             onClick={handleApproveForm2Form3}
                             className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs p-3 rounded-xl shadow-sm transition-all flex items-center justify-center gap-2">
-                            <Check className="w-4 h-4" /> AUTHORIZE FORM 2 & FORM 3 — ACTIVATE MILESTONE 1 ESCROW
+                            <Check className="w-4 h-4" /> {t('authorize_form2_form3_btn', 'AUTHORIZE FORM 2 & FORM 3 — ACTIVATE MILESTONE 1 ESCROW')}
                         </button>
                     </CardContent>
                 </Card>
@@ -511,22 +511,22 @@ export default function LiveHackathonWorkflowEngine() {
                                 <div>
                                     <div className="font-bold text-amber-900 text-xs flex items-center gap-1.5">
                                         <AlertTriangle className="w-4 h-4 text-amber-600" />
-                                        <span>Interactive Fraud Demo Controls for Hackathon Judges</span>
+                                        <span>{t('fraud_demo_title', 'Interactive Fraud Demo Controls for Hackathon Judges')}</span>
                                     </div>
-                                    <p className="text-slate-600 text-xs mt-0.5">Test real-time fraud blocking (Duplicate Image & GPS Mismatch distances &gt; 100m).</p>
+                                    <p className="text-slate-600 text-xs mt-0.5">{t('fraud_demo_desc', 'Test real-time fraud blocking (Duplicate Image & GPS Mismatch distances > 100m).')}</p>
                                 </div>
                                 <div className="flex flex-wrap items-center gap-2 shrink-0">
                                     <button
                                         onClick={() => handleVerifyMilestone('duplicate_image')}
                                         disabled={loading}
                                         className="bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs px-3 py-1.5 rounded transition-all">
-                                        🚨 Demo 1: Duplicate Image Fraud
+                                        {t('demo1_duplicate_image', '🚨 Demo 1: Duplicate Image Fraud')}
                                     </button>
                                     <button
                                         onClick={() => handleVerifyMilestone('gps_mismatch')}
                                         disabled={loading}
                                         className="bg-red-600 hover:bg-red-700 text-white font-bold text-xs px-3 py-1.5 rounded transition-all">
-                                        🚨 Demo 2: GPS Mismatch Fraud (&gt;100m)
+                                        {t('demo2_gps_mismatch', '🚨 Demo 2: GPS Mismatch Fraud (>100m)')}
                                     </button>
                                 </div>
                             </div>
@@ -539,7 +539,7 @@ export default function LiveHackathonWorkflowEngine() {
                         <div className="lg:col-span-1 space-y-3">
                             <Card className="border border-slate-200 shadow-sm">
                                 <CardHeader className="bg-slate-50 p-3 border-b">
-                                    <CardTitle className="text-xs font-bold text-slate-900 uppercase">Milestones Escrow ({milestones.length})</CardTitle>
+                                    <CardTitle className="text-xs font-bold text-slate-900 uppercase">{t('milestones_escrow', 'Milestones Escrow')} ({milestones.length})</CardTitle>
                                 </CardHeader>
                                 <CardContent className="p-2 space-y-2">
                                     {milestones.map((m) => (
@@ -556,7 +556,7 @@ export default function LiveHackathonWorkflowEngine() {
                                             </div>
                                             <div className="flex justify-between items-center mt-2 text-xs font-mono">
                                                 <span className="font-bold text-slate-900">₹{m.amount.toLocaleString()}</span>
-                                                <span className="text-slate-500 font-semibold">{m.pct}% Budget</span>
+                                                <span className="text-slate-500 font-semibold">{m.pct}% {t('budget', 'Budget')}</span>
                                             </div>
                                         </div>
                                     ))}
@@ -567,7 +567,7 @@ export default function LiveHackathonWorkflowEngine() {
                             {releasedFunds.length > 0 && (
                                 <Card className="border border-emerald-200 bg-emerald-50/20 shadow-sm">
                                     <CardHeader className="p-3 border-b border-emerald-100">
-                                        <CardTitle className="text-xs font-bold text-emerald-900 uppercase">Released Fund Ledger ({releasedFunds.length})</CardTitle>
+                                        <CardTitle className="text-xs font-bold text-emerald-900 uppercase">{t('released_fund_ledger', 'Released Fund Ledger')} ({releasedFunds.length})</CardTitle>
                                     </CardHeader>
                                     <CardContent className="p-3 space-y-2 text-xs">
                                         {releasedFunds.map((tx, idx) => (
@@ -576,7 +576,7 @@ export default function LiveHackathonWorkflowEngine() {
                                                     <div className="font-bold text-emerald-900">₹{tx.amount.toLocaleString()}</div>
                                                     <div className="text-[10px] text-slate-400">{tx.transactionId}</div>
                                                 </div>
-                                                <Badge variant="success" className="text-[9px]">RELEASED</Badge>
+                                                <Badge variant="success" className="text-[9px]">{t('status_released', 'RELEASED')}</Badge>
                                             </div>
                                         ))}
                                     </CardContent>
@@ -590,11 +590,11 @@ export default function LiveHackathonWorkflowEngine() {
                                 <CardHeader className="bg-slate-900 text-white p-4">
                                     <div className="flex justify-between items-center">
                                         <div>
-                                            <Badge className="bg-indigo-500/30 text-indigo-200 border-indigo-400 text-[10px] mb-1">ACTIVE MILESTONE WORKSPACE</Badge>
+                                            <Badge className="bg-indigo-500/30 text-indigo-200 border-indigo-400 text-[10px] mb-1">{t('active_milestone_workspace', 'ACTIVE MILESTONE WORKSPACE')}</Badge>
                                             <CardTitle className="text-base font-bold text-white">Milestone 1: Site Prep & Excavation</CardTitle>
                                         </div>
                                         <div className="bg-slate-800 p-2.5 rounded-xl text-right">
-                                            <div className="text-[9px] text-slate-400">Escrow Amount</div>
+                                            <div className="text-[9px] text-slate-400">{t('escrow_amount', 'Escrow Amount')}</div>
                                             <div className="text-lg font-extrabold font-mono text-emerald-400">₹2,00,000</div>
                                         </div>
                                     </div>
@@ -636,7 +636,7 @@ export default function LiveHackathonWorkflowEngine() {
                                         onClick={() => handleVerifyMilestone(null)}
                                         disabled={loading}
                                         className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs p-3 rounded-xl shadow-sm transition-all flex items-center justify-center gap-2">
-                                        <Sparkles className="w-4 h-4 text-amber-400" /> RUN MULTI-MODEL MILESTONE AI VERIFICATION
+                                        <Sparkles className="w-4 h-4 text-amber-400" /> {t('run_milestone_ai_verification', 'RUN MULTI-MODEL MILESTONE AI VERIFICATION')}
                                     </button>
 
                                     {/* Verification Results & Human Gate */}
@@ -644,7 +644,7 @@ export default function LiveHackathonWorkflowEngine() {
                                         <div className="space-y-4 pt-4 border-t">
                                             <div className="grid grid-cols-2 md:grid-cols-4 gap-3 bg-slate-50 p-3 rounded-xl border">
                                                 <div>
-                                                    <div className="text-slate-400 text-[10px]">Verification Score</div>
+                                                    <div className="text-slate-400 text-[10px]">{t('metric_verification_score', 'Verification Score')}</div>
                                                     <div className="text-lg font-extrabold font-mono text-emerald-600">{verificationResult.verificationScore}/100</div>
                                                 </div>
                                                 <div>
@@ -674,12 +674,12 @@ export default function LiveHackathonWorkflowEngine() {
                                                         onClick={handleHumanApprovalAndRelease}
                                                         disabled={loading || verificationResult.verificationScore < 70}
                                                         className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs py-2.5 rounded-lg shadow-sm transition-all flex items-center justify-center gap-1.5 disabled:opacity-40">
-                                                        <Coins className="w-4 h-4" /> [ APPROVE & RELEASE ₹2,00,000 ]
+                                                        <Coins className="w-4 h-4" /> [ {t('approve_release_tranche', 'APPROVE & RELEASE')} ₹2,00,000 ]
                                                     </button>
                                                     <button
                                                         onClick={() => setActionMsg('❌ Milestone evidence rejected by validator.')}
                                                         className="bg-red-600 hover:bg-red-700 text-white font-bold text-xs px-4 py-2.5 rounded-lg shadow-sm">
-                                                        REJECT
+                                                        {t('btn_reject', 'REJECT')}
                                                     </button>
                                                 </div>
                                             </div>

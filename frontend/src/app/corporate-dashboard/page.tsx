@@ -11,10 +11,12 @@ import { PieChart as RechartsPie, Pie, Cell, ResponsiveContainer, Tooltip as Rec
 import { CorporateActiveProjectsMap } from '@/components/maps/CorporateActiveProjectsMap';
 import { useProposals } from '@/lib/ProposalContext';
 import { useAuth, CorporateProfile } from '@/lib/AuthContext';
+import { useLanguage } from '@/lib/LanguageContext';
 import ImpactEvidenceUploader from '@/components/ImpactEvidenceUploader';
 
 export default function CorporateDashboard() {
     const { user } = useAuth();
+    const { t } = useLanguage();
     const [activeTab, setActiveTab] = useState('Overview');
     const { proposals, approveFunding } = useProposals();
 
@@ -328,30 +330,37 @@ export default function CorporateDashboard() {
             <header className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
                 <div>
                     <div className="flex items-center gap-2 mb-1">
-                        <Badge variant="default" className="text-[11px]">Corporate Funder Portal</Badge>
-                        <span className="text-xs font-mono text-slate-400">Budget: {formattedBudget}</span>
+                        <Badge variant="default" className="text-[11px]">{t('corp_dashboard_heading', 'Corporate Funder Portal')}</Badge>
+                        <span className="text-xs font-mono text-slate-400">{t('budget', 'Budget')}: {formattedBudget}</span>
                     </div>
                     <h1 className="text-3xl font-bold tracking-tight text-slate-900">{companyName}</h1>
                     <p className="text-slate-500 mt-1 font-medium text-xs md:text-sm">
-                        Manage budgets, securely deploy funds, and track verifiable milestone impact.
+                        {t('corp_dashboard_subhead', 'Manage budgets, securely deploy funds, and track verifiable milestone impact.')}
                     </p>
                 </div>
                 <button
                     onClick={() => setShowPublishModal(true)}
                     className="bg-indigo-600 text-white px-5 py-2.5 rounded-xl font-bold text-sm hover:bg-indigo-700 transition flex items-center gap-2 shadow-md shadow-indigo-200 cursor-pointer shrink-0"
                 >
-                    <FileSignature className="w-4 h-4" /> Publish New Opportunity
+                    <FileSignature className="w-4 h-4" /> {t('publish_opportunity', 'Publish New Opportunity')}
                 </button>
             </header>
 
             <nav className="flex items-center gap-2 overflow-x-auto pb-2 -mb-2 border-b border-slate-200 hide-scrollbar">
-                {['Overview', 'Active Projects Map', 'Budget Planning', 'Compare NGOs', 'Escrow Control', 'Impact Reports'].map(tab => (
+                {[
+                    { id: 'Overview', key: 'tab_overview', label: 'Overview' },
+                    { id: 'Active Projects Map', key: 'tab_active_projects_map', label: 'Active Projects Map' },
+                    { id: 'Budget Planning', key: 'tab_budget_planning', label: 'Budget Planning' },
+                    { id: 'Compare NGOs', key: 'tab_compare_ngos', label: 'Compare NGOs' },
+                    { id: 'Escrow Control', key: 'tab_escrow_control', label: 'Escrow Control' },
+                    { id: 'Impact Reports', key: 'tab_impact_reports', label: 'Impact Reports' }
+                ].map(tab => (
                     <button
-                        key={tab}
-                        onClick={() => setActiveTab(tab)}
-                        className={`px-4 py-2.5 rounded-t-lg font-semibold text-sm whitespace-nowrap transition-colors ${activeTab === tab ? 'bg-indigo-50 text-indigo-700 border-b-2 border-indigo-700' : 'text-slate-500 hover:text-slate-900 hover:bg-slate-50'}`}
+                        key={tab.id}
+                        onClick={() => setActiveTab(tab.id)}
+                        className={`px-4 py-2.5 rounded-t-lg font-semibold text-sm whitespace-nowrap transition-colors ${activeTab === tab.id ? 'bg-indigo-50 text-indigo-700 border-b-2 border-indigo-700' : 'text-slate-500 hover:text-slate-900 hover:bg-slate-50'}`}
                     >
-                        {tab}
+                        {t(tab.key, tab.label)}
                     </button>
                 ))}
             </nav>

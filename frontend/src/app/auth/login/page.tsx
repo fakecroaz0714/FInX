@@ -2,12 +2,14 @@
 
 import React, { useState, Suspense } from 'react';
 import { useAuth, Role } from '@/lib/AuthContext';
+import { useLanguage } from '@/lib/LanguageContext';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { ShieldCheck, Building2, HeartHandshake, Users, Shield, ArrowRight, AlertCircle } from 'lucide-react';
 
 function LoginContent() {
     const { login } = useAuth();
+    const { t } = useLanguage();
     const router = useRouter();
     const searchParams = useSearchParams();
 
@@ -81,9 +83,9 @@ function LoginContent() {
                     <div className="inline-flex items-center justify-center w-14 h-14 bg-indigo-600 rounded-2xl mb-4 shadow-md shadow-indigo-200">
                         <ShieldCheck className="w-8 h-8 text-white" />
                     </div>
-                    <h1 className="text-2xl font-extrabold text-slate-900 tracking-tight">Sign in to FINX</h1>
+                    <h1 className="text-2xl font-extrabold text-slate-900 tracking-tight">{t('sign_in_to_finx', 'Sign in to FINX')}</h1>
                     <p className="text-xs text-slate-500 mt-1.5">
-                        Access India's Milestone-Verified CSR & Public Impact Infrastructure
+                        {t('sign_in_sub', "Access India's Milestone-Verified CSR & Public Impact Infrastructure")}
                     </p>
                 </div>
 
@@ -98,7 +100,7 @@ function LoginContent() {
                     {/* Role Selector */}
                     <div>
                         <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
-                            Sign in as (Role)
+                            {t('sign_in_as', 'Sign in as (Role)')}
                         </label>
                         <div className="relative">
                             <select
@@ -123,7 +125,7 @@ function LoginContent() {
                     {/* Email */}
                     <div>
                         <label className="block text-xs font-semibold text-slate-700 mb-1">
-                            {role === 'Corporate' ? 'Work Email' : role === 'Admin' ? 'Admin Email' : role === 'NGO' ? 'Official NGO Email' : 'Email address'}
+                            {role === 'Corporate' ? 'Work Email' : role === 'Admin' ? 'Admin Email' : role === 'NGO' ? 'Official NGO Email' : t('email_address', 'Email address')}
                         </label>
                         <input
                             required
@@ -138,7 +140,7 @@ function LoginContent() {
                     {/* Password */}
                     <div>
                         <div className="flex justify-between items-center mb-1">
-                            <label className="block text-xs font-semibold text-slate-700">Password</label>
+                            <label className="block text-xs font-semibold text-slate-700">{t('password', 'Password')}</label>
                             <span className="text-[11px] text-slate-400">Demo password accepted</span>
                         </div>
                         <input
@@ -157,10 +159,10 @@ function LoginContent() {
                         className="w-full py-3 px-4 bg-indigo-600 hover:bg-indigo-700 disabled:bg-indigo-400 text-white rounded-xl font-bold text-sm transition-colors shadow-md shadow-indigo-200 flex items-center justify-center gap-2 cursor-pointer mt-2"
                     >
                         {loading ? (
-                            <span>Signing in...</span>
+                            <span>{t('signing_in', 'Signing in...')}</span>
                         ) : (
                             <>
-                                <span>Sign In as {role === 'NGO' ? 'NGO' : role}</span>
+                                <span>{t('sign_in_button', 'Sign In')} ({role === 'NGO' ? 'NGO' : role})</span>
                                 <ArrowRight className="w-4 h-4" />
                             </>
                         )}
@@ -168,7 +170,7 @@ function LoginContent() {
                 </form>
 
                 <div className="pt-2 text-center text-xs text-slate-500 border-t border-slate-100">
-                    Don't have a FINX account?{' '}
+                    {t('dont_have_account', "Don't have a FINX account?")}{' '}
                     <Link
                         href={`/auth/signup?role=${role}`}
                         className="text-indigo-600 hover:underline font-bold"
