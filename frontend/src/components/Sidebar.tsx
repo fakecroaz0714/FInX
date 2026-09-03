@@ -19,10 +19,9 @@ import { useLanguage, Language } from '@/lib/LanguageContext';
 
 const roleNavItems: Record<string, Array<{ key: string; defaultName: string; href: string; icon: any }>> = {
     Admin: [
-        { key: 'nav_dashboard', defaultName: 'Dashboard', href: '/', icon: LayoutDashboard },
         { key: 'nav_matching', defaultName: 'Matching Engine', href: '/matching', icon: Network },
-        { key: 'nav_verified_milestones', defaultName: 'Verified Milestones', href: '/verified-milestones', icon: ShieldCheck },
         { key: 'nav_ngo_validation', defaultName: 'NGO Validation', href: '/validator', icon: ShieldCheck },
+        { key: 'nav_verified_milestones', defaultName: 'Verified Milestones', href: '/verified-milestones', icon: ShieldCheck },
         { key: 'nav_escrow', defaultName: 'Escrow Controls', href: '/escrow', icon: FileCheck2 },
         { key: 'nav_demo', defaultName: 'On-Chain Demo', href: '/demo', icon: ShieldCheck },
         { key: 'nav_impact', defaultName: 'Impact Reports', href: '/impact', icon: BarChart4 },

@@ -6,6 +6,8 @@ import { AuthProvider } from "@/lib/AuthContext";
 import { ProposalProvider } from "@/lib/ProposalContext";
 import { LanguageProvider } from "@/lib/LanguageContext";
 
+import AuthGuard from "@/components/AuthGuard";
+
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -20,14 +22,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.className} bg-slate-50 text-slate-900 flex h-screen overflow-hidden`}>
+      <body className={`${inter.className} bg-slate-50 text-slate-900 h-screen overflow-hidden`}>
         <LanguageProvider>
           <AuthProvider>
             <ProposalProvider>
-              <Sidebar />
-              <main className="flex-1 overflow-y-auto w-full">
+              <AuthGuard>
                 {children}
-              </main>
+              </AuthGuard>
             </ProposalProvider>
           </AuthProvider>
         </LanguageProvider>

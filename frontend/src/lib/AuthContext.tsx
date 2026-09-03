@@ -80,6 +80,8 @@ export interface SignupData {
 interface AuthContextType {
     user: User | null;
     role: Role;
+    loading: boolean;
+    isAuthenticated: boolean;
     login: (email: string, pass: string, selectedRole: Role) => void;
     signup: (
         dataOrEmail: SignupData | string,
@@ -174,44 +176,31 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        // Load state from localStorage with robust default fallbacks
+        // Load state from localStorage cleanly without creating mock users
         try {
             const savedUserStr = localStorage.getItem('finx_user');
             const savedRole = (localStorage.getItem('finx_role') as Role) || 'Admin';
-            
-            let loadedUser: User;
+
             if (savedUserStr) {
-                loadedUser = JSON.parse(savedUserStr);
-                // Ensure profile structure exists
-                if (!loadedUser.profile) {
-                    loadedUser.profile = defaultProfiles[savedRole]?.profile || {};
+                const loadedUser: User = JSON.parse(savedUserStr);
+                if (loadedUser && loadedUser.id && loadedUser.role) {
+                    if (!loadedUser.profile) {
+                        loadedUser.profile = defaultProfiles[loadedUser.role]?.profile || {};
+                    }
+                    setUser(loadedUser);
+                    setRole(loadedUser.role);
+                } else {
+                    setUser(null);
+                    setRole(savedRole);
                 }
             } else {
-                const defaults = defaultProfiles[savedRole] || defaultProfiles.Admin;
-                loadedUser = {
-                    id: `usr_${Date.now()}`,
-                    role: savedRole,
-                    name: defaults.name,
-                    email: defaults.email,
-                    profile: defaults.profile
-                };
-                localStorage.setItem('finx_user', JSON.stringify(loadedUser));
-                localStorage.setItem('finx_role', savedRole);
+                // Completely unauthenticated initial state
+                setUser(null);
+                setRole(savedRole);
             }
-
-            setUser(loadedUser);
-            setRole(savedRole);
         } catch (e) {
             console.error('Error loading auth state from localStorage:', e);
-            const fallback = defaultProfiles.Admin;
-            const fallbackUser: User = {
-                id: 'usr_admin',
-                role: 'Admin',
-                name: fallback.name,
-                email: fallback.email,
-                profile: fallback.profile
-            };
-            setUser(fallbackUser);
+            setUser(null);
             setRole('Admin');
         } finally {
             setLoading(false);
@@ -319,27 +308,27 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     };
 
     const logout = () => {
-        const fallback = defaultProfiles.Admin;
-        const resetAdmin: User = {
-            id: 'usr_admin',
-            role: 'Admin',
-            name: fallback.name,
-            email: fallback.email,
-            profile: fallback.profile
-        };
         try {
-            localStorage.setItem('finx_user', JSON.stringify(resetAdmin));
-            localStorage.setItem('finx_role', 'Admin');
+            localStorage.removeItem('finx_user');
+            localStorage.removeItem('finx_role');
         } catch (e) {
-            console.error('Failed to reset on logout:', e);
+            console.error('Failed to clear session on logout:', e);
         }
-        setUser(resetAdmin);
+        setUser(null);
         setRole('Admin');
         window.location.href = '/auth/login';
     };
 
     const changeRole = (newRole: Role) => {
         const activeRole = newRole || 'Admin';
+        setRole(activeRole);
+        try {
+            localStorage.setItem('finx_role', activeRole);
+        } catch (e) {}
+
+        // If not authenticated, only prospective role is updated for login/signup
+        if (!user) return;
+
         // Try finding registered user for that role in store
         let foundUser: User | undefined;
         try {
@@ -367,10 +356,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         }
     };
 
-    if (loading) return null;
-
     return (
-        <AuthContext.Provider value={{ user, role, login, signup, logout, changeRole }}>
+        <AuthContext.Provider value={{
+            user,
+            role,
+            loading,
+            isAuthenticated: Boolean(user),
+            login,
+            signup,
+            logout,
+            changeRole
+        }}>
             {children}
         </AuthContext.Provider>
     );
