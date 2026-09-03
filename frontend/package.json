@@ -21,6 +21,7 @@
     "tailwind-merge": "^3.6.0"
   },
   "optionalDependencies": {
+    "@tailwindcss/oxide-darwin-arm64": "^4.3.3",
     "lightningcss-darwin-arm64": "^1.33.0"
   },
   "devDependencies": {
