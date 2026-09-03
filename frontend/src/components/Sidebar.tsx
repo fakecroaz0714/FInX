@@ -20,6 +20,7 @@ const navItems = [
     { name: 'Validation', href: '/validation', icon: ShieldCheck },
     { name: 'CSR Matches', href: '/csr', icon: Briefcase },
     { name: 'Escrow & Milestones', href: '/escrow', icon: FileCheck2 },
+    { name: 'On-Chain Demo', href: '/demo', icon: ShieldCheck },
     { name: 'Corporate Partners', href: '/corporate', icon: Building2 },
     { name: 'Impact Reports', href: '/impact', icon: BarChart4 },
 ];
@@ -50,8 +51,8 @@ export default function Sidebar() {
                             key={item.href}
                             href={item.href}
                             className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${isActive
-                                    ? 'bg-indigo-50 text-indigo-700'
-                                    : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+                                ? 'bg-indigo-50 text-indigo-700'
+                                : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
                                 }`}
                         >
                             <Icon className={`w-5 h-5 ${isActive ? 'text-indigo-600' : 'text-slate-400'}`} />
