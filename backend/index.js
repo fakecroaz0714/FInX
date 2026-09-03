@@ -1293,6 +1293,474 @@ app.post('/api/finx/demo/reset', (req, res) => {
     });
 });
 
+// =========================================================================
+// FINX AI AUTO-MATCHING ENGINE MODULE
+// Citizen Petitions -> Categorization -> Geographic -> Verified NGOs -> Corporate CSR Funds -> Escrow Synergy
+// =========================================================================
+
+store.citizenPetitions = [
+    {
+        id: 'PET-101',
+        title: 'Rural Solar Pumps',
+        location: 'Nagpur, MH',
+        city: 'Nagpur',
+        state: 'Maharashtra',
+        category: 'Environment',
+        categoryCluster: 'ENVIRONMENT',
+        targetBeneficiaries: 3500,
+        requestedBudget: 4000000,
+        budgetFormatted: '₹4.0M',
+        signatures: 1850,
+        targetSignatures: 2000,
+        status: 'UNRESOLVED',
+        description: 'Solar irrigation pumps for drought-affected cotton and orange farming clusters.'
+    },
+    {
+        id: 'PET-102',
+        title: 'Drinking Water Pipeline',
+        location: 'Nashik, MH',
+        city: 'Nashik',
+        state: 'Maharashtra',
+        category: 'Sanitation',
+        categoryCluster: 'WATER_SANITATION',
+        targetBeneficiaries: 6200,
+        requestedBudget: 3200000,
+        budgetFormatted: '₹3.2M',
+        signatures: 2150,
+        targetSignatures: 2500,
+        status: 'UNRESOLVED',
+        description: 'Clean gravity-feed piped drinking water to replace contaminated well sources.'
+    },
+    {
+        id: 'PET-103',
+        title: 'Primary School Roof',
+        location: 'Pune, MH',
+        city: 'Pune',
+        state: 'Maharashtra',
+        category: 'Education',
+        categoryCluster: 'EDUCATION',
+        targetBeneficiaries: 1100,
+        requestedBudget: 1500000,
+        budgetFormatted: '₹1.5M',
+        signatures: 980,
+        targetSignatures: 1000,
+        status: 'UNRESOLVED',
+        description: 'Reinforced concrete weatherproof roofing and classroom electrification for Zilla Parishad school.'
+    },
+    {
+        id: 'PET-104',
+        title: 'Clinic Medical Supplies',
+        location: 'Mumbai, MH',
+        city: 'Mumbai',
+        state: 'Maharashtra',
+        category: 'Healthcare',
+        categoryCluster: 'HEALTHCARE',
+        targetBeneficiaries: 2400,
+        requestedBudget: 800000,
+        budgetFormatted: '₹0.8M',
+        signatures: 450,
+        targetSignatures: 1000,
+        status: 'UNRESOLVED',
+        description: 'Medical supplies and oxygen concentrators for community healthcare center.'
+    }
+];
+
+store.matchingNgos = [
+    {
+        id: 'NGO-1082',
+        name: 'Green Earth Foundation',
+        rating: 94,
+        verified: true,
+        validatorScore: 94,
+        focus: 'Environment',
+        focusCluster: 'ENVIRONMENT',
+        location: 'Nagpur, MH',
+        city: 'Nagpur',
+        state: 'Maharashtra',
+        operationalYears: 4
+    },
+    {
+        id: 'NGO-1004',
+        name: 'Jal Seva NGO',
+        rating: 91,
+        verified: true,
+        validatorScore: 91,
+        focus: 'Sanitation',
+        focusCluster: 'WATER_SANITATION',
+        location: 'Nashik, MH',
+        city: 'Nashik',
+        state: 'Maharashtra',
+        operationalYears: 9
+    },
+    {
+        id: 'NGO-1099',
+        name: 'EduCare Org',
+        rating: 88,
+        verified: true,
+        validatorScore: 88,
+        focus: 'Education',
+        focusCluster: 'EDUCATION',
+        location: 'Pune, MH',
+        city: 'Pune',
+        state: 'Maharashtra',
+        operationalYears: 6
+    },
+    {
+        id: 'NGO-1105',
+        name: 'Urban Health Initiative',
+        rating: 45,
+        verified: false,
+        validatorScore: 45,
+        focus: 'Healthcare',
+        focusCluster: 'HEALTHCARE',
+        location: 'Mumbai, MH',
+        city: 'Mumbai',
+        state: 'Maharashtra',
+        operationalYears: 2
+    }
+];
+
+store.matchingCorporates = [
+    {
+        id: 'CORP-GREEN-001',
+        name: 'GreenFuture Energy',
+        budget: '₹4.0M',
+        budgetAmount: 4000000,
+        categories: ['ENVIRONMENT', 'RENEWABLE_ENERGY'],
+        location: 'Nagpur, MH',
+        city: 'Nagpur',
+        state: 'Maharashtra'
+    },
+    {
+        id: 'CORP-TATA-002',
+        name: 'Tata Power CSR',
+        budget: '₹3.2M',
+        budgetAmount: 3200000,
+        categories: ['WATER_SANITATION', 'RURAL_DEVELOPMENT'],
+        location: 'Nashik, MH',
+        city: 'Nashik',
+        state: 'Maharashtra'
+    },
+    {
+        id: 'CORP-TECH-003',
+        name: 'TechCorp India',
+        budget: '₹1.5M',
+        budgetAmount: 1500000,
+        categories: ['EDUCATION', 'SKILLS'],
+        location: 'Pune, MH',
+        city: 'Pune',
+        state: 'Maharashtra'
+    },
+    {
+        id: 'CORP-PHARMA-004',
+        name: 'PharmaCare CSR',
+        budget: '₹0.8M',
+        budgetAmount: 800000,
+        categories: ['HEALTHCARE'],
+        location: 'Mumbai, MH',
+        city: 'Mumbai',
+        state: 'Maharashtra'
+    }
+];
+
+// Active Synergy Workflows Store
+store.matchingWorkflows = [
+    {
+        id: 1,
+        matchKey: 'PET-101_NGO-1082_CORP-GREEN-001',
+        petition: { id: 'PET-101', title: 'Rural Solar Pumps', location: 'Nagpur, MH', category: 'Environment', requestedBudget: '₹4.0M' },
+        ngo: { id: 'NGO-1082', name: 'Green Earth Foundation', rating: 94, verified: true, validatorScore: 94 },
+        corporate: { id: 'CORP-GREEN-001', name: 'GreenFuture Energy', budget: '₹4.0M', matchScore: 98 },
+        status: 'pending',
+        confidenceScore: 98,
+        scoreBreakdown: { category: 40, geographic: 20, ngo: 19, budget: 10, relevance: 9 },
+        explanation: 'Perfect SDG Environment alignment, identical Nagpur geo-location, 94/100 verified NGO trust score, full CSR budget match.'
+    },
+    {
+        id: 2,
+        matchKey: 'PET-103_NGO-1099_CORP-TECH-003',
+        petition: { id: 'PET-103', title: 'Primary School Roof', location: 'Pune, MH', category: 'Education', requestedBudget: '₹1.5M' },
+        ngo: { id: 'NGO-1099', name: 'EduCare Org', rating: 88, verified: true, validatorScore: 88 },
+        corporate: { id: 'CORP-TECH-003', name: 'TechCorp India', budget: '₹1.5M', matchScore: 92 },
+        status: 'pending',
+        confidenceScore: 92,
+        scoreBreakdown: { category: 40, geographic: 20, ngo: 18, budget: 10, relevance: 4 },
+        explanation: 'Education category match in Pune cluster, 88/100 verified NGO credentials, ₹1.5M budget parity.'
+    },
+    {
+        id: 3,
+        matchKey: 'PET-104_NGO-1105_CORP-PHARMA-004',
+        petition: { id: 'PET-104', title: 'Clinic Medical Supplies', location: 'Mumbai, MH', category: 'Healthcare', requestedBudget: '₹0.8M' },
+        ngo: { id: 'NGO-1105', name: 'Urban Health Initiative', rating: 45, verified: false, validatorScore: 45 },
+        corporate: { id: 'CORP-PHARMA-004', name: 'PharmaCare CSR', budget: '₹0.8M', matchScore: 78 },
+        status: 'pending',
+        confidenceScore: 78,
+        scoreBreakdown: { category: 40, geographic: 20, ngo: 9, budget: 10, relevance: -1 },
+        explanation: 'Healthcare thematic match, but NGO validation remains pending (Risk: Unverified).'
+    },
+    {
+        id: 4,
+        matchKey: 'PET-102_NGO-1004_CORP-TATA-002',
+        petition: { id: 'PET-102', title: 'Drinking Water Pipeline', location: 'Nashik, MH', category: 'Sanitation', requestedBudget: '₹3.2M' },
+        ngo: { id: 'NGO-1004', name: 'Jal Seva NGO', rating: 91, verified: true, validatorScore: 91 },
+        corporate: { id: 'CORP-TATA-002', name: 'Tata Power CSR', budget: '₹3.2M', matchScore: 95 },
+        status: 'pending',
+        confidenceScore: 95,
+        scoreBreakdown: { category: 40, geographic: 18, ngo: 18, budget: 10, relevance: 9 },
+        explanation: 'Clean water & sanitation priority with Jal Seva verified track record and Tata Power rural mandate.'
+    }
+];
+
+// Mathematical 5-factor scoring engine
+function calculateSynergyScore(petition, ngo, corporate) {
+    let categoryScore = 0;
+    if (corporate.categories.includes(petition.categoryCluster) && ngo.focusCluster === petition.categoryCluster) {
+        categoryScore = 40;
+    } else if (corporate.categories.includes(petition.categoryCluster) || ngo.focusCluster === petition.categoryCluster) {
+        categoryScore = 28;
+    } else {
+        categoryScore = 10;
+    }
+
+    let geographicScore = 0;
+    if (petition.city && ngo.city && corporate.city && petition.city === ngo.city && ngo.city === corporate.city) {
+        geographicScore = 20;
+    } else if (petition.state && petition.state === ngo.state) {
+        geographicScore = 17;
+    } else {
+        geographicScore = 8;
+    }
+
+    let ngoTrustScore = 0;
+    if (ngo.verified) {
+        ngoTrustScore = Math.round((ngo.validatorScore / 100) * 20);
+    } else {
+        ngoTrustScore = Math.round((ngo.validatorScore / 100) * 8);
+    }
+
+    let budgetScore = 0;
+    if (corporate.budgetAmount >= petition.requestedBudget) {
+        budgetScore = 10;
+    } else if (corporate.budgetAmount >= petition.requestedBudget * 0.75) {
+        budgetScore = 7;
+    } else {
+        budgetScore = 3;
+    }
+
+    let relevanceScore = 0;
+    if (petition.signatures >= 1000) relevanceScore += 5;
+    else relevanceScore += 3;
+    if (ngo.operationalYears >= 4) relevanceScore += 5;
+    else relevanceScore += 2;
+
+    const total = Math.min(100, Math.max(10, categoryScore + geographicScore + ngoTrustScore + budgetScore + relevanceScore));
+    return {
+        total,
+        breakdown: { category: categoryScore, geographic: geographicScore, ngo: ngoTrustScore, budget: budgetScore, relevance: relevanceScore }
+    };
+}
+
+// 1. GET /api/matching/data - Overview of available petitions, NGOs, and CSR capital
+app.get('/api/matching/data', (req, res) => {
+    const unresolvedCount = 1204 - store.matchingWorkflows.filter(w => w.status === 'approve').length;
+    const totalCommitted = store.matchingWorkflows
+        .filter(w => w.status === 'approve')
+        .reduce((sum, w) => sum + (parseFloat(w.corporate?.budget?.replace(/[^0-9.]/g, '') || '0') * 1000000), 0);
+    const availableBudgetNum = 82500000 - totalCommitted;
+    const availableBudgetFormatted = `₹${(availableBudgetNum / 1000000).toFixed(1)}M`;
+    const approvedCount = store.matchingWorkflows.filter(w => w.status === 'approve').length;
+    const totalReviewed = store.matchingWorkflows.filter(w => w.status !== 'pending').length;
+    const successRate = totalReviewed > 0 ? Math.round((approvedCount / totalReviewed) * 100) : 91;
+
+    res.json({
+        success: true,
+        summary: {
+            unresolvedPetitions: unresolvedCount,
+            availableCsrCapital: availableBudgetFormatted,
+            workflowSuccessRate: successRate,
+            highConfidenceCount: store.matchingWorkflows.filter(w => (w.confidenceScore || w.corporate?.matchScore || 0) >= 85 && w.ngo?.verified).length
+        },
+        workflows: store.matchingWorkflows,
+        petitions: store.citizenPetitions,
+        ngos: store.matchingNgos,
+        corporates: store.matchingCorporates
+    });
+});
+
+// 2. POST /api/matching/auto-match - Execute real 5-factor AI matching algorithm
+app.post('/api/matching/auto-match', (req, res) => {
+    const logs = [
+        'Loading active citizen petitions (4 grassroots submissions)',
+        'Verifying NGO validator trust ratings and compliance credentials',
+        'Comparing SDG categories & mandate clusters',
+        'Evaluating geographic proximity and district constraints',
+        'Verifying corporate CSR budget parity & fund availability',
+        'Running multi-factor confidence scoring engine'
+    ];
+
+    let newMatchesCreated = 0;
+    let existingMatchesRefreshed = 0;
+
+    // For each citizen petition, find the optimal synergy pairing (Petition -> Verified NGO -> Corporate CSR)
+    store.citizenPetitions.forEach(petition => {
+        let bestCandidate = null;
+
+        store.matchingNgos.forEach(ngo => {
+            store.matchingCorporates.forEach(corporate => {
+                const calculation = calculateSynergyScore(petition, ngo, corporate);
+                if (!bestCandidate || calculation.total > bestCandidate.calculation.total) {
+                    bestCandidate = { petition, ngo, corporate, calculation };
+                }
+            });
+        });
+
+        if (bestCandidate) {
+            const { petition: p, ngo: n, corporate: c, calculation } = bestCandidate;
+            const matchKey = `${p.id}_${n.id}_${c.id}`;
+
+            // Check if workflow already exists for this petition to prevent duplicates
+            const existingIdx = store.matchingWorkflows.findIndex(w => w.matchKey === matchKey || w.petition?.id === p.id || w.petition?.title === p.title);
+
+            if (existingIdx >= 0) {
+                const existing = store.matchingWorkflows[existingIdx];
+                existing.matchKey = matchKey;
+                existing.confidenceScore = calculation.total;
+                existing.scoreBreakdown = calculation.breakdown;
+                existing.corporate.name = c.name;
+                existing.corporate.budget = c.budget;
+                existing.corporate.matchScore = calculation.total;
+                existing.ngo.name = n.name;
+                existing.ngo.rating = n.rating;
+                existing.ngo.verified = n.verified;
+                existing.ngo.validatorScore = n.validatorScore;
+                existing.explanation = `Evaluated ${calculation.total}% confidence: Category ${calculation.breakdown.category}/40, Geo ${calculation.breakdown.geographic}/20, NGO ${calculation.breakdown.ngo}/20, Budget ${calculation.breakdown.budget}/10, Relevance ${calculation.breakdown.relevance}/10.`;
+                existingMatchesRefreshed++;
+            } else {
+                const newId = store.matchingWorkflows.length + 1;
+                store.matchingWorkflows.push({
+                    id: newId,
+                    matchKey,
+                    petition: {
+                        id: p.id,
+                        title: p.title,
+                        location: p.location,
+                        category: p.category,
+                        requestedBudget: p.budgetFormatted
+                    },
+                    ngo: {
+                        id: n.id,
+                        name: n.name,
+                        rating: n.rating,
+                        verified: n.verified,
+                        validatorScore: n.validatorScore
+                    },
+                    corporate: {
+                        id: c.id,
+                        name: c.name,
+                        budget: c.budget,
+                        matchScore: calculation.total
+                    },
+                    status: 'pending',
+                    confidenceScore: calculation.total,
+                    scoreBreakdown: calculation.breakdown,
+                    explanation: `Evaluated ${calculation.total}% confidence: Category ${calculation.breakdown.category}/40, Geo ${calculation.breakdown.geographic}/20, NGO ${calculation.breakdown.ngo}/20, Budget ${calculation.breakdown.budget}/10, Relevance ${calculation.breakdown.relevance}/10.`
+                });
+                newMatchesCreated++;
+            }
+        }
+    });
+
+    // Calculate updated KPI metrics
+    const highConfidenceMatches = store.matchingWorkflows.filter(w => (w.confidenceScore || w.corporate?.matchScore || 0) >= 85 && w.ngo?.verified);
+    const unresolvedCount = 1204 - store.matchingWorkflows.filter(w => w.status === 'approve').length;
+    const totalCommitted = store.matchingWorkflows
+        .filter(w => w.status === 'approve')
+        .reduce((sum, w) => sum + (parseFloat(w.corporate?.budget?.replace(/[^0-9.]/g, '') || '0') * 1000000), 0);
+    const availableBudgetNum = 82500000 - totalCommitted;
+    const availableBudgetFormatted = `₹${(availableBudgetNum / 1000000).toFixed(1)}M`;
+    const approvedCount = store.matchingWorkflows.filter(w => w.status === 'approve').length;
+    const totalReviewed = store.matchingWorkflows.filter(w => w.status !== 'pending').length;
+    const successRate = totalReviewed > 0 ? Math.round((approvedCount / totalReviewed) * 100) : 91;
+
+    res.json({
+        success: true,
+        message: `Auto-Match completed. ${highConfidenceMatches.length} high-confidence matches available (${newMatchesCreated} new, ${existingMatchesRefreshed} refreshed).`,
+        summary: {
+            unresolvedPetitions: unresolvedCount,
+            availableCsrCapital: availableBudgetFormatted,
+            workflowSuccessRate: successRate,
+            highConfidenceCount: highConfidenceMatches.length
+        },
+        workflows: store.matchingWorkflows,
+        logs: [
+            ...logs,
+            `Match calculation finished. Found ${highConfidenceMatches.length} High-Confidence Matches.`
+        ]
+    });
+});
+
+// 3. POST /api/matching/workflows/:id/approve - Approve synergy workflow and queue for Escrow
+app.post('/api/matching/workflows/:id/approve', (req, res) => {
+    const id = parseInt(req.params.id, 10);
+    const workflow = store.matchingWorkflows.find(w => w.id === id);
+
+    if (!workflow) {
+        return res.status(404).json({ success: false, error: 'Synergy workflow not found.' });
+    }
+
+    workflow.status = 'approve';
+    workflow.approvedAt = new Date().toISOString();
+    workflow.escrowContractId = `0x${Math.random().toString(16).substring(2, 10).toUpperCase()}...${Math.random().toString(16).substring(2, 6).toUpperCase()}`;
+
+    // Calculate updated KPI metrics
+    const unresolvedCount = 1204 - store.matchingWorkflows.filter(w => w.status === 'approve').length;
+    const totalCommitted = store.matchingWorkflows
+        .filter(w => w.status === 'approve')
+        .reduce((sum, w) => sum + (parseFloat(w.corporate?.budget?.replace(/[^0-9.]/g, '') || '0') * 1000000), 0);
+    const availableBudgetNum = 82500000 - totalCommitted;
+    const availableBudgetFormatted = `₹${(availableBudgetNum / 1000000).toFixed(1)}M`;
+    const approvedCount = store.matchingWorkflows.filter(w => w.status === 'approve').length;
+    const totalReviewed = store.matchingWorkflows.filter(w => w.status !== 'pending').length;
+    const successRate = totalReviewed > 0 ? Math.round((approvedCount / totalReviewed) * 100) : 94;
+
+    res.json({
+        success: true,
+        workflow,
+        summary: {
+            unresolvedPetitions: unresolvedCount,
+            availableCsrCapital: availableBudgetFormatted,
+            workflowSuccessRate: successRate,
+            highConfidenceCount: store.matchingWorkflows.filter(w => (w.confidenceScore || w.corporate?.matchScore || 0) >= 85 && w.ngo?.verified).length
+        }
+    });
+});
+
+// 4. POST /api/matching/workflows/:id/decline - Decline synergy workflow
+app.post('/api/matching/workflows/:id/decline', (req, res) => {
+    const id = parseInt(req.params.id, 10);
+    const workflow = store.matchingWorkflows.find(w => w.id === id);
+
+    if (!workflow) {
+        return res.status(404).json({ success: false, error: 'Synergy workflow not found.' });
+    }
+
+    workflow.status = 'reject';
+    workflow.declinedAt = new Date().toISOString();
+
+    const approvedCount = store.matchingWorkflows.filter(w => w.status === 'approve').length;
+    const totalReviewed = store.matchingWorkflows.filter(w => w.status !== 'pending').length;
+    const successRate = totalReviewed > 0 ? Math.round((approvedCount / totalReviewed) * 100) : 91;
+
+    res.json({
+        success: true,
+        workflow,
+        summary: {
+            unresolvedPetitions: 1204 - approvedCount,
+            workflowSuccessRate: successRate
+        }
+    });
+});
+
 app.listen(PORT, () => {
     console.log(`FINX Verified Milestone Funding Engine listening on port ${PORT}`);
 });

@@ -25,6 +25,7 @@ import {
     Award
 } from "lucide-react";
 import { useLanguage } from '@/lib/LanguageContext';
+import { safeJsonFetch } from '@/lib/apiUtils';
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:5001';
 
@@ -57,23 +58,24 @@ export default function AIProposalVerificationPanel() {
         setLoading(true);
         try {
             const [propRes, corpRes] = await Promise.all([
-                fetch(`${BACKEND_URL}/api/proposals`),
-                fetch(`${BACKEND_URL}/api/corporate/eligible-proposals`)
+                safeJsonFetch<any>(`${BACKEND_URL}/api/proposals`),
+                safeJsonFetch<any>(`${BACKEND_URL}/api/corporate/eligible-proposals`)
             ]);
 
-            const propData = await propRes.json();
-            const corpData = await corpRes.json();
-
-            if (propData.success) {
-                setProposals(propData.proposals);
-                setSummary(propData.summary);
-                if (propData.proposals.length > 0 && !selectedProposal) {
-                    setSelectedProposal(propData.proposals[0]);
+            if (propRes.ok && propRes.data?.success) {
+                setProposals(propRes.data.proposals);
+                setSummary(propRes.data.summary);
+                if (propRes.data.proposals.length > 0 && !selectedProposal) {
+                    setSelectedProposal(propRes.data.proposals[0]);
                 }
+            } else if (propRes.error) {
+                console.warn('Could not load proposals from backend:', propRes.error);
             }
 
-            if (corpData.success) {
-                setEligibleProposals(corpData.eligibleProposals);
+            if (corpRes.ok && corpRes.data?.success) {
+                setEligibleProposals(corpRes.data.eligibleProposals);
+            } else if (corpRes.error) {
+                console.warn('Could not load eligible proposals from backend:', corpRes.error);
             }
         } catch (err) {
             console.error('Error fetching proposals data:', err);
@@ -86,11 +88,12 @@ export default function AIProposalVerificationPanel() {
         setSelectedProposal(proposal);
         setLoading(true);
         try {
-            const res = await fetch(`${BACKEND_URL}/api/proposals/${proposal.id}/verification-report`);
-            const data = await res.json();
-            if (data.success) {
-                setVerificationReport(data.report);
+            const res = await safeJsonFetch<any>(`${BACKEND_URL}/api/proposals/${proposal.id}/verification-report`);
+            if (res.ok && res.data?.success) {
+                setVerificationReport(res.data.report);
                 setShowReportModal(true);
+            } else {
+                console.warn('Error fetching verification report:', res.error);
             }
         } catch (err) {
             console.error('Error loading verification report:', err);
@@ -108,7 +111,7 @@ export default function AIProposalVerificationPanel() {
 
         setActionLoading(true);
         try {
-            const res = await fetch(`${BACKEND_URL}/api/validator/proposals/${selectedProposal.id}/${action}`, {
+            const res = await safeJsonFetch<any>(`${BACKEND_URL}/api/validator/proposals/${selectedProposal.id}/${action}`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -117,13 +120,14 @@ export default function AIProposalVerificationPanel() {
                     comments: validatorComment || 'Proposal verified and approved for corporate CSR matching.'
                 })
             });
-            const data = await res.json();
-            if (data.success) {
+            if (res.ok && res.data?.success) {
                 setValidatorComment('');
                 setShowReportModal(false);
                 await fetchProposalsData();
-                setActionMsg(`✅ Proposal ${selectedProposal.proposalCode} updated to '${data.proposal.status}'.`);
+                setActionMsg(`✅ Proposal ${selectedProposal.proposalCode} updated to '${res.data.proposal.status}'.`);
                 setTimeout(() => setActionMsg(''), 4000);
+            } else {
+                setActionMsg(`❌ Error performing decision: ${res.error || 'Server error'}`);
             }
         } catch (err) {
             console.error(`Error performing validator decision ${action}:`, err);
@@ -135,13 +139,12 @@ export default function AIProposalVerificationPanel() {
     const handleTriggerDemo = async (scenario: string) => {
         setActionLoading(true);
         try {
-            const res = await fetch(`${BACKEND_URL}/api/demo/proposal-scenario`, {
+            const res = await safeJsonFetch<any>(`${BACKEND_URL}/api/demo/proposal-scenario`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ scenario })
             });
-            const data = await res.json();
-            if (data.success) {
+            if (res.ok && res.data?.success) {
                 await fetchProposalsData();
                 if (scenario === 'suspicious_proposal') {
                     setActionMsg('🚨 DEMO DETECTED FRAUD: Proposal loaded with +14.3% Budget Variance, 500t Material Anomaly & 94% Duplicate Match!');
@@ -151,6 +154,8 @@ export default function AIProposalVerificationPanel() {
                     setActionMsg('🔄 Proposal demo environment reset.');
                 }
                 setTimeout(() => setActionMsg(''), 5000);
+            } else {
+                setActionMsg(`❌ Error executing demo scenario: ${res.error || 'Request failed'}`);
             }
         } catch (err) {
             console.error('Error running proposal demo scenario:', err);
