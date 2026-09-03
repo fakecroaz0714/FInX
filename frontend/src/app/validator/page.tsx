@@ -3,7 +3,8 @@
 import { useState } from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
-import { Search, ShieldAlert, FileCheck2, Building2, MapPin, Eye, AlertTriangle, CheckCircle2, FileText, AlertCircle, RefreshCw } from 'lucide-react';
+import { Search, ShieldAlert, ShieldCheck, FileCheck2, Building2, MapPin, Eye, AlertTriangle, CheckCircle2, FileText, AlertCircle, RefreshCw, Compass } from 'lucide-react';
+import { ValidatorActiveProjectsMap } from '@/components/maps/ValidatorActiveProjectsMap';
 
 const mockNGOs = [
     {
@@ -182,25 +183,72 @@ export default function ValidatorDashboard() {
                 </Card>
             </div>
 
-            <Card className="border border-slate-200 shadow-sm">
-                <CardHeader className="bg-slate-50 border-b border-slate-100 flex flex-row justify-between items-center pb-4">
-                    <div className="flex gap-4">
-                        {['Overview', 'Validation Queue', 'Risk Assessment', 'Audit Logs'].map(tab => (
+            {/* Navigation Tabs */}
+            <div className="flex justify-between items-center border-b border-slate-200 pb-2">
+                <div className="flex gap-4">
+                    {['Overview', 'Active Projects Map', 'Validation Queue', 'Risk Assessment', 'Audit Logs'].map(tab => (
+                        <button
+                            key={tab}
+                            onClick={() => setActiveTab(tab)}
+                            className={`text-sm font-semibold pb-2 transition-colors flex items-center gap-1.5 ${
+                                activeTab === tab
+                                    ? 'text-blue-700 border-b-2 border-blue-700'
+                                    : 'text-slate-500 hover:text-slate-800'
+                            }`}
+                        >
+                            {tab === 'Active Projects Map' && <Compass className="w-4 h-4 text-blue-600" />}
+                            {tab}
+                        </button>
+                    ))}
+                </div>
+
+                <div className="relative">
+                    <Search className="w-4 h-4 absolute left-3 top-2.5 text-slate-400" />
+                    <input type="text" placeholder="Search NGO PAN or ID..." className="pl-9 pr-4 py-2 border border-slate-200 rounded-lg text-sm w-64 focus:ring-2 focus:ring-blue-600 outline-none" />
+                </div>
+            </div>
+
+            {/* Active Projects Map View */}
+            {activeTab === 'Active Projects Map' && (
+                <div className="space-y-4">
+                    <ValidatorActiveProjectsMap />
+                </div>
+            )}
+
+            {/* Overview / Validation Queue Content */}
+            {activeTab !== 'Active Projects Map' && (
+                <div className="space-y-6">
+                    {/* Map Spotlight Banner in Overview */}
+                    {activeTab === 'Overview' && (
+                        <div className="p-4 rounded-xl bg-gradient-to-r from-blue-50 to-slate-50 border border-blue-200 shadow-sm flex flex-col md:flex-row items-center justify-between gap-4">
+                            <div className="flex items-center gap-3">
+                                <div className="w-10 h-10 rounded-xl bg-blue-700 text-white flex items-center justify-center shadow-sm">
+                                    <ShieldCheck className="w-5 h-5" />
+                                </div>
+                                <div>
+                                    <h4 className="font-bold text-slate-900 text-sm">Field Geo-Verification Map Active</h4>
+                                    <p className="text-xs text-slate-600 mt-0.5">
+                                        5 active NGO projects undergoing physical GPS audits, drone tree checks, and milestone inspection across Maharashtra.
+                                    </p>
+                                </div>
+                            </div>
                             <button
-                                key={tab}
-                                onClick={() => setActiveTab(tab)}
-                                className={`text-sm font-medium pb-2 transition-colors ${activeTab === tab ? 'text-indigo-600 border-b-2 border-indigo-600' : 'text-slate-500 hover:text-slate-800'}`}
+                                onClick={() => setActiveTab('Active Projects Map')}
+                                className="px-4 py-2 bg-blue-700 hover:bg-blue-800 text-white text-xs font-bold rounded-lg transition shadow-xs whitespace-nowrap flex items-center gap-1.5"
                             >
-                                {tab}
+                                <Compass className="w-3.5 h-3.5" /> Open Field Verification Map &rarr;
                             </button>
-                        ))}
-                    </div>
-                    <div className="relative">
-                        <Search className="w-4 h-4 absolute left-3 top-3 text-slate-400" />
-                        <input type="text" placeholder="Search NGO PAN or ID..." className="pl-9 pr-4 py-2 border border-slate-200 rounded-lg text-sm w-64 focus:ring-2 focus:ring-indigo-600 outline-none" />
-                    </div>
-                </CardHeader>
-                <CardContent className="p-0">
+                        </div>
+                    )}
+
+                    <Card className="border border-slate-200 shadow-sm">
+                        <CardHeader className="bg-slate-50 border-b border-slate-100 flex flex-row justify-between items-center pb-4">
+                            <CardTitle className="text-base text-slate-800">
+                                {activeTab === 'Risk Assessment' ? 'High Risk Organizations' : activeTab === 'Audit Logs' ? 'Historical Compliance Logs' : 'Auditing Queue & Registered Entities'}
+                            </CardTitle>
+                            <Badge variant="neutral">{mockNGOs.length} NGOs Listed</Badge>
+                        </CardHeader>
+                        <CardContent className="p-0">
                     <table className="w-full text-sm text-left">
                         <thead className="bg-slate-50 text-slate-500 font-semibold uppercase text-xs tracking-wider">
                             <tr>
@@ -249,5 +297,7 @@ export default function ValidatorDashboard() {
                 </CardContent>
             </Card>
         </div>
-    );
+    )}
+</div>
+);
 }

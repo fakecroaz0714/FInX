@@ -8,6 +8,7 @@ import {
     Coins, MapPin, Building2, TrendingUp, ShieldCheck, FileCheck2, Filter, ChevronRight, CheckCircle2, AlertCircle
 } from 'lucide-react';
 import { PieChart as RechartsPie, Pie, Cell, ResponsiveContainer, Tooltip as RechartsTooltip, BarChart, CartesianGrid, XAxis, YAxis, Tooltip, Bar } from 'recharts';
+import { CorporateActiveProjectsMap } from '@/components/maps/CorporateActiveProjectsMap';
 
 export default function CorporateDashboard() {
     const [activeTab, setActiveTab] = useState('Overview');
@@ -205,6 +206,8 @@ export default function CorporateDashboard() {
                         </Card>
                     </div>
                 );
+            case 'Active Projects Map':
+                return <CorporateActiveProjectsMap />;
             default:
                 return (
                     <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
@@ -236,6 +239,29 @@ export default function CorporateDashboard() {
                                 <div className="text-3xl font-bold text-slate-900 mt-1 font-mono">14K+</div>
                             </CardContent>
                         </Card>
+
+                        {/* Interactive Corporate Map Spotlight Banner */}
+                        <div className="md:col-span-4 mt-2">
+                            <div className="p-5 rounded-2xl bg-gradient-to-r from-blue-50/90 via-indigo-50/50 to-white border border-blue-200/90 shadow-sm flex flex-col md:flex-row items-center justify-between gap-4">
+                                <div className="flex items-center gap-3.5">
+                                    <div className="w-11 h-11 rounded-xl bg-blue-600 text-white flex items-center justify-center shadow-sm ring-4 ring-blue-100">
+                                        <Briefcase className="w-5 h-5" />
+                                    </div>
+                                    <div>
+                                        <h4 className="font-bold text-slate-900 text-sm md:text-base">Active Corporate CSR Investment Map</h4>
+                                        <p className="text-xs text-slate-600 mt-0.5">
+                                            Track smart escrow deployments, released tranches, and SDG outcomes across 5 regional project sites.
+                                        </p>
+                                    </div>
+                                </div>
+                                <button
+                                    onClick={() => setActiveTab('Active Projects Map')}
+                                    className="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-xl transition shadow-xs whitespace-nowrap flex items-center gap-1.5"
+                                >
+                                    Open Portfolio Map &rarr;
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 );
         }
@@ -254,7 +280,7 @@ export default function CorporateDashboard() {
             </header>
 
             <nav className="flex items-center gap-2 overflow-x-auto pb-2 -mb-2 border-b border-slate-200 hide-scrollbar">
-                {['Overview', 'Budget Planning', 'Compare NGOs', 'Escrow Control', 'Impact Reports'].map(tab => (
+                {['Overview', 'Active Projects Map', 'Budget Planning', 'Compare NGOs', 'Escrow Control', 'Impact Reports'].map(tab => (
                     <button
                         key={tab}
                         onClick={() => setActiveTab(tab)}

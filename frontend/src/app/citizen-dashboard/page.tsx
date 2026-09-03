@@ -5,8 +5,9 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
 import {
     Megaphone, MapPin, Search, FileText, Camera, Upload, CheckCircle2,
-    Clock, Building2, BellRing, Target, ShieldCheck, HardDrive, Info
+    Clock, Building2, BellRing, Target, ShieldCheck, HardDrive, Info, Navigation
 } from 'lucide-react';
+import { CitizenNearbyProjectsMap } from '@/components/maps/CitizenNearbyProjectsMap';
 
 export default function CitizenDashboard() {
     const [activeTab, setActiveTab] = useState('Overview');
@@ -202,48 +203,8 @@ export default function CitizenDashboard() {
                 );
             case 'Nearby Projects':
                 return (
-                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 h-[600px] mb-8">
-                        {/* Map Mock */}
-                        <div className="col-span-2 bg-slate-200 rounded-xl overflow-hidden border border-slate-300 relative">
-                            {/* Embedded Map Graphic representation */}
-                            <img src="https://images.unsplash.com/photo-1524661135-423995f22d0b?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80" alt="Map View" className="w-full h-full object-cover opacity-80 mix-blend-multiply" />
-
-                            {/* Map Pins */}
-                            <div className="absolute top-1/4 left-1/3 bg-white p-2 rounded-xl shadow-lg border border-indigo-200 z-10 w-48 text-center animate-bounce">
-                                <MapPin className="w-6 h-6 text-indigo-600 mx-auto -mt-6 bg-white rounded-full p-1 shadow-sm" />
-                                <div className="font-bold text-xs text-slate-900 mt-1">Solar Pump Installation</div>
-                                <div className="text-[10px] font-semibold text-emerald-600">Funded by GreenEnergy</div>
-                            </div>
-
-                            <div className="absolute top-1/2 right-1/4 bg-white p-2 rounded-xl shadow-lg border border-emerald-200 z-10 w-48 text-center opacity-80">
-                                <MapPin className="w-6 h-6 text-emerald-500 mx-auto -mt-6 bg-white rounded-full p-1 shadow-sm" />
-                                <div className="font-bold text-xs text-slate-900 mt-1">Completed: Clinic Renovation</div>
-                                <div className="text-[10px] font-semibold text-slate-500">2 months ago</div>
-                            </div>
-                        </div>
-
-                        {/* List */}
-                        <Card className="h-full border-slate-200 shadow-sm flex flex-col">
-                            <CardHeader className="bg-slate-50 border-b border-slate-100">
-                                <CardTitle className="text-base text-slate-900 flex justify-between">
-                                    Local Impact Zones
-                                    <Badge variant="neutral">Pune, MH</Badge>
-                                </CardTitle>
-                            </CardHeader>
-                            <CardContent className="p-0 overflow-y-auto flex-1 divide-y divide-slate-100">
-                                <div className="p-4 hover:bg-slate-50 cursor-pointer">
-                                    <div className="font-bold text-sm text-slate-900">Solar Pump Installation</div>
-                                    <div className="text-xs text-slate-500 mt-1">Providing clean water to 80 farms.</div>
-                                    <div className="mt-3 bg-slate-200 h-1.5 w-full rounded-full overflow-hidden leading-none"><div className="bg-indigo-600 h-full w-3/4"></div></div>
-                                    <div className="text-[10px] font-bold text-slate-400 mt-1 text-right uppercase tracking-wider">75% Complete</div>
-                                </div>
-                                <div className="p-4 hover:bg-slate-50 cursor-pointer opacity-70">
-                                    <div className="font-bold text-sm text-slate-900 text-emerald-700 flex gap-1 items-center"><CheckCircle2 className="w-4 h-4" /> Clinic Renovation</div>
-                                    <div className="text-xs text-slate-500 mt-1">Rebuilt waiting hall and maternity wing.</div>
-                                    <div className="text-[10px] font-bold text-slate-400 mt-2 uppercase tracking-wider">Completed Oct 2023</div>
-                                </div>
-                            </CardContent>
-                        </Card>
+                    <div className="mb-8">
+                        <CitizenNearbyProjectsMap />
                     </div>
                 );
             default:
@@ -270,6 +231,27 @@ export default function CitizenDashboard() {
                                 <div className="text-sm font-semibold text-slate-500 tracking-wide uppercase">Local Projects Completed</div>
                             </CardContent>
                         </Card>
+
+                        {/* Interactive Nearby Projects Spotlight */}
+                        <div className="md:col-span-3 mt-2">
+                            <div className="p-4 rounded-xl bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200/80 shadow-sm flex flex-col md:flex-row items-center justify-between gap-4">
+                                <div className="flex items-center gap-3">
+                                    <div className="w-10 h-10 rounded-xl bg-blue-600 text-white flex items-center justify-center shadow-sm">
+                                        <MapPin className="w-5 h-5" />
+                                    </div>
+                                    <div>
+                                        <h4 className="font-bold text-slate-900 text-sm">Nearby Community Impact Projects</h4>
+                                        <p className="text-xs text-slate-600 mt-0.5">Explore 5 verified grassroots projects around Pune on the interactive map.</p>
+                                    </div>
+                                </div>
+                                <button
+                                    onClick={() => setActiveTab('Nearby Projects')}
+                                    className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-lg transition shadow-xs whitespace-nowrap"
+                                >
+                                    Open Nearby Projects Map &rarr;
+                                </button>
+                            </div>
+                        </div>
 
                         {/* Recent Notifications Feed */}
                         <div className="md:col-span-3 mt-4">
