@@ -17,53 +17,54 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
     const [user, setUser] = useState<any | null>(null);
-    const [role, setRole] = useState<Role>(null);
+    const [role, setRole] = useState<Role>('Admin');
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        // Load mock state from localStorage
+        // Load mock state from localStorage with default fallbacks
         const savedUser = localStorage.getItem('finx_user');
         const savedRole = localStorage.getItem('finx_role') as Role;
-        if (savedUser && savedRole) {
-            setUser(JSON.parse(savedUser));
-            setRole(savedRole);
-        }
+        
+        const initialRole = savedRole || 'Admin';
+        const initialUser = savedUser ? JSON.parse(savedUser) : { name: `${initialRole} User`, email: `${initialRole.toLowerCase()}@finx.org` };
+
+        setUser(initialUser);
+        setRole(initialRole);
+        localStorage.setItem('finx_user', JSON.stringify(initialUser));
+        localStorage.setItem('finx_role', initialRole);
+        
         setLoading(false);
     }, []);
 
     const saveState = (u: any, r: Role) => {
-        if (u && r) {
-            localStorage.setItem('finx_user', JSON.stringify(u));
-            localStorage.setItem('finx_role', r);
-            setUser(u);
-            setRole(r);
-        } else {
-            localStorage.removeItem('finx_user');
-            localStorage.removeItem('finx_role');
-            setUser(null);
-            setRole(null);
-        }
+        const activeRole = r || 'Admin';
+        const activeUser = u || { name: `${activeRole} User`, email: `${activeRole.toLowerCase()}@finx.org` };
+
+        localStorage.setItem('finx_user', JSON.stringify(activeUser));
+        localStorage.setItem('finx_role', activeRole);
+        setUser(activeUser);
+        setRole(activeRole);
     };
 
     const login = (email: string, pass: string, selectedRole: Role) => {
-        // Mock Login
-        saveState({ email, name: email.split('@')[0] }, selectedRole);
+        const activeRole = selectedRole || 'Admin';
+        saveState({ email, name: email.split('@')[0] }, activeRole);
     };
 
     const signup = (email: string, pass: string, selectedRole: Role) => {
-        // Mock Signup
-        saveState({ email, name: email.split('@')[0] }, selectedRole);
+        const activeRole = selectedRole || 'Admin';
+        saveState({ email, name: email.split('@')[0] }, activeRole);
     };
 
     const logout = () => {
-        saveState(null, null);
+        saveState({ name: 'Admin User', email: 'admin@finx.org' }, 'Admin');
         window.location.href = '/auth/login';
     };
 
     const changeRole = (newRole: Role) => {
-        if (user) {
-            saveState(user, newRole);
-        }
+        const activeRole = newRole || 'Admin';
+        const updatedUser = user ? { ...user, name: `${activeRole} User` } : { name: `${activeRole} User`, email: `${activeRole.toLowerCase()}@finx.org` };
+        saveState(updatedUser, activeRole);
     };
 
     if (loading) return null;

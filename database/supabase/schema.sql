@@ -135,3 +135,92 @@ CREATE TABLE notifications (
     is_read BOOLEAN DEFAULT FALSE,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now())
 );
+
+-- 14. project_milestones (Verified Milestone Engine)
+CREATE TABLE project_milestones (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    project_id UUID REFERENCES projects(id) ON DELETE CASCADE,
+    milestone_number INTEGER NOT NULL,
+    title VARCHAR(255) NOT NULL,
+    description TEXT,
+    percentage NUMERIC(5, 2) NOT NULL,
+    amount NUMERIC(12, 2) NOT NULL,
+    status VARCHAR(50) DEFAULT 'LOCKED' CHECK (status IN ('LOCKED', 'ACTIVE', 'EVIDENCE_SUBMITTED', 'VERIFYING', 'HUMAN_REVIEW', 'VERIFIED', 'FUND_RELEASED', 'COMPLETED', 'REVISION_REQUIRED', 'VERIFICATION_FAILED', 'FLAGGED', 'SUSPENDED')),
+    due_date DATE,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now())
+);
+
+-- 15. milestone_evidence (Geotagged Proof & Baseline)
+CREATE TABLE milestone_evidence (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    project_id UUID REFERENCES projects(id) ON DELETE CASCADE,
+    milestone_id UUID REFERENCES project_milestones(id) ON DELETE CASCADE,
+    is_baseline BOOLEAN DEFAULT FALSE,
+    latitude NUMERIC(10, 8) NOT NULL,
+    longitude NUMERIC(11, 8) NOT NULL,
+    photo_url TEXT NOT NULL,
+    image_hash VARCHAR(64) NOT NULL,
+    claimed_progress NUMERIC(5, 2) DEFAULT 0,
+    reported_expenditure NUMERIC(12, 2) DEFAULT 0,
+    work_description TEXT,
+    uploaded_by UUID REFERENCES users(id),
+    uploaded_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now())
+);
+
+-- 16. evidence_verifications (Automated Engine Verification Runs)
+CREATE TABLE evidence_verifications (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    evidence_id UUID REFERENCES milestone_evidence(id) ON DELETE CASCADE,
+    distance_meters NUMERIC(10, 2),
+    allowed_radius_meters NUMERIC(10, 2) DEFAULT 100,
+    location_status VARCHAR(50) CHECK (location_status IN ('VERIFIED', 'FAILED')),
+    duplicate_detected BOOLEAN DEFAULT FALSE,
+    timestamp_status VARCHAR(50) CHECK (timestamp_status IN ('VALID', 'ANOMALOUS')),
+    ai_relevance_score NUMERIC(5, 2),
+    ai_progress_score NUMERIC(5, 2),
+    ai_consistency_score NUMERIC(5, 2),
+    ai_suspicious BOOLEAN DEFAULT FALSE,
+    ai_reason TEXT,
+    progress_mismatch BOOLEAN DEFAULT FALSE,
+    cost_variance_percent NUMERIC(5, 2) DEFAULT 0,
+    verification_score NUMERIC(5, 2) NOT NULL,
+    final_status VARCHAR(50) CHECK (final_status IN ('VERIFIED', 'HUMAN_REVIEW', 'VERIFICATION_FAILED')),
+    evaluated_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now())
+);
+
+-- 17. milestone_fund_releases (Ledger Transactions)
+CREATE TABLE milestone_fund_releases (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    transaction_id VARCHAR(100) UNIQUE NOT NULL,
+    project_id UUID REFERENCES projects(id),
+    milestone_id UUID REFERENCES project_milestones(id),
+    amount NUMERIC(12, 2) NOT NULL,
+    status VARCHAR(50) DEFAULT 'PENDING' CHECK (status IN ('PENDING', 'APPROVED', 'RELEASED', 'BLOCKED', 'CANCELLED')),
+    authorized_by UUID REFERENCES users(id),
+    verification_score NUMERIC(5, 2),
+    released_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now())
+);
+
+-- 18. risk_flags
+CREATE TABLE risk_flags (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    project_id UUID REFERENCES projects(id),
+    milestone_id UUID REFERENCES project_milestones(id),
+    flag_type VARCHAR(100) NOT NULL CHECK (flag_type IN ('GPS_MISMATCH', 'DUPLICATE_EVIDENCE', 'TIMESTAMP_ANOMALY', 'PROGRESS_MISMATCH', 'COST_VARIANCE', 'MISSING_EVIDENCE', 'REPEATED_VERIFICATION_FAILURE', 'SUSPICIOUS_IMAGE', 'OUT_OF_PROJECT_AREA')),
+    risk_level VARCHAR(50) NOT NULL CHECK (risk_level IN ('LOW', 'MEDIUM', 'HIGH', 'CRITICAL')),
+    details TEXT NOT NULL,
+    resolved BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now())
+);
+
+-- 19. audit_logs
+CREATE TABLE audit_logs (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    actor VARCHAR(255) NOT NULL,
+    action VARCHAR(255) NOT NULL,
+    project_id UUID REFERENCES projects(id),
+    milestone_id UUID REFERENCES project_milestones(id),
+    metadata JSONB,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now())
+);
+

@@ -11,9 +11,14 @@ export default function CorporatePage() {
 
     return (
         <div className="p-8 pb-20">
-            <header className="mb-8">
-                <h1 className="text-3xl font-bold tracking-tight text-slate-900">Corporate Partners</h1>
-                <p className="text-slate-500 mt-1">Directory of participating CSR funders.</p>
+            <header className="mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div>
+                    <h1 className="text-3xl font-bold tracking-tight text-slate-900">Corporate Partners</h1>
+                    <p className="text-slate-500 mt-1">Directory of participating CSR funders and Milestone Funding Control.</p>
+                </div>
+                <a href="/verified-milestones" className="bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold px-4 py-2.5 rounded-lg flex items-center gap-2 shadow-sm shrink-0">
+                    <Activity className="w-4 h-4" /> Open Milestone Funding Control
+                </a>
             </header>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
