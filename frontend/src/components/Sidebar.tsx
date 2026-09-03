@@ -17,7 +17,7 @@ const navItems = [
     { name: 'Dashboard', href: '/', icon: LayoutDashboard },
     { name: 'Petitions', href: '/petitions', icon: MapPin },
     { name: 'NGO Network', href: '/ngos', icon: Users },
-    { name: 'Validation', href: '/validation', icon: ShieldCheck },
+    { name: 'NGO Validator', href: '/validator', icon: ShieldCheck },
     { name: 'CSR Matches', href: '/csr', icon: Briefcase },
     { name: 'Escrow & Milestones', href: '/escrow', icon: FileCheck2 },
     { name: 'On-Chain Demo', href: '/demo', icon: ShieldCheck },
