@@ -21,7 +21,7 @@ export default function Dashboard() {
         {[
           { title: "Active Petitions", value: "24", label: "From communities" },
           { title: "NGOs Validated", value: "8", label: "Ready for funding" },
-          { title: "CSR Funds Escrowed", value: "$1.2M", label: "Across 12 projects" },
+          { title: "CSR Funds Escrowed", value: "₹1.2M", label: "Across 12 projects" },
           { title: "Milestones Cleared", value: "42", label: "Funds released" },
         ].map((stat, i) => (
           <Card key={i} className="border border-slate-200 shadow-sm leading-normal">
@@ -44,9 +44,9 @@ export default function Dashboard() {
             <CardContent className="p-0">
               <div className="divide-y divide-slate-100">
                 {[
-                  { name: "Clean Water Initiative - Pune", ngo: "Jal Seva NGO", status: "Escrow Active", amount: "$50,000", progress: 40 },
-                  { name: "Solar Panel Installation - Rural Tech", ngo: "Green Earth Foundation", status: "Milestone Review", amount: "$120,000", progress: 75 },
-                  { name: "School Rebuilding Project - Bihar", ngo: "EduCare Org", status: "Evaluating NGO", amount: "$85,000", progress: 10 },
+                  { name: "Clean Water Initiative - Pune", ngo: "Jal Seva NGO", status: "Escrow Active", amount: "₹50,000", progress: 40 },
+                  { name: "Solar Panel Installation - Rural Tech", ngo: "Green Earth Foundation", status: "Milestone Review", amount: "₹120,000", progress: 75 },
+                  { name: "School Rebuilding Project - Bihar", ngo: "EduCare Org", status: "Evaluating NGO", amount: "₹85,000", progress: 10 },
                 ].map((item, i) => (
                   <div key={i} className="p-5 flex items-center justify-between hover:bg-slate-50 transition-colors">
                     <div className="flex-1">

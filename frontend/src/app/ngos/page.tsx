@@ -10,7 +10,7 @@ export default function NGOsPage() {
             status: "Verified",
             trustScore: 92,
             activeProjects: 3,
-            totalFunds: "$250,000"
+            totalFunds: "₹250,000"
         },
         {
             name: "Green Earth Foundation",
@@ -18,7 +18,7 @@ export default function NGOsPage() {
             status: "Verified",
             trustScore: 88,
             activeProjects: 5,
-            totalFunds: "$1.2M"
+            totalFunds: "₹1.2M"
         },
         {
             name: "EduCare Org",
@@ -26,7 +26,7 @@ export default function NGOsPage() {
             status: "Needs Review",
             trustScore: 45,
             activeProjects: 0,
-            totalFunds: "$0"
+            totalFunds: "₹0"
         },
         {
             name: "Urban Health Initiative",
@@ -34,7 +34,7 @@ export default function NGOsPage() {
             status: "High Risk",
             trustScore: 12,
             activeProjects: 0,
-            totalFunds: "$0"
+            totalFunds: "₹0"
         }
     ];
 

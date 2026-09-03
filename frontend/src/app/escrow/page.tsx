@@ -7,7 +7,7 @@ export default function EscrowPage() {
         {
             id: 1,
             title: "Initial Feasibility & Setup",
-            amount: "$12,500",
+            amount: "₹12,500",
             status: "Released",
             date: "Oct 12, 2024",
             proof: "Survey Report Verified"
@@ -15,7 +15,7 @@ export default function EscrowPage() {
         {
             id: 2,
             title: "Equipment Procurement",
-            amount: "$25,000",
+            amount: "₹25,000",
             status: "Reviewing",
             date: "Pending",
             proof: "Invoices Submitted"
@@ -23,7 +23,7 @@ export default function EscrowPage() {
         {
             id: 3,
             title: "Installation & Training",
-            amount: "$12,500",
+            amount: "₹12,500",
             status: "Locked",
             date: "Est. Dec 2024",
             proof: "-"
@@ -49,7 +49,7 @@ export default function EscrowPage() {
                                 </div>
                                 <div className="text-right">
                                     <div className="text-indigo-200 text-xs uppercase tracking-wider font-semibold mb-1">Total Locked</div>
-                                    <div className="text-2xl font-bold font-mono">$50,000</div>
+                                    <div className="text-2xl font-bold font-mono">₹50,000</div>
                                 </div>
                             </div>
 
@@ -57,8 +57,8 @@ export default function EscrowPage() {
                                 <div className="bg-indigo-500 h-full w-1/4 rounded-full"></div>
                             </div>
                             <div className="flex justify-between text-xs text-slate-400 mt-2">
-                                <span>$12,500 Released</span>
-                                <span>$37,500 Remaining</span>
+                                <span>₹12,500 Released</span>
+                                <span>₹37,500 Remaining</span>
                             </div>
                         </CardHeader>
                         <CardContent className="p-0">

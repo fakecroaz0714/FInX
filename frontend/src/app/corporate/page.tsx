@@ -4,9 +4,9 @@ import { Building2, ExternalLink, Activity } from "lucide-react";
 
 export default function CorporatePage() {
     const corporates = [
-        { name: "TechCorp India", budget: "$1.5M", sector: "Technology", status: "Active Matching" },
-        { name: "GreenFuture Energy", budget: "$4.0M", sector: "Energy", status: "Reviewing NGOs" },
-        { name: "GlobalRetail", budget: "$800K", sector: "Retail", status: "Escrow Locked" },
+        { name: "TechCorp India", budget: "₹1.5M", sector: "Technology", status: "Active Matching" },
+        { name: "GreenFuture Energy", budget: "₹4.0M", sector: "Energy", status: "Reviewing NGOs" },
+        { name: "GlobalRetail", budget: "₹800K", sector: "Retail", status: "Escrow Locked" },
     ];
 
     return (

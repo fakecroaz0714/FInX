@@ -9,7 +9,7 @@ export default function CSRPage() {
             ngo: "Jal Seva NGO",
             ngoStatus: "Verified",
             alignmentScore: 94,
-            fundingRequired: "$50,000",
+            fundingRequired: "₹50,000",
             theme: "Clean Water",
             location: "Pune, Maharashtra"
         },
@@ -18,7 +18,7 @@ export default function CSRPage() {
             ngo: "Green Earth Foundation",
             ngoStatus: "Verified",
             alignmentScore: 88,
-            fundingRequired: "$120,000",
+            fundingRequired: "₹120,000",
             theme: "Renewable Energy",
             location: "Nagpur, Maharashtra"
         }
@@ -45,12 +45,12 @@ export default function CSRPage() {
                             </div>
                             <div>
                                 <div className="text-sm font-medium text-slate-500">Total CSR Budget (FY 24)</div>
-                                <div className="text-2xl font-bold text-slate-900">$2.5M</div>
+                                <div className="text-2xl font-bold text-slate-900">₹2.5M</div>
                             </div>
                         </div>
                         <div className="mt-4 text-xs font-semibold text-slate-500 flex justify-between">
-                            <span>Committed: $1.2M</span>
-                            <span>Remaining: $1.3M</span>
+                            <span>Committed: ₹1.2M</span>
+                            <span>Remaining: ₹1.3M</span>
                         </div>
                     </CardContent>
                 </Card>
