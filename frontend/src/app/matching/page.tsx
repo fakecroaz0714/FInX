@@ -53,7 +53,7 @@ export default function MatchingEngine() {
                         <BrainCircuit className="w-6 h-6 text-indigo-400 mb-1" />
                         <span className="text-sm font-bold text-indigo-300 uppercase tracking-widest">AI Workflow Engine</span>
                     </div>
-                    <h1 className="text-3xl md:text-4xl font-bold tracking-tight">Smart Matchmaking</h1>
+                    <h1 className="text-3xl md:text-4xl font-bold tracking-tight">Smart Mediation</h1>
                     <p className="text-indigo-100 mt-2 font-medium opacity-90 max-w-2xl">
                         Automatically triaging Citizen Petitions &#10230; Verified NGOs &#10230; Corporate CSR Funds based on SDG categories and geographic heuristics.
                     </p>
