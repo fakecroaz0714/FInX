@@ -11,8 +11,7 @@ import {
     MapPin,
     ShieldCheck,
     BarChart4,
-    Globe,
-    Network
+    Globe
 } from 'lucide-react';
 import { useAuth } from '@/lib/AuthContext';
 import { useLanguage, Language } from '@/lib/LanguageContext';
@@ -62,23 +61,25 @@ export default function Sidebar() {
     const activeNavItems = roleNavItems[activeRoleKey] || roleNavItems['Admin'];
 
     return (
-        <div className="w-64 bg-white border-r border-slate-200 flex flex-col h-full shadow-sm z-10 shrink-0">
-            <div className="p-6 border-b border-slate-100 flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded bg-indigo-600 flex items-center justify-center font-bold text-white shadow-sm ring-2 ring-indigo-100">
+        <div className="w-56 xl:w-60 bg-white border-r border-slate-200/80 flex flex-col h-full shadow-sm z-20 shrink-0 select-none">
+            {/* Header */}
+            <div className="p-4 border-b border-slate-100 flex items-center justify-between">
+                <div className="flex items-center gap-2.5">
+                    <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-indigo-600 to-indigo-800 flex items-center justify-center font-bold text-white shadow-sm ring-2 ring-indigo-100 text-xs">
                         FX
                     </div>
                     <div>
-                        <h1 className="text-xl font-bold text-slate-900 tracking-tight leading-none">FINX</h1>
-                        <p className="text-[10px] text-slate-500 font-medium tracking-wide uppercase mt-1">CSR Platform</p>
+                        <h1 className="text-lg font-extrabold text-slate-900 tracking-tight leading-none">FINX</h1>
+                        <p className="text-[9px] text-slate-400 font-semibold tracking-wider uppercase mt-0.5">CSR Platform</p>
                     </div>
                 </div>
             </div>
 
-            <div className="flex-1 overflow-y-auto p-4 space-y-1">
-                <div className="text-xs font-semibold text-slate-400 mb-4 px-3 uppercase tracking-wider flex justify-between items-center">
+            {/* Menu */}
+            <div className="flex-1 overflow-y-auto p-3 space-y-1">
+                <div className="text-[10px] font-bold text-slate-400 mb-2 px-2.5 uppercase tracking-widest flex justify-between items-center">
                     <span>{activeRoleKey} Menu</span>
-                    <span className="text-[10px] bg-slate-100 text-slate-600 px-1.5 py-0.5 rounded font-mono font-normal">Filtered</span>
+                    <span className="text-[9px] bg-slate-100 text-slate-600 px-1.5 py-0.5 rounded font-mono font-medium">Active</span>
                 </div>
                 {activeNavItems.map((item) => {
                     const isActive = pathname === item.href;
@@ -89,31 +90,31 @@ export default function Sidebar() {
                         <Link
                             key={item.href}
                             href={item.href}
-                            className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${isActive
-                                ? 'bg-indigo-50 text-indigo-700 font-bold'
+                            className={`flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-xs font-semibold transition-all ${isActive
+                                ? 'bg-indigo-50 text-indigo-700 shadow-sm border border-indigo-100'
                                 : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
                                 }`}
                         >
-                            <Icon className={`w-5 h-5 ${isActive ? 'text-indigo-600' : 'text-slate-400'}`} />
-                            {translatedName}
+                            <Icon className={`w-4 h-4 shrink-0 ${isActive ? 'text-indigo-600' : 'text-slate-400'}`} />
+                            <span className="truncate">{translatedName}</span>
                         </Link>
                     );
                 })}
             </div>
 
-            {/* CONTROL PANEL: MULTI-LANGUAGE SELECTOR & ROLE SWITCHER */}
-            <div className="p-4 border-t border-slate-100 space-y-3">
-                {/* 1. Language Selector */}
-                <div className="bg-slate-900 text-white rounded-xl p-3 shadow-md space-y-1.5">
-                    <div className="text-[11px] font-semibold text-indigo-300 uppercase tracking-wider flex items-center gap-1.5">
-                        <Globe className="w-3.5 h-3.5 text-indigo-400" />
+            {/* Compact Control Panel */}
+            <div className="p-3 border-t border-slate-100 space-y-2 bg-slate-50/50">
+                {/* Language Dropdown */}
+                <div className="bg-slate-900 text-white rounded-lg p-2.5 shadow-sm space-y-1">
+                    <div className="text-[10px] font-bold text-indigo-300 uppercase tracking-wider flex items-center gap-1">
+                        <Globe className="w-3 h-3 text-indigo-400" />
                         {t('select_language')}
                     </div>
 
                     <select
                         value={lang}
                         onChange={(e) => setLang(e.target.value as Language)}
-                        className="w-full bg-slate-800 text-sm font-bold text-white p-2 border border-slate-700 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none cursor-pointer"
+                        className="w-full bg-slate-800 text-xs font-bold text-white p-1.5 border border-slate-700 rounded focus:ring-1 focus:ring-indigo-500 outline-none cursor-pointer"
                     >
                         <option value="en">🇺🇸 English</option>
                         <option value="hi">🇮🇳 हिन्दी (Hindi)</option>
@@ -123,16 +124,16 @@ export default function Sidebar() {
                     </select>
                 </div>
 
-                {/* 2. Active Role Switcher */}
-                <div className="bg-slate-50 rounded-xl p-3 border border-slate-200 shadow-sm">
-                    <div className="text-[11px] font-semibold text-slate-500 mb-1 uppercase tracking-wider">
+                {/* Role Switcher */}
+                <div className="bg-white rounded-lg p-2.5 border border-slate-200 shadow-sm">
+                    <div className="text-[10px] font-bold text-slate-500 mb-1 uppercase tracking-wider truncate">
                         {t('active_role')} ({user?.name || `${role} User`})
                     </div>
 
                     <select
                         value={role || 'Admin'}
                         onChange={(e) => changeRole(e.target.value as any)}
-                        className="w-full bg-white text-sm font-bold text-slate-900 p-2 border border-slate-300 rounded-lg mt-1 focus:ring-2 focus:ring-indigo-500 outline-none shadow-sm cursor-pointer"
+                        className="w-full bg-slate-50 text-xs font-bold text-slate-900 p-1.5 border border-slate-200 rounded focus:ring-1 focus:ring-indigo-500 outline-none cursor-pointer"
                     >
                         <option value="Admin">🛡️ Admin / Reviewer</option>
                         <option value="Corporate">🏢 Corporate CSR Funder</option>
@@ -140,9 +141,9 @@ export default function Sidebar() {
                         <option value="Citizen">🏘️ Citizen / Village User</option>
                     </select>
 
-                    <div className="flex justify-between items-center mt-2.5 pt-2 border-t border-slate-200/60 text-xs">
-                        <span className="text-slate-400 text-[10px]">Multi-Language Active</span>
-                        <button onClick={logout} className="text-indigo-600 font-medium hover:underline text-[11px]">
+                    <div className="flex justify-between items-center mt-1.5 pt-1.5 border-t border-slate-100 text-[10px]">
+                        <span className="text-slate-400">i18n Active</span>
+                        <button onClick={logout} className="text-indigo-600 font-semibold hover:underline">
                             Reset
                         </button>
                     </div>

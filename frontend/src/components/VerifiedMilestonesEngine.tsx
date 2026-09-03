@@ -232,17 +232,17 @@ export default function VerifiedMilestonesEngine() {
     const { project, summary, milestones, riskFlags, fundReleases, auditTrail } = projectData;
 
     return (
-        <div className="space-y-8">
+        <div className="p-4 md:p-6 lg:p-8 max-w-7xl mx-auto space-y-6">
             {/* Action Banner / Notification */}
             {actionMsg && (
-                <div className={`p-4 rounded-xl font-medium text-sm shadow-sm flex items-center justify-between transition-all ${actionMsg.includes('🚨') || actionMsg.includes('❌') ? 'bg-red-50 border border-red-200 text-red-800' :
+                <div className={`p-3.5 rounded-xl font-semibold text-xs shadow-sm flex items-center justify-between transition-all ${actionMsg.includes('🚨') || actionMsg.includes('❌') ? 'bg-red-50 border border-red-200 text-red-800' :
                         actionMsg.includes('✅') || actionMsg.includes('🎉') ? 'bg-emerald-50 border border-emerald-200 text-emerald-800' :
                             'bg-indigo-50 border border-indigo-200 text-indigo-800'
                     }`}>
-                    <div className="flex items-center gap-3">
-                        {actionMsg.includes('🚨') ? <AlertTriangle className="w-5 h-5 text-red-600 shrink-0" /> :
-                            actionMsg.includes('✅') ? <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" /> :
-                                <ShieldCheck className="w-5 h-5 text-indigo-600 shrink-0" />}
+                    <div className="flex items-center gap-2.5">
+                        {actionMsg.includes('🚨') ? <AlertTriangle className="w-4 h-4 text-red-600 shrink-0" /> :
+                            actionMsg.includes('✅') ? <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" /> :
+                                <ShieldCheck className="w-4 h-4 text-indigo-600 shrink-0" />}
                         <span>{actionMsg}</span>
                     </div>
                     <button onClick={() => setActionMsg('')} className="text-xs opacity-60 hover:opacity-100 font-bold px-2">✕</button>
@@ -250,16 +250,16 @@ export default function VerifiedMilestonesEngine() {
             )}
 
             {/* FRAUD DEMO CONTROL BAR */}
-            <Card className="border-2 border-indigo-200 bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white shadow-lg overflow-hidden">
-                <CardContent className="p-6">
-                    <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+            <Card className="border border-slate-800 bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white shadow-sm overflow-hidden">
+                <CardContent className="p-4 md:p-5">
+                    <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-3">
                         <div>
-                            <div className="flex items-center gap-2 mb-1">
-                                <Sparkles className="w-5 h-5 text-amber-400 animate-pulse" />
-                                <h3 className="font-bold text-lg text-white">Interactive Fraud Demo Mode</h3>
-                                <Badge className="bg-amber-500/30 text-amber-300 border-amber-400 text-xs">Live Testing</Badge>
+                            <div className="flex items-center gap-2 mb-0.5">
+                                <Sparkles className="w-4 h-4 text-amber-400 animate-pulse" />
+                                <h3 className="font-bold text-sm text-white">Interactive Fraud Demo Mode</h3>
+                                <Badge className="bg-amber-500/30 text-amber-300 border-amber-400/40 text-[10px] px-2 py-0.5">Live Testing</Badge>
                             </div>
-                            <p className="text-slate-300 text-sm">
+                            <p className="text-slate-300 text-xs">
                                 Test FINX automated fraud detection engine. Simulate fake GPS photos or duplicate image uploads to verify fund locking.
                             </p>
                         </div>
