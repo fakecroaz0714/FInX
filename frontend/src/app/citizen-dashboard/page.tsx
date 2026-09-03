@@ -10,6 +10,7 @@ import {
 
 export default function CitizenDashboard() {
     const [activeTab, setActiveTab] = useState('Overview');
+    const [evidenceFile, setEvidenceFile] = useState('');
 
     const formSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -71,11 +72,31 @@ export default function CitizenDashboard() {
                                     </div>
                                     <div>
                                         <label className="block text-sm font-semibold text-slate-700 mb-1">Attach Photos / Video Proof</label>
-                                        <div className="border-2 border-dashed border-slate-300 rounded-xl p-8 flex flex-col items-center justify-center text-slate-500 bg-slate-50 hover:bg-slate-100 hover:border-indigo-400 transition cursor-pointer">
-                                            <Camera className="w-8 h-8 mb-2 text-indigo-400" />
-                                            <span className="text-sm font-medium">Click to upload ground-reality photos</span>
-                                            <span className="text-xs mt-1">Supports JPG, PNG, MP4 (Max 50MB)</span>
-                                        </div>
+                                        <label className="border-2 border-dashed border-slate-300 rounded-xl p-8 flex flex-col items-center justify-center text-slate-500 bg-slate-50 hover:bg-slate-100 hover:border-indigo-400 transition cursor-pointer relative overflow-hidden">
+                                            <input
+                                                type="file"
+                                                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                                                onChange={(e) => {
+                                                    if (e.target.files && e.target.files.length > 0) {
+                                                        const file = e.target.files[0];
+                                                        setEvidenceFile(file.name);
+                                                    }
+                                                }}
+                                            />
+                                            {evidenceFile ? (
+                                                <div className="flex flex-col items-center text-emerald-600">
+                                                    <CheckCircle2 className="w-8 h-8 mb-2" />
+                                                    <span className="text-sm font-medium">{evidenceFile} attached securely!</span>
+                                                    <span className="text-xs text-slate-400 mt-1 hover:underline">Click to change</span>
+                                                </div>
+                                            ) : (
+                                                <>
+                                                    <Camera className="w-8 h-8 mb-2 text-indigo-400" />
+                                                    <span className="text-sm font-medium text-slate-700">Click to upload ground-reality photos</span>
+                                                    <span className="text-xs mt-1 text-slate-400">Supports JPG, PNG, MP4 (Max 50MB)</span>
+                                                </>
+                                            )}
+                                        </label>
                                     </div>
                                 </div>
 
