@@ -28,8 +28,20 @@ import {
     Sliders
 } from "lucide-react";
 import { useLanguage } from '@/lib/LanguageContext';
+import { safeJsonFetch } from '@/lib/apiUtils';
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:5001';
+
+const WORKFLOW_STAGES = [
+    { num: 1, name: 'Stage 1: Document Intelligence', desc: 'NGO credential OCR, registration verification & quotation hashes' },
+    { num: 2, name: 'Stage 2: CSR Compliance', desc: 'Schedule VII legal category alignment & purpose consistency' },
+    { num: 3, name: 'Stage 3: Budget Analysis', desc: 'Unit price × quantity line validation & XGBoost/benchmark estimation' },
+    { num: 4, name: 'Stage 4: Duplicate Detection', desc: 'Vector semantic title/scope embeddings & duplicate prevention' },
+    { num: 5, name: 'Stage 5: Anomaly Detection', desc: 'Isolation forest material/labour ratio & variance detection' },
+    { num: 6, name: 'Stage 6: GPS Verification', desc: 'Baseline Haversine radius validation (< 100 meters)' },
+    { num: 7, name: 'Stage 7: Evidence Analysis', desc: 'Baseline photograph relevance & SHA-256 hash generation' },
+    { num: 8, name: 'Stage 8: Risk Aggregation', desc: 'Multi-model weighted scoring (20% GPS, 20% Image, 15% Progress...)' }
+];
 
 export default function LiveHackathonWorkflowEngine() {
     const { t } = useLanguage();
@@ -103,17 +115,43 @@ export default function LiveHackathonWorkflowEngine() {
         setAiStage(1);
         setCurrentStep(2);
 
-        // Simulate 8-Stage Real-Time Pipeline Progress
+        // Submit form 1 to backend
+        const formPromise = safeJsonFetch<any>(`${BACKEND_URL}/api/finx/projects/PROJ-VILLAGE-ROAD-001/form1`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(form1)
+        });
+
+        // Trigger AI verify
+        const verifyPromise = safeJsonFetch<any>(`${BACKEND_URL}/api/finx/projects/PROJ-VILLAGE-ROAD-001/ai-verify`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ projectId: 'PROJ-VILLAGE-ROAD-001' })
+        });
+
+        // Simulate 8-Stage Real-Time Pipeline Progress with smooth visual transitions
         for (let i = 1; i <= 8; i++) {
-            await new Promise(r => setTimeout(r, 400));
+            await new Promise(r => setTimeout(r, 380));
             setAiStage(i);
         }
 
         try {
-            const res = await fetch(`${BACKEND_URL}/api/proposals/FINX-PR-00241/verification-report`);
-            const data = await res.json();
-            if (data.success) {
-                setForm1Report(data.report);
+            const [fRes, vRes] = await Promise.all([formPromise, verifyPromise]);
+            if (vRes.ok && vRes.data?.verification) {
+                const v = vRes.data.verification;
+                setForm1Report({
+                    overallScore: v.overall_score || 93,
+                    riskLevel: v.risk_level || 'LOW RISK',
+                    confidenceRating: v.confidence || 94.2,
+                    aiRecommendation: v.recommendation || 'RECOMMEND ACCEPTANCE (HUMAN VALIDATION REQUIRED)',
+                    findings: v.findings || [],
+                    modelResults: v.model_results || []
+                });
+            } else {
+                const fbRes = await safeJsonFetch<any>(`${BACKEND_URL}/api/proposals/FINX-PR-00241/verification-report`);
+                if (fbRes.ok && fbRes.data?.report) {
+                    setForm1Report(fbRes.data.report);
+                }
             }
         } catch (err) {
             console.error('Error running Form 1 verification:', err);
@@ -123,11 +161,23 @@ export default function LiveHackathonWorkflowEngine() {
     };
 
     // Step 3: Approve CSR Form 2 & Form 3
-    const handleApproveForm2Form3 = () => {
+    const handleApproveForm2Form3 = async () => {
         setForm2Approved(true);
         setForm3Authorized(true);
         setCurrentStep(4);
         setActionMsg('✅ Corporate Approved CSR Form 2 (Scope) & Authorized Form 3 (Milestone Funding Escrow). Milestone 1 Activated!');
+
+        // Record on backend server
+        safeJsonFetch(`${BACKEND_URL}/api/finx/projects/PROJ-VILLAGE-ROAD-001/form2/approve`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ approvedBy: 'Corporate CSR Committee', notes: 'Form 2 Technical Scope Approved' })
+        });
+        safeJsonFetch(`${BACKEND_URL}/api/finx/projects/PROJ-VILLAGE-ROAD-001/form3/authorize`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ authorizedBy: 'Corporate CSR Officer', notes: 'Form 3 Escrow Funding Authorized' })
+        });
         setTimeout(() => setActionMsg(''), 5000);
     };
 
@@ -148,7 +198,7 @@ export default function LiveHackathonWorkflowEngine() {
                 photoUrl = 'https://images.unsplash.com/photo-1541888946425-d0fbb186a5b2?q=80&w=800&auto=format&fit=crop';
             }
 
-            const res = await fetch(`${BACKEND_URL}/api/demo/fraud-scenario`, {
+            const res = await safeJsonFetch<any>(`${BACKEND_URL}/api/demo/fraud-scenario`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -157,14 +207,22 @@ export default function LiveHackathonWorkflowEngine() {
                 })
             });
 
-            const data = await res.json();
-            if (data.success) {
-                setVerificationResult(data.verification);
-                if (data.verification.verificationScore < 70 || data.verification.finalStatus === 'VERIFICATION_FAILED') {
-                    setActionMsg(`🚨 VERIFICATION FAILED! Risk Flag: ${data.verification.riskFlags[0]?.flag_type || 'ANOMALY'}. Fund Release BLOCKED.`);
+            if (res.ok && res.data?.success) {
+                const ver = res.data.verification;
+                setVerificationResult(ver);
+                if (ver.verificationScore < 70 || ver.finalStatus === 'VERIFICATION_FAILED') {
+                    if (isFraudScenario === 'duplicate_image') {
+                        setActionMsg('🚨 VERIFICATION FAILED — Fund Release BLOCKED. Reason: Evidence matches previous project/milestone evidence (DUPLICATE_EVIDENCE)');
+                    } else if (isFraudScenario === 'gps_mismatch') {
+                        setActionMsg('🚨 VERIFICATION FAILED — Fund Release BLOCKED. Reason: GPS Mismatch detected (>100m, actual: 15.4 km away)');
+                    } else {
+                        setActionMsg(`🚨 VERIFICATION FAILED! Risk Flag: ${ver.riskFlags?.[0]?.flag_type || 'ANOMALY'}. Fund Release BLOCKED.`);
+                    }
                 } else {
-                    setActionMsg(`✅ MILESTONE VERIFIED (Score: ${data.verification.verificationScore}/100). Awaiting Human Approval.`);
+                    setActionMsg(`✅ MILESTONE VERIFIED (Score: ${ver.verificationScore}/100). Awaiting Human Approval.`);
                 }
+            } else {
+                setActionMsg(`❌ Verification error: ${res.error || 'Request failed'}`);
             }
         } catch (err) {
             console.error('Error verifying milestone:', err);
@@ -185,6 +243,13 @@ export default function LiveHackathonWorkflowEngine() {
 
         setLoading(true);
         try {
+            // Call backend release endpoint
+            await safeJsonFetch(`${BACKEND_URL}/api/finx/milestones/${activeMs.id}/release-fund`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ authorizedBy: 'Inspector R. Sharma (Corporate Validator)', projectId: 'PROJ-VILLAGE-ROAD-001' })
+            });
+
             // Internal simulated ledger release
             const newRelease = {
                 transactionId: `TXN-ESCROW-${Date.now().toString().slice(-6)}`,
@@ -224,7 +289,7 @@ export default function LiveHackathonWorkflowEngine() {
     };
 
     // Reset Hackathon Demo
-    const handleResetDemo = () => {
+    const handleResetDemo = async () => {
         setCurrentStep(1);
         setForm2Approved(false);
         setForm3Authorized(false);
@@ -239,6 +304,10 @@ export default function LiveHackathonWorkflowEngine() {
             { id: 'MS-105', number: 5, title: 'Milestone 5: Final Commissioning & Signs', amount: 100000, pct: 10, status: 'LOCKED', completedQty: 0, expectedQty: 400 }
         ]);
         setActiveMilestoneId('MS-101');
+
+        // Reset server-side demo state
+        await safeJsonFetch(`${BACKEND_URL}/api/finx/demo/reset`, { method: 'POST' });
+
         setActionMsg('🔄 FINX Hackathon Demo Environment Reset to Step 1.');
         setTimeout(() => setActionMsg(''), 4000);
     };
@@ -412,59 +481,106 @@ export default function LiveHackathonWorkflowEngine() {
                     </CardHeader>
 
                     <CardContent className="p-5 space-y-6">
-                        {/* Real-Time Pipeline Stage Progress */}
-                        {aiVerifying && (
-                            <div className="space-y-3">
-                                <div className="flex justify-between text-xs font-bold text-slate-700">
-                                    <span>{t('executing_stage', 'Executing Stage')} {aiStage} {t('of_8_pipeline_modules', 'of 8 Pipeline Modules...')}</span>
-                                    <span>{Math.round((aiStage / 8) * 100)}%</span>
+                        {/* 8-Stage Real-Time Pipeline Progress */}
+                        <div className="p-4 bg-slate-900 text-white rounded-xl space-y-3 border border-slate-800">
+                            <div className="flex justify-between items-center border-b border-slate-800 pb-2.5">
+                                <div className="flex items-center gap-2">
+                                    <Activity className="w-4 h-4 text-indigo-400 animate-pulse" />
+                                    <span className="font-bold text-xs uppercase tracking-wider text-white">8-Stage Multi-Model Verification Pipeline</span>
                                 </div>
-                                <div className="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
-                                    <div className="bg-indigo-600 h-full transition-all duration-300" style={{ width: `${(aiStage / 8) * 100}%` }}></div>
-                                </div>
+                                <Badge className={!aiVerifying && form1Report ? "bg-emerald-500/30 text-emerald-300 border-emerald-400" : "bg-indigo-500/30 text-indigo-300 border-indigo-400"}>
+                                    {!aiVerifying && form1Report ? "All 8 Stages Complete" : `Executing Stage ${aiStage} of 8...`}
+                                </Badge>
                             </div>
-                        )}
 
-                        {/* Verification Report Summary */}
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5 pt-1">
+                                {WORKFLOW_STAGES.map((st) => {
+                                    const isDone = aiStage > st.num || (!aiVerifying && form1Report);
+                                    const isCurrent = aiStage === st.num && aiVerifying;
+                                    return (
+                                        <div
+                                            key={st.num}
+                                            className={`p-2.5 rounded-lg border transition-all flex items-start gap-2.5 ${isDone ? 'bg-emerald-950/40 border-emerald-500/40 text-emerald-100' :
+                                                isCurrent ? 'bg-indigo-950/70 border-indigo-400 text-white shadow-sm ring-1 ring-indigo-400/50' :
+                                                    'bg-slate-800/60 border-slate-700/60 text-slate-400'}`}>
+                                            <div className="shrink-0 mt-0.5">
+                                                {isDone ? (
+                                                    <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                                                ) : isCurrent ? (
+                                                    <div className="w-4 h-4 border-2 border-indigo-400 border-t-transparent rounded-full animate-spin" />
+                                                ) : (
+                                                    <div className="w-4 h-4 rounded-full border border-slate-600 flex items-center justify-center text-[9px]">{st.num}</div>
+                                                )}
+                                            </div>
+                                            <div className="min-w-0">
+                                                <div className="font-bold text-[11px] flex items-center gap-1.5">
+                                                    <span>{st.name}</span>
+                                                    {isDone && <span className="text-emerald-400 text-xs font-bold">✓</span>}
+                                                </div>
+                                                <div className="text-[10px] text-slate-400 truncate">{st.desc}</div>
+                                            </div>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        </div>
+
+                        {/* FINX AI VERIFICATION COMPLETE BANNER & REPORT */}
                         {form1Report && (
-                            <div className="space-y-4 text-xs">
-                                <div className="grid grid-cols-2 md:grid-cols-4 gap-3 bg-slate-50 p-4 rounded-xl border">
-                                    <div>
-                                        <div className="text-slate-400 text-[10px]">{t('overall_ai_score', 'Overall AI Score')}</div>
-                                        <div className="text-xl font-extrabold font-mono text-emerald-600 mt-0.5">{form1Report.overallScore}/100</div>
+                            <div className="space-y-4 text-xs animate-in fade-in slide-in-from-bottom-2 duration-300">
+                                <div className="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 border border-emerald-500/60 p-4 rounded-xl text-white shadow-md space-y-3">
+                                    <div className="flex justify-between items-center border-b border-slate-800 pb-2">
+                                        <div className="flex items-center gap-2">
+                                            <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0" />
+                                            <span className="text-emerald-400 font-extrabold text-sm uppercase tracking-wider">FINX AI VERIFICATION COMPLETE</span>
+                                        </div>
+                                        <Badge variant="success" className="text-xs px-2.5 py-0.5">PASSED / HUMAN REVIEW</Badge>
                                     </div>
-                                    <div>
-                                        <div className="text-slate-400 text-[10px]">{t('risk_level', 'Risk Level')}</div>
-                                        <Badge variant="success" className="mt-0.5 text-[10px]">{form1Report.riskLevel}</Badge>
+
+                                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-center">
+                                        <div className="p-2.5 bg-slate-800/80 rounded-lg border border-slate-700">
+                                            <div className="text-[10px] text-slate-400 uppercase font-semibold">{t('overall_ai_score', 'Overall AI Score')}</div>
+                                            <div className="text-2xl font-extrabold font-mono text-emerald-400 mt-0.5">{form1Report.overallScore}/100</div>
+                                        </div>
+                                        <div className="p-2.5 bg-slate-800/80 rounded-lg border border-slate-700">
+                                            <div className="text-[10px] text-slate-400 uppercase font-semibold">{t('risk_level', 'Risk Level')}</div>
+                                            <div className="text-2xl font-extrabold font-mono text-emerald-300 mt-0.5">{form1Report.riskLevel}</div>
+                                        </div>
+                                        <div className="p-2.5 bg-slate-800/80 rounded-lg border border-slate-700">
+                                            <div className="text-[10px] text-slate-400 uppercase font-semibold">{t('confidence', 'Confidence')}</div>
+                                            <div className="text-2xl font-extrabold font-mono text-indigo-300 mt-0.5">{form1Report.confidenceRating || 94.2}%</div>
+                                        </div>
+                                        <div className="p-2.5 bg-slate-800/80 rounded-lg border border-slate-700">
+                                            <div className="text-[10px] text-slate-400 uppercase font-semibold">{t('recommendation', 'Recommendation')}</div>
+                                            <div className="text-xs font-bold text-slate-200 mt-1 truncate">{form1Report.aiRecommendation}</div>
+                                        </div>
                                     </div>
-                                    <div>
-                                        <div className="text-slate-400 text-[10px]">{t('confidence', 'Confidence')}</div>
-                                        <div className="font-mono font-bold text-slate-900 mt-0.5">{form1Report.confidenceRating || 94.2}%</div>
-                                    </div>
-                                    <div>
-                                        <div className="text-slate-400 text-[10px]">{t('recommendation', 'Recommendation')}</div>
-                                        <div className="font-bold text-indigo-700 mt-0.5">{form1Report.aiRecommendation}</div>
-                                    </div>
+
+                                    <p className="text-slate-300 text-xs italic text-center font-medium">
+                                        "AI analyzes. Evidence verifies. Humans approve. Funds follow progress."
+                                    </p>
                                 </div>
 
                                 {/* Detected Issue Banners */}
-                                <div className="space-y-2">
-                                    {form1Report.findings.map((f: any, idx: number) => (
-                                        <div key={idx} className="p-3 bg-amber-50 border border-amber-200 rounded-lg text-amber-900 flex items-start gap-2.5">
-                                            <AlertTriangle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
-                                            <div>
-                                                <div className="font-bold text-[11px]">[{f.severity}] {f.module}</div>
-                                                <div className="text-slate-700 text-xs mt-0.5">{f.text}</div>
+                                {form1Report.findings && form1Report.findings.length > 0 && (
+                                    <div className="space-y-2">
+                                        {form1Report.findings.map((f: any, idx: number) => (
+                                            <div key={idx} className="p-3 bg-amber-50 border border-amber-200 rounded-lg text-amber-900 flex items-start gap-2.5">
+                                                <AlertTriangle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
+                                                <div>
+                                                    <div className="font-bold text-[11px]">[{f.severity || 'NOTE'}] {f.module || f.model || 'ENGINE'}</div>
+                                                    <div className="text-slate-700 text-xs mt-0.5">{f.text || f.details}</div>
+                                                </div>
                                             </div>
-                                        </div>
-                                    ))}
-                                </div>
+                                        ))}
+                                    </div>
+                                )}
 
                                 <button
                                     onClick={() => setCurrentStep(3)}
-                                    className="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs p-3 rounded-xl transition-all shadow-sm flex items-center justify-center gap-2">
+                                    className="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs p-3.5 rounded-xl transition-all shadow-md flex items-center justify-center gap-2">
                                     <span>{t('proceed_to_form2_form3', 'PROCEED TO CORPORATE CSR FORM 2 & FORM 3 APPROVAL')}</span>
-                                    <ArrowRight className="w-4 h-4" />
+                                    <ArrowRight className="w-4 h-4 text-indigo-400" />
                                 </button>
                             </div>
                         )}

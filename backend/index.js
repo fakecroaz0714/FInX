@@ -32,13 +32,30 @@ app.use(express.json({ limit: '10mb' }));
 // In-memory Database Store (Mirrors Supabase Schema for instant local dev & demo)
 const store = {
     projects: {
+        'PROJ-VILLAGE-ROAD-001': {
+            id: 'PROJ-VILLAGE-ROAD-001',
+            title: 'Village Road Development',
+            location: 'Shirur Village, Pune District, Maharashtra',
+            latitude: 18.5204,
+            longitude: 73.8567,
+            totalBudget: 1000000, // ₹10,00,000
+            currency: '₹',
+            ngoName: 'Gram Vikas NGO',
+            ngoId: 'NGO-ROAD-001',
+            corporateName: 'TechCorp CSR Trust',
+            corporateId: 'CORP-TECH-101',
+            baselinePhotoUrl: 'https://images.unsplash.com/photo-1541888946425-d0fbb186a5b2?q=80&w=800&auto=format&fit=crop',
+            baselineCapturedAt: '2026-08-15T09:30:00Z',
+            baselineInspector: 'Inspector R. Sharma (Senior Hydrologist)',
+            allowedRadiusMeters: 100
+        },
         'PROJ-CLEAN-WATER-PUNE': {
             id: 'PROJ-CLEAN-WATER-PUNE',
             title: 'Clean Water & Sanitation Initiative - Pune',
             location: 'Shirur Village, Pune District, Maharashtra',
             latitude: 18.5204,
             longitude: 73.8567,
-            totalBudget: 4000000, // ₹40,00,000
+            totalBudget: 1000000, // ₹10,00,000
             currency: '₹',
             ngoName: 'Jal Seva Foundation',
             ngoId: 'NGO-WATER-001',
@@ -51,15 +68,95 @@ const store = {
         }
     },
     milestones: {
+        'PROJ-VILLAGE-ROAD-001': [
+            {
+                id: 'MS-101',
+                projectId: 'PROJ-VILLAGE-ROAD-001',
+                milestoneNumber: 1,
+                title: 'Milestone 1: Site Prep & Excavation',
+                description: 'Geotechnical survey, land clearing, trench excavation for 300m rural road.',
+                percentage: 20,
+                amount: 200000,
+                expectedQuantity: 300,
+                completedQuantity: 300,
+                unit: 'meters',
+                status: 'ACTIVE',
+                dueDate: '2026-09-15',
+                previousPhotoUrl: null
+            },
+            {
+                id: 'MS-102',
+                projectId: 'PROJ-VILLAGE-ROAD-001',
+                milestoneNumber: 2,
+                title: 'Milestone 2: Sub-Base Concrete Bed',
+                description: 'Aggregates compaction and concrete sub-base layering for 500m section.',
+                percentage: 25,
+                amount: 250000,
+                expectedQuantity: 500,
+                completedQuantity: 0,
+                unit: 'meters',
+                status: 'LOCKED',
+                dueDate: '2026-10-15',
+                previousPhotoUrl: null
+            },
+            {
+                id: 'MS-103',
+                projectId: 'PROJ-VILLAGE-ROAD-001',
+                milestoneNumber: 3,
+                title: 'Milestone 3: Tar Surface Laying',
+                description: 'Bituminous hot-mix paving and roller compaction for 800m road section.',
+                percentage: 30,
+                amount: 300000,
+                expectedQuantity: 800,
+                completedQuantity: 0,
+                unit: 'meters',
+                status: 'LOCKED',
+                dueDate: '2026-11-15',
+                previousPhotoUrl: null
+            },
+            {
+                id: 'MS-104',
+                projectId: 'PROJ-VILLAGE-ROAD-001',
+                milestoneNumber: 4,
+                title: 'Milestone 4: Drainage & Side Shoulders',
+                description: 'Side drainage channels, culverts, and earthen shoulders for 400m.',
+                percentage: 15,
+                amount: 150000,
+                expectedQuantity: 400,
+                completedQuantity: 0,
+                unit: 'meters',
+                status: 'LOCKED',
+                dueDate: '2026-12-15',
+                previousPhotoUrl: null
+            },
+            {
+                id: 'MS-105',
+                projectId: 'PROJ-VILLAGE-ROAD-001',
+                milestoneNumber: 5,
+                title: 'Milestone 5: Final Commissioning & Signs',
+                description: 'Road markings, solar reflective signboards, safety audit and hand-over.',
+                percentage: 10,
+                amount: 100000,
+                expectedQuantity: 400,
+                completedQuantity: 0,
+                unit: 'meters',
+                status: 'LOCKED',
+                dueDate: '2027-01-15',
+                previousPhotoUrl: null
+            }
+        ],
         'PROJ-CLEAN-WATER-PUNE': [
             {
                 id: 'MS-001',
                 projectId: 'PROJ-CLEAN-WATER-PUNE',
                 milestoneNumber: 1,
-                title: 'Milestone 1: Site Preparation & Excavation',
+                title: 'Milestone 1: Site Prep & Excavation',
                 description: 'Geotechnical survey, land clearing, trench excavation for water pipe laying.',
                 percentage: 20,
-                amount: 800000,
+                amount: 200000,
+                expectedQuantity: 300,
+                completedQuantity: 300,
+                unit: 'meters',
                 status: 'ACTIVE',
                 dueDate: '2026-09-15',
                 previousPhotoUrl: null
@@ -68,10 +165,13 @@ const store = {
                 id: 'MS-002',
                 projectId: 'PROJ-CLEAN-WATER-PUNE',
                 milestoneNumber: 2,
-                title: 'Milestone 2: Base Concrete & Pipeline Foundation',
+                title: 'Milestone 2: Sub-Base Concrete Bed',
                 description: 'Laying base concrete bed, reinforced piping installation, pressure testing.',
                 percentage: 25,
-                amount: 1000000,
+                amount: 250000,
+                expectedQuantity: 500,
+                completedQuantity: 0,
+                unit: 'meters',
                 status: 'LOCKED',
                 dueDate: '2026-10-15',
                 previousPhotoUrl: null
@@ -80,10 +180,13 @@ const store = {
                 id: 'MS-003',
                 projectId: 'PROJ-CLEAN-WATER-PUNE',
                 milestoneNumber: 3,
-                title: 'Milestone 3: Filtration Tower Construction',
+                title: 'Milestone 3: Tar Surface Laying',
                 description: 'Overhead tank structure construction, multi-stage filtration unit installation.',
-                percentage: 35,
-                amount: 1400000,
+                percentage: 30,
+                amount: 300000,
+                expectedQuantity: 800,
+                completedQuantity: 0,
+                unit: 'meters',
                 status: 'LOCKED',
                 dueDate: '2026-11-15',
                 previousPhotoUrl: null
@@ -92,12 +195,30 @@ const store = {
                 id: 'MS-004',
                 projectId: 'PROJ-CLEAN-WATER-PUNE',
                 milestoneNumber: 4,
-                title: 'Milestone 4: Finishing, Solar Pump & Final Commissioning',
+                title: 'Milestone 4: Drainage & Side Shoulders',
                 description: 'Solar pump wiring, distribution tap installation, water quality testing, hand-over.',
-                percentage: 20,
-                amount: 800000,
+                percentage: 15,
+                amount: 150000,
+                expectedQuantity: 400,
+                completedQuantity: 0,
+                unit: 'meters',
                 status: 'LOCKED',
                 dueDate: '2026-12-15',
+                previousPhotoUrl: null
+            },
+            {
+                id: 'MS-005',
+                projectId: 'PROJ-CLEAN-WATER-PUNE',
+                milestoneNumber: 5,
+                title: 'Milestone 5: Final Commissioning & Signs',
+                description: 'Final commissioning, water quality testing, safety audit and hand-over.',
+                percentage: 10,
+                amount: 100000,
+                expectedQuantity: 400,
+                completedQuantity: 0,
+                unit: 'meters',
+                status: 'LOCKED',
+                dueDate: '2027-01-15',
                 previousPhotoUrl: null
             }
         ]
@@ -485,16 +606,33 @@ app.post('/api/fund-release', (req, res) => {
 
 // POST /api/demo/fraud-scenario - Live Demo Fraud Simulation Endpoint
 app.post('/api/demo/fraud-scenario', async (req, res) => {
-    const { scenario } = req.body;
-    const project = store.projects['PROJ-CLEAN-WATER-PUNE'];
-    const milestones = store.milestones['PROJ-CLEAN-WATER-PUNE'];
-    const currentActive = milestones.find(m => m.status === 'ACTIVE' || m.status === 'EVIDENCE_SUBMITTED' || m.status === 'HUMAN_REVIEW' || m.status === 'VERIFIED') || milestones[0];
+    const { scenario, milestoneId } = req.body;
+    const project = store.projects['PROJ-VILLAGE-ROAD-001'] || store.projects['PROJ-CLEAN-WATER-PUNE'];
+    const milestones = store.milestones[project.id] || store.milestones['PROJ-VILLAGE-ROAD-001'] || store.milestones['PROJ-CLEAN-WATER-PUNE'];
+    
+    // Find target milestone by milestoneId if provided, else find active
+    let currentActive = null;
+    if (milestoneId) {
+        currentActive = milestones.find(m => m.id === milestoneId);
+        if (!currentActive) {
+            // Search all milestone lists
+            Object.values(store.milestones).forEach(list => {
+                const found = list.find(m => m.id === milestoneId);
+                if (found) currentActive = found;
+            });
+        }
+    }
+    if (!currentActive) {
+        currentActive = milestones.find(m => m.status === 'ACTIVE' || m.status === 'EVIDENCE_SUBMITTED' || m.status === 'HUMAN_REVIEW' || m.status === 'VERIFIED') || milestones[0];
+    }
 
     if (scenario === 'reset') {
-        // Reset to initial state
-        milestones.forEach((m, idx) => {
-            m.status = idx === 0 ? 'ACTIVE' : 'LOCKED';
-            m.previousPhotoUrl = null;
+        // Reset all milestone lists to initial state
+        Object.values(store.milestones).forEach(list => {
+            list.forEach((m, idx) => {
+                m.status = idx === 0 ? 'ACTIVE' : 'LOCKED';
+                m.previousPhotoUrl = null;
+            });
         });
         store.riskFlags = [];
         store.fundReleases = [];
@@ -506,14 +644,14 @@ app.post('/api/demo/fraud-scenario', async (req, res) => {
     }
 
     let isFraudDemoType = null;
-    let photoUrl = 'https://images.unsplash.com/photo-1581094794329-c8112a89af12?q=80&w=800&auto=format&fit=crop';
+    let photoUrl = 'https://images.unsplash.com/photo-1541888946425-d0fbb186a5b2?q=80&w=800&auto=format&fit=crop';
     let lat = project.latitude;
     let lng = project.longitude;
 
     if (scenario === 'gps_mismatch') {
         isFraudDemoType = 'gps_mismatch';
-        lat = 19.0760; // Mumbai coordinates (150+ km away from Pune project site)
-        lng = 72.8777;
+        lat = 18.6500; // 15.4 km away from project baseline
+        lng = 73.9500;
         photoUrl = 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?q=80&w=800&auto=format&fit=crop';
     } else if (scenario === 'duplicate_image') {
         isFraudDemoType = 'duplicate_image';
@@ -521,7 +659,7 @@ app.post('/api/demo/fraud-scenario', async (req, res) => {
         const dummyHash = 'a1b2c3d4e5f67890a1b2c3d4e5f67890a1b2c3d4e5f67890a1b2c3d4e5f67890';
         store.hashes.add(dummyHash);
         store.evidence[currentActive.id] = { imageHash: dummyHash };
-    } else if (scenario === 'valid_verification') {
+    } else if (scenario === 'valid_verification' || scenario === 'valid_evidence') {
         isFraudDemoType = 'valid';
         lat = 18.5204;
         lng = 73.8567;
@@ -607,8 +745,8 @@ store.proposals = {
         id: 'FINX-PR-00241',
         proposalCode: 'FINX-PR-00241',
         ngoId: 'NGO-ABC-001',
-        ngoName: 'ABC Foundation',
-        projectName: 'Rural Road Development Project',
+        ngoName: 'Gram Vikas NGO (ABC Foundation)',
+        projectName: 'Village Road Development',
         projectDescription: 'Construction of 2.4 km paved rural access road connecting Shirur village to district market.',
         csrCategory: 'RURAL_DEVELOPMENT',
         projectLocation: 'Shirur Village, Pune District, Maharashtra',
@@ -616,10 +754,10 @@ store.proposals = {
         longitude: 73.8567,
         beneficiaryCount: 4500,
         projectDurationMonths: 6,
-        requestedAmount: 4000000, // ₹40,00,000
+        requestedAmount: 1000000, // ₹10,00,000
         submissionDate: '2026-08-20T10:00:00Z',
         status: 'AWAITING_VALIDATION',
-        aiVerificationScore: 88,
+        aiVerificationScore: 92,
         riskLevel: 'LOW RISK',
         aiRecommendation: 'RECOMMEND ACCEPTANCE (HUMAN VALIDATION REQUIRED)'
     },
@@ -681,9 +819,11 @@ store.proposalDocs = {
 
 store.proposalBudgets = {
     'FINX-PR-00241': [
-        { category: 'Excavation', itemDescription: 'Road excavation & earthwork', quantity: 2, unitPrice: 500000, lineTotal: 1000000 },
-        { category: 'Materials', itemDescription: 'Material supply (Tar & Gravel)', quantity: 500, unitPrice: 4000, lineTotal: 2000000 },
-        { category: 'Labour', itemDescription: 'Labour & supervision', quantity: 6, unitPrice: 166666.67, lineTotal: 1000000 }
+        { category: 'Excavation', itemDescription: 'Site Prep & Trench Excavation (300m)', quantity: 1, unitPrice: 200000, lineTotal: 200000 },
+        { category: 'Sub-Base', itemDescription: 'Sub-Base Concrete Bed & Aggregates (500m)', quantity: 1, unitPrice: 250000, lineTotal: 250000 },
+        { category: 'Paving', itemDescription: 'Tar Surface Laying & Bituminous Course (800m)', quantity: 1, unitPrice: 300000, lineTotal: 300000 },
+        { category: 'Drainage', itemDescription: 'Side Drainage & Earthen Shoulders (400m)', quantity: 1, unitPrice: 150000, lineTotal: 150000 },
+        { category: 'Finishing', itemDescription: 'Signboards, Safety Audit & Final Commissioning', quantity: 1, unitPrice: 100000, lineTotal: 100000 }
     ]
 };
 
@@ -965,19 +1105,19 @@ app.post('/api/demo/proposal-scenario', (req, res) => {
     const { scenario } = req.body;
 
     if (scenario === 'suspicious_proposal') {
-        store.proposals['FINX-PR-00241'].requestedAmount = 4000000;
+        store.proposals['FINX-PR-00241'].requestedAmount = 1450000;
         store.proposals['FINX-PR-00241'].status = 'AWAITING_VALIDATION';
-        store.proposals['FINX-PR-00241'].aiVerificationScore = 88;
-        store.proposals['FINX-PR-00241'].riskLevel = 'MEDIUM RISK';
+        store.proposals['FINX-PR-00241'].aiVerificationScore = 72;
+        store.proposals['FINX-PR-00241'].riskLevel = 'HIGH RISK';
     } else if (scenario === 'valid_proposal') {
-        store.proposals['FINX-PR-00241'].requestedAmount = 3500000;
+        store.proposals['FINX-PR-00241'].requestedAmount = 1000000;
         store.proposals['FINX-PR-00241'].status = 'VALIDATOR_ACCEPTED';
-        store.proposals['FINX-PR-00241'].aiVerificationScore = 96;
+        store.proposals['FINX-PR-00241'].aiVerificationScore = 94;
         store.proposals['FINX-PR-00241'].riskLevel = 'LOW RISK';
     } else if (scenario === 'reset') {
-        store.proposals['FINX-PR-00241'].requestedAmount = 4000000;
+        store.proposals['FINX-PR-00241'].requestedAmount = 1000000;
         store.proposals['FINX-PR-00241'].status = 'AWAITING_VALIDATION';
-        store.proposals['FINX-PR-00241'].aiVerificationScore = 88;
+        store.proposals['FINX-PR-00241'].aiVerificationScore = 92;
         store.proposals['FINX-PR-00241'].riskLevel = 'LOW RISK';
     }
 
@@ -1211,12 +1351,35 @@ app.post('/api/finx/milestones/:id/approve', (req, res) => {
 // POST /api/finx/milestones/:id/release-fund - Internal Fund Release
 app.post('/api/finx/milestones/:id/release-fund', (req, res) => {
     const milestoneId = req.params.id;
-    const { authorizedBy = 'Corporate CSR Officer', projectId = 'PROJ-CLEAN-WATER-PUNE' } = req.body;
+    const { authorizedBy = 'Corporate CSR Officer' } = req.body;
+    let projectId = req.body.projectId;
 
-    const project = store.projects[projectId] || store.projects['PROJ-CLEAN-WATER-PUNE'];
-    const milestones = store.milestones[project.id] || [];
-    const milestoneIndex = milestones.findIndex(m => m.id === milestoneId);
-    const milestone = milestones[milestoneIndex];
+    let milestone = null;
+    let milestoneIndex = -1;
+    let project = null;
+    let milestones = [];
+
+    if (projectId && store.projects[projectId]) {
+        project = store.projects[projectId];
+        milestones = store.milestones[project.id] || [];
+        milestoneIndex = milestones.findIndex(m => m.id === milestoneId);
+        if (milestoneIndex !== -1) milestone = milestones[milestoneIndex];
+    }
+
+    if (!milestone) {
+        // Search across all projects in store.milestones
+        for (const [pId, list] of Object.entries(store.milestones)) {
+            const idx = list.findIndex(m => m.id === milestoneId);
+            if (idx !== -1) {
+                milestone = list[idx];
+                milestoneIndex = idx;
+                projectId = pId;
+                project = store.projects[pId];
+                milestones = list;
+                break;
+            }
+        }
+    }
 
     if (!milestone) return res.status(404).json({ success: false, error: 'Milestone not found' });
 
@@ -1256,9 +1419,11 @@ app.post('/api/finx/milestones/:id/release-fund', (req, res) => {
     res.json({
         success: true,
         message: `₹${milestone.amount.toLocaleString()} Milestone Fund Released`,
+        transaction: releaseTx,
         releaseTx,
         currentMilestone: milestone,
-        nextUnlocked
+        nextUnlocked,
+        nextMilestone: nextUnlocked
     });
 });
 
@@ -1271,21 +1436,28 @@ app.get('/api/finx/projects/:id/audit', (req, res) => {
 
 // POST /api/finx/demo/reset - Reset Demo State
 app.post('/api/finx/demo/reset', (req, res) => {
-    const project = store.projects['PROJ-CLEAN-WATER-PUNE'];
-    const milestones = store.milestones['PROJ-CLEAN-WATER-PUNE'] || [];
-
-    milestones.forEach((m, idx) => {
-        m.status = idx === 0 ? 'ACTIVE' : 'LOCKED';
-        m.previousPhotoUrl = null;
+    Object.values(store.milestones).forEach(list => {
+        list.forEach((m, idx) => {
+            m.status = idx === 0 ? 'ACTIVE' : 'LOCKED';
+            m.previousPhotoUrl = null;
+        });
     });
+
+    if (store.proposals['FINX-PR-00241']) {
+        store.proposals['FINX-PR-00241'].requestedAmount = 1000000;
+        store.proposals['FINX-PR-00241'].status = 'AWAITING_VALIDATION';
+        store.proposals['FINX-PR-00241'].aiVerificationScore = 92;
+        store.proposals['FINX-PR-00241'].riskLevel = 'LOW RISK';
+    }
 
     store.riskFlags = [];
     store.fundReleases = [];
     store.evidence = {};
     store.verifications = {};
+    store.csrForms = {};
     store.hashes.clear();
 
-    logAudit('Demo Admin', 'Reset FINX Hackathon Demo State to Initial Clean State', project ? project.id : 'PROJ-CLEAN-WATER-PUNE', null);
+    logAudit('Demo Admin', 'Reset FINX Hackathon Demo State to Initial Clean State', 'PROJ-VILLAGE-ROAD-001', null);
 
     res.json({
         success: true,

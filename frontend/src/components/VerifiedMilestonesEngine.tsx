@@ -26,6 +26,7 @@ import {
 } from "lucide-react";
 
 import { useLanguage } from '@/lib/LanguageContext';
+import { safeJsonFetch } from '@/lib/apiUtils';
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:5001';
 
@@ -54,9 +55,8 @@ export default function VerifiedMilestonesEngine() {
 
     const fetchProjectData = async () => {
         try {
-            const res = await fetch(`${BACKEND_URL}/api/milestones/project/PROJ-CLEAN-WATER-PUNE`);
-            const data = await res.json();
-            if (data.success) {
+            const { ok, data } = await safeJsonFetch<any>(`${BACKEND_URL}/api/milestones/project/PROJ-CLEAN-WATER-PUNE`);
+            if (ok && data?.success) {
                 setProjectData(data);
                 if (data.milestones && data.milestones.length > 0) {
                     const activeOrSelected = data.milestones.find((m: any) => m.status === 'EVIDENCE_SUBMITTED' || m.status === 'HUMAN_REVIEW' || m.status === 'VERIFIED' || m.status === 'ACTIVE') || data.milestones[0];
@@ -101,13 +101,12 @@ export default function VerifiedMilestonesEngine() {
         setDemoLoading(true);
         setActionMsg(`Simulating Fraud Engine Scenario: ${scenario.toUpperCase()}...`);
         try {
-            const res = await fetch(`${BACKEND_URL}/api/demo/fraud-scenario`, {
+            const { ok, data } = await safeJsonFetch<any>(`${BACKEND_URL}/api/demo/fraud-scenario`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ scenario })
             });
-            const data = await res.json();
-            if (data.success) {
+            if (ok && data?.success) {
                 await fetchProjectData();
                 if (scenario === 'gps_mismatch') {
                     setActionMsg('🚨 DEMO DETECTED FRAUD: GPS Mismatch! Evidence captured 15.4km away. Funds LOCKED & Risk Flag raised.');
@@ -118,6 +117,8 @@ export default function VerifiedMilestonesEngine() {
                 } else if (scenario === 'reset') {
                     setActionMsg('🔄 Demo environment reset to initial state.');
                 }
+            } else {
+                setActionMsg(`Action failed: ${data?.error || 'Server error'}`);
             }
         } catch (err) {
             console.error('Error running demo scenario:', err);
@@ -133,7 +134,7 @@ export default function VerifiedMilestonesEngine() {
 
         setLoading(true);
         try {
-            const res = await fetch(`${BACKEND_URL}/api/evidence/submit`, {
+            const { ok, data } = await safeJsonFetch<any>(`${BACKEND_URL}/api/evidence/submit`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -148,11 +149,12 @@ export default function VerifiedMilestonesEngine() {
                     uploadedBy: 'Jal Seva NGO Field Team'
                 })
             });
-            const data = await res.json();
-            if (data.success) {
+            if (ok && data?.success) {
                 setShowSubmitModal(false);
                 await fetchProjectData();
                 setActionMsg(`Evidence submitted! Verification Score: ${data.verification.verificationScore}%`);
+            } else {
+                setActionMsg(`Evidence submission failed: ${data?.error || 'Server error'}`);
             }
         } catch (err) {
             console.error('Error submitting evidence:', err);
@@ -166,7 +168,7 @@ export default function VerifiedMilestonesEngine() {
         if (!selectedMilestone) return;
         setLoading(true);
         try {
-            const res = await fetch(`${BACKEND_URL}/api/milestones/approve`, {
+            const { ok, data } = await safeJsonFetch<any>(`${BACKEND_URL}/api/milestones/approve`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -177,12 +179,13 @@ export default function VerifiedMilestonesEngine() {
                     corporateUser: 'TechCorp CSR Director'
                 })
             });
-            const data = await res.json();
-            if (data.success) {
+            if (ok && data?.success) {
                 setShowReviewModal(false);
                 setReviewNotes('');
                 await fetchProjectData();
                 setActionMsg(`Corporate Decision applied: ${action}`);
+            } else {
+                setActionMsg(`Decision failed: ${data?.error || 'Server error'}`);
             }
         } catch (err) {
             console.error('Error applying decision:', err);
@@ -196,7 +199,7 @@ export default function VerifiedMilestonesEngine() {
         if (!selectedMilestone) return;
         setLoading(true);
         try {
-            const res = await fetch(`${BACKEND_URL}/api/fund-release`, {
+            const { ok, data } = await safeJsonFetch<any>(`${BACKEND_URL}/api/fund-release`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -205,13 +208,12 @@ export default function VerifiedMilestonesEngine() {
                     authorizedBy: 'TechCorp CSR Director'
                 })
             });
-            const data = await res.json();
-            if (data.success) {
+            if (ok && data?.success) {
                 setShowReleaseModal(false);
                 await fetchProjectData();
                 setActionMsg('🎉 MILESTONE VERIFIED — NEXT FUNDING STAGE UNLOCKED!');
             } else {
-                setActionMsg(`❌ ${data.error}`);
+                setActionMsg(`❌ ${data?.error || 'Fund release failed'}`);
             }
         } catch (err) {
             console.error('Error releasing funds:', err);
