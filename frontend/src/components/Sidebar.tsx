@@ -15,7 +15,7 @@ import {
 
 const navItems = [
     { name: 'Dashboard', href: '/', icon: LayoutDashboard },
-    { name: 'Petitions', href: '/petitions', icon: MapPin },
+    { name: 'Citizen Hub', href: '/citizen-dashboard', icon: MapPin },
     { name: 'NGO Network', href: '/ngos', icon: Users },
     { name: 'NGO Validator', href: '/validator', icon: ShieldCheck },
     { name: 'Corporate Hub', href: '/corporate-dashboard', icon: Briefcase },
