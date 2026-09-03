@@ -57,6 +57,13 @@ export default function DemoDashboard() {
         });
     };
 
+    const handleCancel = () => {
+        simulateTx("Cancelling Project & Refunding", () => {
+            setStatus("Cancelled");
+            setLockedFunds(0); // Refunded back to Funder
+        });
+    };
+
     return (
         <div className="p-8 pb-20 max-w-5xl mx-auto">
             <header className="mb-8">
@@ -66,8 +73,8 @@ export default function DemoDashboard() {
 
             {txState && (
                 <div className={`mb-6 p-4 rounded-lg font-mono text-sm shadow-sm flex items-center gap-3 ${txState.startsWith("Pending") ? "bg-amber-50 text-amber-700 border border-amber-200" :
-                        txState.startsWith("Confirmed") ? "bg-emerald-50 text-emerald-700 border border-emerald-200" :
-                            "bg-red-50 text-red-700 border border-red-200"
+                    txState.startsWith("Confirmed") ? "bg-emerald-50 text-emerald-700 border border-emerald-200" :
+                        "bg-red-50 text-red-700 border border-red-200"
                     }`}>
                     {txState.startsWith("Pending") ? <DatabaseLoader /> : <CheckCircle2 className="w-5 h-5" />}
                     {txState}
@@ -81,7 +88,7 @@ export default function DemoDashboard() {
                         <div className="text-2xl font-bold font-mono text-slate-900">₹{totalFunding.toLocaleString()}</div>
                     </CardContent>
                 </Card>
-                <Card>
+                <Card className={status === 'Cancelled' ? 'opacity-50' : ''}>
                     <CardContent className="p-5">
                         <div className="text-sm font-medium text-slate-500">Locked in Escrow</div>
                         <div className="text-2xl font-bold font-mono text-indigo-600">₹{lockedFunds.toLocaleString()}</div>
@@ -96,7 +103,7 @@ export default function DemoDashboard() {
                 <Card>
                     <CardContent className="p-5">
                         <div className="text-sm font-medium text-slate-500">Milestone</div>
-                        <div className="text-2xl font-bold text-slate-900">{currentMilestone + 1} <span className="text-sm text-slate-400">/ 4</span></div>
+                        <div className="text-2xl font-bold text-slate-900">{status === 'Cancelled' ? 'Halted' : `${currentMilestone + 1} / 4`}</div>
                     </CardContent>
                 </Card>
             </div>
@@ -110,7 +117,7 @@ export default function DemoDashboard() {
                                     <CardTitle className="text-lg">Project Details</CardTitle>
                                     <CardDescription className="text-slate-500 font-mono text-xs mt-1">ID: {projectId}</CardDescription>
                                 </div>
-                                <Badge variant={status.includes("Active") ? "success" : "warning"}>{status}</Badge>
+                                <Badge variant={status.includes("Active") ? "success" : status === "Cancelled" ? "danger" : "warning"}>{status}</Badge>
                             </div>
                         </CardHeader>
                         <CardContent className="p-6 space-y-4 text-sm">
@@ -129,7 +136,7 @@ export default function DemoDashboard() {
                         </CardContent>
                     </Card>
 
-                    <Card className="border border-slate-200 shadow-sm">
+                    <Card className={`border border-slate-200 shadow-sm ${status === 'Cancelled' ? 'opacity-50 grayscale' : ''}`}>
                         <CardHeader className="border-b border-slate-100 pb-4">
                             <CardTitle className="text-lg">Milestones Schedule</CardTitle>
                         </CardHeader>
@@ -139,9 +146,9 @@ export default function DemoDashboard() {
                                     const isPast = idx < currentMilestone;
                                     const isCurrent = idx === currentMilestone;
                                     return (
-                                        <div key={idx} className={`p-4 flex justify-between items-center ${isCurrent ? 'bg-indigo-50/50' : ''} ${isPast ? 'opacity-60' : ''}`}>
+                                        <div key={idx} className={`p-4 flex justify-between items-center ${isCurrent && status !== 'Cancelled' ? 'bg-indigo-50/50' : ''} ${isPast ? 'opacity-60' : ''}`}>
                                             <div className="flex items-center gap-3">
-                                                <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold ${isPast ? 'bg-emerald-100 text-emerald-700' : isCurrent ? 'bg-indigo-100 text-indigo-700' : 'bg-slate-100 text-slate-500'}`}>
+                                                <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold ${isPast ? 'bg-emerald-100 text-emerald-700' : isCurrent && status !== 'Cancelled' ? 'bg-indigo-100 text-indigo-700' : 'bg-slate-100 text-slate-500'}`}>
                                                     M{idx + 1}
                                                 </div>
                                                 <span className="font-semibold text-slate-800">
@@ -150,8 +157,8 @@ export default function DemoDashboard() {
                                             </div>
                                             <div className="text-right flex items-center gap-4">
                                                 <span className="font-mono font-medium text-slate-900">₹{amt.toLocaleString()}</span>
-                                                <Badge variant={isPast ? "success" : isCurrent ? "warning" : "neutral"} className="w-20 justify-center">
-                                                    {isPast ? "Released" : isCurrent ? status.includes("Submitted") ? "Pending" : status.includes("Approved") ? "Approved" : "Locked" : "Locked"}
+                                                <Badge variant={isPast ? "success" : status === 'Cancelled' ? "danger" : isCurrent ? "warning" : "neutral"} className="w-20 justify-center">
+                                                    {isPast ? "Released" : status === 'Cancelled' ? "Refunded" : isCurrent ? status.includes("Submitted") ? "Pending" : status.includes("Approved") ? "Approved" : "Locked" : "Locked"}
                                                 </Badge>
                                             </div>
                                         </div>
@@ -195,7 +202,10 @@ export default function DemoDashboard() {
 
                     <hr className="my-4 border-slate-100" />
 
-                    <button className="w-full justify-center items-center flex text-red-600 bg-red-50 border border-red-200 px-4 py-3 rounded-lg font-medium hover:bg-red-100 transition-colors text-sm">
+                    <button
+                        onClick={handleCancel}
+                        disabled={status === 'Cancelled' || status === 'Created' || status === 'Completed'}
+                        className="w-full justify-center items-center flex text-red-600 bg-red-50 border border-red-200 px-4 py-3 rounded-lg font-medium hover:bg-red-100 transition-colors text-sm disabled:opacity-50 disabled:cursor-not-allowed">
                         Cancel Project (Refund)
                     </button>
                 </div>
