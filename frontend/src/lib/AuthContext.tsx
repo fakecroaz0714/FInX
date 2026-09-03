@@ -311,49 +311,23 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         try {
             localStorage.removeItem('finx_user');
             localStorage.removeItem('finx_role');
+            if (typeof window !== 'undefined') {
+                sessionStorage.clear();
+            }
         } catch (e) {
             console.error('Failed to clear session on logout:', e);
         }
         setUser(null);
         setRole('Admin');
-        window.location.href = '/auth/login';
+        if (typeof window !== 'undefined') {
+            window.location.replace('/auth/login');
+        }
     };
 
-    const changeRole = (newRole: Role) => {
-        const activeRole = newRole || 'Admin';
-        setRole(activeRole);
-        try {
-            localStorage.setItem('finx_role', activeRole);
-        } catch (e) {}
-
-        // If not authenticated, only prospective role is updated for login/signup
-        if (!user) return;
-
-        // Try finding registered user for that role in store
-        let foundUser: User | undefined;
-        try {
-            const usersStoreStr = localStorage.getItem('finx_users_store');
-            if (usersStoreStr) {
-                const store: User[] = JSON.parse(usersStoreStr);
-                foundUser = store.find(u => u.role === activeRole);
-            }
-        } catch (e) {
-            console.error('Error searching role profile in store:', e);
-        }
-
-        if (foundUser) {
-            saveState(foundUser, activeRole);
-        } else {
-            const defaults = defaultProfiles[activeRole] || defaultProfiles.Admin;
-            const newUser: User = {
-                id: `usr_${activeRole.toLowerCase()}_${Date.now()}`,
-                role: activeRole,
-                name: defaults.name,
-                email: defaults.email,
-                profile: defaults.profile
-            };
-            saveState(newUser, activeRole);
-        }
+    const changeRole = (_newRole: Role) => {
+        // In-session role switching is removed per security/auth specifications.
+        // Role selection is fixed to the authenticated session established at login.
+        console.warn('Role switching during an authenticated session is disabled. Please logout to switch roles.');
     };
 
     return (

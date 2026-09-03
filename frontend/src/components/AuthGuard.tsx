@@ -18,42 +18,53 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
             case 'Corporate': return '/corporate-dashboard';
             case 'NGO': return '/ngo-dashboard';
             case 'Citizen': return '/citizen-dashboard';
-            case 'Admin': return '/matching';
-            default: return '/matching';
+            case 'Admin': return '/validator';
+            default: return '/validator';
         }
     };
 
     useEffect(() => {
         if (loading) return;
 
-        // 1. Not logged in and attempting to access a protected route
+        // 1. Not logged in and attempting to access a protected route -> redirect to login
         if (!user && !isAuthRoute) {
             router.replace('/auth/login');
             return;
         }
 
-        // 2. Logged in and accessing the root route "/" -> redirect to role dashboard
+        // 2. Already logged in and accessing an auth route -> redirect to their role dashboard
+        if (user && isAuthRoute) {
+            router.replace(getRoleDashboard(user.role));
+            return;
+        }
+
+        // 3. Logged in and accessing the root route "/" -> redirect to their role dashboard
         if (user && pathname === '/') {
             const dest = getRoleDashboard(user.role);
             router.replace(dest);
             return;
         }
 
-        // 3. Role-based access control for specialized portals
+        // 4. Role-based access control for specialized portals
         if (user) {
-            // Citizen trying to access Corporate or Admin validator portals
-            if (user.role === 'Citizen' && (pathname.startsWith('/corporate') || pathname.startsWith('/validator'))) {
+            // Citizen trying to access Corporate, Admin validator, or NGO portals
+            if (user.role === 'Citizen' && (pathname.startsWith('/corporate') || pathname.startsWith('/validator') || pathname.startsWith('/ngo-dashboard'))) {
                 router.replace('/citizen-dashboard');
                 return;
             }
-            // Corporate trying to access Admin validator portal
-            if (user.role === 'Corporate' && pathname.startsWith('/validator')) {
+            // Corporate trying to access Admin validator, NGO, or Citizen dashboards
+            if (user.role === 'Corporate' && (pathname.startsWith('/validator') || pathname.startsWith('/ngo-dashboard') || pathname.startsWith('/citizen-dashboard'))) {
                 router.replace('/corporate-dashboard');
                 return;
             }
-            // NGO trying to access Corporate dashboard
-            if (user.role === 'NGO' && pathname.startsWith('/corporate-dashboard')) {
+            // NGO trying to access Corporate, Admin validator, or Citizen dashboards
+            if (user.role === 'NGO' && (pathname.startsWith('/corporate') || pathname.startsWith('/validator') || pathname.startsWith('/citizen-dashboard'))) {
                 router.replace('/ngo-dashboard');
+                return;
+            }
+            // Admin trying to access role-specific client dashboards
+            if (user.role === 'Admin' && (pathname.startsWith('/corporate-dashboard') || pathname.startsWith('/ngo-dashboard') || pathname.startsWith('/citizen-dashboard'))) {
+                router.replace('/validator');
                 return;
             }
         }

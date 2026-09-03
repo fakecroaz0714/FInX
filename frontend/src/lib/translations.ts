@@ -6,7 +6,7 @@ export const translations: Record<Language, Record<string, string>> = {
         platform_title: 'FINX CSR Accountability',
         active_role: 'Active Role',
         select_language: 'Select Language',
-        logout_reset: 'Logout / Reset',
+        logout_reset: 'Logout',
 
         // Navigation
         nav_dashboard: 'Dashboard',
@@ -297,7 +297,7 @@ export const translations: Record<Language, Record<string, string>> = {
         platform_title: 'FINX CSR பொறுப்புடைமை',
         active_role: 'செயலில் உள்ள பங்கு',
         select_language: 'மொழியைத் தேர்ந்தெடுக்கவும்',
-        logout_reset: 'வெளியேறு / மீட்டமை',
+        logout_reset: 'வெளியேறு',
 
         // Navigation
         nav_dashboard: 'முகப்பு',
@@ -588,7 +588,7 @@ export const translations: Record<Language, Record<string, string>> = {
         platform_title: 'FINX सीएसआर जवाबदेही',
         active_role: 'सक्रिय भूमिका',
         select_language: 'भाषा चुनें',
-        logout_reset: 'लॉगआउट / रीसेट',
+        logout_reset: 'लॉगआउट',
 
         // Navigation
         nav_dashboard: 'डैशबोर्ड',
@@ -879,7 +879,7 @@ export const translations: Record<Language, Record<string, string>> = {
         platform_title: 'FINX सीएसआर उत्तरदायित्व',
         active_role: 'सक्रिय भूमिका',
         select_language: 'भाषा निवडा',
-        logout_reset: 'लॉगआउट / रीसेट',
+        logout_reset: 'लॉगआउट',
 
         // Navigation
         nav_dashboard: 'डॅशबोर्ड',
@@ -1170,7 +1170,7 @@ export const translations: Record<Language, Record<string, string>> = {
         platform_title: 'FINX CSR బాధ్యత రక్షణ',
         active_role: 'సక్రియ పాత్ర',
         select_language: 'భాషను ఎంచుకోండి',
-        logout_reset: 'లాగ్అవుట్ / రీసెట్',
+        logout_reset: 'లాగ్అవుట్',
 
         // Navigation
         nav_dashboard: 'డాష్‌బోర్డ్',

@@ -22,10 +22,10 @@ export default function RootHomePage() {
             Corporate: '/corporate-dashboard',
             NGO: '/ngo-dashboard',
             Citizen: '/citizen-dashboard',
-            Admin: '/matching'
+            Admin: '/validator'
         };
 
-        const target = roleDestinations[user.role] || '/matching';
+        const target = roleDestinations[user.role] || '/validator';
         router.replace(target);
     }, [user, loading, router]);
 

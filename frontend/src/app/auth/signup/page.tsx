@@ -272,7 +272,7 @@ function SignupContent() {
                     profile
                 });
 
-                router.push('/matching');
+                router.push('/validator');
             }
         } catch (err) {
             console.error('Registration failed:', err);

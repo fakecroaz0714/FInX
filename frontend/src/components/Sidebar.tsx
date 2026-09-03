@@ -12,13 +12,34 @@ import {
     ShieldCheck,
     BarChart4,
     Globe,
-    Network
+    Network,
+    LogOut
 } from 'lucide-react';
-import { useAuth } from '@/lib/AuthContext';
+import { useAuth, Role } from '@/lib/AuthContext';
 import { useLanguage, Language } from '@/lib/LanguageContext';
+
+const roleDisplayConfig: Record<Role, { label: string; icon: string }> = {
+    Corporate: {
+        label: 'Corporate CSR Funder',
+        icon: '🏢'
+    },
+    NGO: {
+        label: 'NGO Partner / Inspector',
+        icon: '🌱'
+    },
+    Citizen: {
+        label: 'Citizen / Village User',
+        icon: '🏘️'
+    },
+    Admin: {
+        label: 'Admin / Reviewer',
+        icon: '🛡️'
+    }
+};
 
 const roleNavItems: Record<string, Array<{ key: string; defaultName: string; href: string; icon: any }>> = {
     Admin: [
+        { key: 'nav_dashboard', defaultName: 'Dashboard', href: '/validator', icon: LayoutDashboard },
         { key: 'nav_matching', defaultName: 'Matching Engine', href: '/matching', icon: Network },
         { key: 'nav_ngo_validation', defaultName: 'NGO Validation', href: '/validator', icon: ShieldCheck },
         { key: 'nav_verified_milestones', defaultName: 'Verified Milestones', href: '/verified-milestones', icon: ShieldCheck },
@@ -52,23 +73,15 @@ const roleNavItems: Record<string, Array<{ key: string; defaultName: string; hre
 export default function Sidebar() {
     const pathname = usePathname();
     const router = useRouter();
-    const { user, role, logout, changeRole } = useAuth();
+    const { user, role, logout } = useAuth();
     const { lang, setLang, t } = useLanguage();
-
-    const handleRoleSwitch = (newRole: any) => {
-        changeRole(newRole);
-        if (newRole === 'Corporate') router.push('/corporate-dashboard');
-        else if (newRole === 'NGO') router.push('/ngo-dashboard');
-        else if (newRole === 'Citizen') router.push('/citizen-dashboard');
-        else if (newRole === 'Admin') router.push('/matching');
-        else router.push('/');
-    };
 
     if (pathname.startsWith('/auth')) {
         return null; // hide sidebar on auth pages
     }
 
-    const activeRoleKey = (role as string) || 'Admin';
+    const activeRoleKey: Role = (user?.role as Role) || (role as Role) || 'Admin';
+    const activeConfig = roleDisplayConfig[activeRoleKey] || roleDisplayConfig.Admin;
     const activeNavItems = roleNavItems[activeRoleKey] || roleNavItems['Admin'];
 
     return (
@@ -137,29 +150,32 @@ export default function Sidebar() {
                     </select>
                 </div>
 
-                {/* Role Switcher */}
-                <div className="bg-white rounded-lg p-2.5 border border-slate-200 shadow-sm">
-                    <div className="text-[10px] font-bold text-slate-500 mb-1 uppercase tracking-wider truncate">
-                        {t('active_role')} ({user?.name || `${role} User`})
+                {/* Active Role Display Card (Fixed to authenticated session, non-switchable) */}
+                <div className="bg-white rounded-xl p-3 border border-slate-200/90 shadow-xs space-y-2">
+                    <div>
+                        <div className="text-[9px] font-extrabold text-slate-400 uppercase tracking-widest">
+                            {t('active_role', 'Active Role')}
+                        </div>
+                        <div className="flex items-center gap-2 mt-1">
+                            <span className="text-base select-none">{activeConfig.icon}</span>
+                            <span className="text-xs font-bold text-slate-900 leading-tight">
+                                {activeConfig.label}
+                            </span>
+                        </div>
+                        {user?.name && (
+                            <div className="text-[11px] font-medium text-slate-500 mt-1 truncate pl-6">
+                                {user.name}
+                            </div>
+                        )}
                     </div>
 
-                    <select
-                        value={role || 'Admin'}
-                        onChange={(e) => handleRoleSwitch(e.target.value as any)}
-                        className="w-full bg-slate-50 text-xs font-bold text-slate-900 p-1.5 border border-slate-200 rounded focus:ring-1 focus:ring-indigo-500 outline-none cursor-pointer"
+                    <button
+                        onClick={logout}
+                        className="w-full flex items-center justify-center gap-1.5 py-1.5 px-3 rounded-lg text-xs font-bold text-rose-600 hover:text-rose-700 bg-rose-50 hover:bg-rose-100 border border-rose-200/80 transition shadow-2xs cursor-pointer"
                     >
-                        <option value="Admin">🛡️ Admin / Reviewer</option>
-                        <option value="Corporate">🏢 Corporate CSR Funder</option>
-                        <option value="NGO">🌿 NGO Partner / Inspector</option>
-                        <option value="Citizen">🏘️ Citizen / Village User</option>
-                    </select>
-
-                    <div className="flex justify-between items-center mt-1.5 pt-1.5 border-t border-slate-100 text-[10px]">
-                        <span className="text-slate-400">i18n Active</span>
-                        <button onClick={logout} className="text-indigo-600 font-semibold hover:underline">
-                            Reset
-                        </button>
-                    </div>
+                        <LogOut className="w-3.5 h-3.5" />
+                        <span>{t('logout_reset', 'Logout')}</span>
+                    </button>
                 </div>
             </div>
         </div>

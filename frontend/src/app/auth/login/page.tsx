@@ -51,7 +51,7 @@ function LoginContent() {
             } else if (role === 'Citizen') {
                 router.push('/citizen-dashboard');
             } else if (role === 'Admin') {
-                router.push('/matching');
+                router.push('/validator');
             } else {
                 router.push('/');
             }
@@ -73,7 +73,7 @@ function LoginContent() {
         Corporate: 'Corporate CSR Dashboard (/corporate-dashboard)',
         NGO: 'NGO Verification & Project Portal (/ngo-dashboard)',
         Citizen: 'Citizen Impact Portal (/citizen-dashboard)',
-        Admin: 'Platform Admin Matching Engine (/matching)'
+        Admin: 'Platform Admin Validator Dashboard (/validator)'
     };
 
     return (
