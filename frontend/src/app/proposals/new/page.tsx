@@ -6,10 +6,12 @@ import { useProposals } from '@/lib/ProposalContext';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
 import { FileText, Save, CheckCircle2, ArrowLeft, Plus, Trash2, Camera } from 'lucide-react';
+import { useLanguage } from '@/lib/LanguageContext';
 
 export default function NewProposal() {
     const router = useRouter();
     const { addProposal } = useProposals();
+    const { t } = useLanguage();
     const [submitting, setSubmitting] = useState(false);
 
     const [formData, setFormData] = useState({
@@ -75,7 +77,7 @@ export default function NewProposal() {
             }));
 
             addProposal({
-                title: formData.title || 'Untitled Proposal',
+                title: formData.title,
                 ngoName: formData.ngoName,
                 ngoRegNum: formData.ngoRegNum,
                 category: formData.category,
@@ -89,8 +91,8 @@ export default function NewProposal() {
             }, isDraft);
 
             setSubmitting(false);
-            router.push('/');
-        }, 1000);
+            router.push('/proposals');
+        }, 1200);
     };
 
     const totalFundingNum = Number(formData.totalFunding) || 0;
@@ -103,16 +105,16 @@ export default function NewProposal() {
                         <ArrowLeft className="w-5 h-5" />
                     </button>
                     <div>
-                        <h1 className="text-2xl font-bold tracking-tight text-slate-900">Create CSR Proposal</h1>
+                        <h1 className="text-2xl font-bold tracking-tight text-slate-900">{t('proposals_create_title', 'Create CSR Proposal')}</h1>
                         <p className="text-slate-500 mt-1 text-sm font-medium">Submit a standardized proposal for corporate matching & validation.</p>
                     </div>
                 </div>
                 <div className="flex gap-3">
                     <button onClick={() => finalizeSubmit(true)} className="px-5 py-2 rounded-lg font-medium border border-slate-300 text-slate-700 hover:bg-slate-50 transition flex items-center gap-2">
-                        <Save className="w-4 h-4" /> Save Draft
+                        <Save className="w-4 h-4" /> {t('btn_save_draft', 'Save Draft')}
                     </button>
                     <button onClick={() => finalizeSubmit(false)} disabled={submitting} className="bg-indigo-600 px-5 py-2 rounded-lg font-medium text-white hover:bg-indigo-700 transition flex items-center gap-2 disabled:opacity-50">
-                        {submitting ? 'Submitting...' : <><CheckCircle2 className="w-4 h-4" /> Submit for Validation</>}
+                        {submitting ? 'Submitting...' : <><CheckCircle2 className="w-4 h-4" /> {t('btn_submit_field_evidence', 'Submit for Validation')}</>}
                     </button>
                 </div>
             </header>

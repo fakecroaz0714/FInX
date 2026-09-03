@@ -1,8 +1,12 @@
+'use client';
+
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 import { FileCheck, Activity, Users, ShieldAlert, CheckCircle, ExternalLink } from "lucide-react";
+import { useLanguage } from "@/lib/LanguageContext";
 
 export default function NGOsPage() {
+    const { t } = useLanguage();
     const ngos = [
         {
             name: "Jal Seva NGO",
@@ -42,11 +46,11 @@ export default function NGOsPage() {
         <div className="p-8 pb-20">
             <header className="mb-8 flex justify-between items-center">
                 <div>
-                    <h1 className="text-3xl font-bold tracking-tight text-slate-900">NGO Network</h1>
-                    <p className="text-slate-500 mt-1">Directory of partner NGOs and validation status.</p>
+                    <h1 className="text-3xl font-bold tracking-tight text-slate-900">{t('ngo_network_title', 'NGO Network')}</h1>
+                    <p className="text-slate-500 mt-1">{t('validator_dashboard_sub', 'Directory of partner NGOs and validation status.')}</p>
                 </div>
                 <button className="bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 px-5 py-2.5 rounded-lg font-medium transition-colors shadow-sm flex items-center gap-2">
-                    Register NGO
+                    {t('step_reg', 'Register NGO')}
                 </button>
             </header>
 

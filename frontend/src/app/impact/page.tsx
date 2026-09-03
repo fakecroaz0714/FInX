@@ -1,13 +1,18 @@
+'use client';
+
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/Card";
 import DashboardChart from "@/components/DashboardChart";
 import { Trees, Droplets, Users, BookOpen } from "lucide-react";
+import { useLanguage } from "@/lib/LanguageContext";
 
 export default function ImpactPage() {
+    const { t } = useLanguage();
+
     return (
         <div className="p-8 pb-20">
             <header className="mb-8">
-                <h1 className="text-3xl font-bold tracking-tight text-slate-900">Impact Reports</h1>
-                <p className="text-slate-500 mt-1">Aggregated platform outcomes and global CSR footprints.</p>
+                <h1 className="text-3xl font-bold tracking-tight text-slate-900">{t('impact_reports_title', 'Impact Reports')}</h1>
+                <p className="text-slate-500 mt-1">{t('impact_reports_sub', 'Aggregated platform outcomes and global CSR footprints.')}</p>
             </header>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
@@ -19,7 +24,7 @@ export default function ImpactPage() {
                             </div>
                         </div>
                         <div className="text-3xl font-bold text-slate-900 mb-1">12,500</div>
-                        <div className="text-sm font-medium text-slate-500">People got clean water</div>
+                        <div className="text-sm font-medium text-slate-500">{t('impact_clean_water', 'People got clean water')}</div>
                     </CardContent>
                 </Card>
 
@@ -31,7 +36,7 @@ export default function ImpactPage() {
                             </div>
                         </div>
                         <div className="text-3xl font-bold text-slate-900 mb-1">45,000</div>
-                        <div className="text-sm font-medium text-slate-500">Trees planted verified</div>
+                        <div className="text-sm font-medium text-slate-500">{t('impact_trees_planted', 'Trees planted verified')}</div>
                     </CardContent>
                 </Card>
 
@@ -43,7 +48,7 @@ export default function ImpactPage() {
                             </div>
                         </div>
                         <div className="text-3xl font-bold text-slate-900 mb-1">3,200</div>
-                        <div className="text-sm font-medium text-slate-500">Students empowered</div>
+                        <div className="text-sm font-medium text-slate-500">{t('impact_students_supported', 'Students empowered')}</div>
                     </CardContent>
                 </Card>
 
@@ -55,7 +60,7 @@ export default function ImpactPage() {
                             </div>
                         </div>
                         <div className="text-3xl font-bold text-slate-900 mb-1">24</div>
-                        <div className="text-sm font-medium text-slate-500">Communities supported</div>
+                        <div className="text-sm font-medium text-slate-500">{t('impact_funds_verified', 'Communities supported')}</div>
                     </CardContent>
                 </Card>
             </div>

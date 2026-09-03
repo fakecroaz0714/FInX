@@ -1,8 +1,12 @@
+'use client';
+
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 import { Briefcase, Map, Target, Leaf, Plus, Sparkles, Building2 } from "lucide-react";
+import { useLanguage } from "@/lib/LanguageContext";
 
 export default function CSRPage() {
+    const { t } = useLanguage();
     const matches = [
         {
             project: "Clean Water Initiative for Rural Pune",
@@ -28,11 +32,11 @@ export default function CSRPage() {
         <div className="p-8 pb-20">
             <header className="mb-8 flex justify-between items-center">
                 <div>
-                    <h1 className="text-3xl font-bold tracking-tight text-slate-900">Corporate CSR Dashboard</h1>
-                    <p className="text-slate-500 mt-1">Manage budgets, discover aligned projects, and track portfolio.</p>
+                    <h1 className="text-3xl font-bold tracking-tight text-slate-900">{t('corporate_csr_dashboard', 'Corporate CSR Dashboard')}</h1>
+                    <p className="text-slate-500 mt-1">{t('impact_reports_sub', 'Manage budgets, discover aligned projects, and track portfolio.')}</p>
                 </div>
                 <button className="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-lg font-medium transition-colors shadow-sm flex items-center gap-2">
-                    <Plus className="w-5 h-5" /> New CSR Goal
+                    <Plus className="w-5 h-5" /> {t('new_csr_goal', 'New CSR Goal')}
                 </button>
             </header>
 

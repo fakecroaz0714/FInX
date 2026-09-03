@@ -75,7 +75,7 @@ export default function CorporateDashboard() {
                                 <div className="space-y-4">
                                     <div>
                                         <div className="flex justify-between items-center mb-1">
-                                            <label className="text-xs font-bold text-slate-700 uppercase tracking-wider">Annual Declared CSR Budget</label>
+                                            <label className="text-xs font-bold text-slate-700 uppercase tracking-wider">{t('total_csr_allocated', 'Annual Declared CSR Budget')}</label>
                                             <span className="text-[11px] text-emerald-600 font-bold">Auto-synced from Corporate Profile</span>
                                         </div>
                                         <input
@@ -87,7 +87,7 @@ export default function CorporateDashboard() {
                                     </div>
                                     <div className="grid grid-cols-2 gap-4">
                                         <div>
-                                            <label className="text-xs font-semibold text-slate-700">Preferred Regions</label>
+                                            <label className="text-xs font-semibold text-slate-700">{t('state_district', 'Preferred Regions')}</label>
                                             <input
                                                 type="text"
                                                 value={preferredLocations}
@@ -96,7 +96,7 @@ export default function CorporateDashboard() {
                                             />
                                         </div>
                                         <div>
-                                            <label className="text-xs font-semibold text-slate-700">Corporate CIN</label>
+                                            <label className="text-xs font-semibold text-slate-700">{t('reg_number', 'Corporate CIN')}</label>
                                             <input
                                                 type="text"
                                                 value={corpProfile.registrationNumber || 'L72200MH2005PLC154872'}
@@ -106,7 +106,7 @@ export default function CorporateDashboard() {
                                         </div>
                                     </div>
                                     <div>
-                                        <label className="text-xs font-semibold text-slate-700 mb-1.5 block">Mandate Categories</label>
+                                        <label className="text-xs font-semibold text-slate-700 mb-1.5 block">{t('category_label', 'Mandate Categories')}</label>
                                         <div className="flex flex-wrap gap-1.5">
                                             {preferredCategories.map(cat => (
                                                 <Badge key={cat} variant="neutral" className="text-xs px-2.5 py-1">
@@ -119,7 +119,7 @@ export default function CorporateDashboard() {
                                         onClick={() => setShowPublishModal(true)}
                                         className="w-full bg-indigo-600 text-white font-bold py-3 rounded-xl hover:bg-indigo-700 transition shadow-md shadow-indigo-200 text-sm flex items-center justify-center gap-2"
                                     >
-                                        <FileSignature className="w-4 h-4" /> Publish New CSR Opportunity
+                                        <FileSignature className="w-4 h-4" /> {t('publish_opportunity', 'Publish New CSR Opportunity')}
                                     </button>
                                 </div>
                                 <div className="h-64 flex flex-col items-center justify-center">
@@ -151,7 +151,7 @@ export default function CorporateDashboard() {
                     <div className="space-y-6">
                         <div className="flex justify-between items-center bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
                             <div>
-                                <h3 className="font-bold text-slate-900">Validated NGO Proposals</h3>
+                                <h3 className="font-bold text-slate-900">{t('tab_project_proposals', 'Validated NGO Proposals')}</h3>
                                 <p className="text-sm text-slate-500">Awaiting your CSR budget approval and escrow locking.</p>
                             </div>
                             <div className="flex gap-3">
@@ -173,21 +173,21 @@ export default function CorporateDashboard() {
                                             <h2 className="text-xl font-bold text-slate-900 mb-1">{p.ngoName}</h2>
                                             <div className="text-xs text-slate-500 mb-4">{p.title}</div>
                                             <div className="flex gap-2 mb-4">
-                                                <Badge variant="success">Verified Validator</Badge>
+                                                <Badge variant="success">{t('status_verified', 'Verified Validator')}</Badge>
                                                 <Badge variant="neutral">{p.category}</Badge>
                                             </div>
                                             <table className="w-full text-sm">
                                                 <tbody className="divide-y divide-slate-100">
-                                                    <tr><td className="py-2 text-slate-500">Proposed Cost</td><td className="py-2 font-mono font-bold">₹{p.totalFunding.toLocaleString('en-IN')}</td></tr>
-                                                    <tr><td className="py-2 text-slate-500">Target Beneficiaries</td><td className="py-2 font-semibold">{p.beneficiaries}</td></tr>
+                                                    <tr><td className="py-2 text-slate-500">{t('th_escrow_budget', 'Proposed Cost')}</td><td className="py-2 font-mono font-bold">₹{p.totalFunding.toLocaleString('en-IN')}</td></tr>
+                                                    <tr><td className="py-2 text-slate-500">{t('est_beneficiaries', 'Target Beneficiaries')}</td><td className="py-2 font-semibold">{p.beneficiaries}</td></tr>
                                                     <tr><td className="py-2 text-slate-500">Cost per Beneficiary</td><td className="py-2 font-semibold text-emerald-600">₹{p.beneficiaries ? Math.round(p.totalFunding / p.beneficiaries) : 0}</td></tr>
-                                                    <tr><td className="py-2 text-slate-500">Location</td><td className="py-2 font-semibold">{p.location}</td></tr>
-                                                    <tr><td className="py-2 text-slate-500">Milestones</td><td className="py-2 font-semibold">Total {p.milestones.length} Stages</td></tr>
+                                                    <tr><td className="py-2 text-slate-500">{t('state_district', 'Location')}</td><td className="py-2 font-semibold">{p.location}</td></tr>
+                                                    <tr><td className="py-2 text-slate-500">{t('tab_milestones', 'Milestones')}</td><td className="py-2 font-semibold">Total {p.milestones.length} Stages</td></tr>
                                                 </tbody>
                                             </table>
                                             <div className="flex gap-3 mt-6">
-                                                <button onClick={() => approveFunding(p.id, companyName)} className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-2 rounded-lg transition">Approve & Fund</button>
-                                                <button className="px-4 border border-slate-300 text-slate-700 hover:bg-slate-50 rounded-lg font-medium transition">Reject</button>
+                                                <button onClick={() => approveFunding(p.id, companyName)} className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-2 rounded-lg transition">{t('btn_approve', 'Approve & Fund')}</button>
+                                                <button className="px-4 border border-slate-300 text-slate-700 hover:bg-slate-50 rounded-lg font-medium transition">{t('btn_reject', 'Reject')}</button>
                                             </div>
                                         </CardContent>
                                     </Card>
@@ -403,7 +403,7 @@ export default function CorporateDashboard() {
                             </div>
 
                             <div>
-                                <label className="font-semibold text-slate-700 block mb-1">Opportunity / Project Title <span className="text-red-500">*</span></label>
+                                <label className="font-semibold text-slate-700 block mb-1">{t('th_title', 'Opportunity / Project Title')} <span className="text-red-500">*</span></label>
                                 <input
                                     required
                                     type="text"
@@ -416,7 +416,7 @@ export default function CorporateDashboard() {
 
                             <div className="grid grid-cols-2 gap-3">
                                 <div>
-                                    <label className="font-semibold text-slate-700 block mb-1">Target Category</label>
+                                    <label className="font-semibold text-slate-700 block mb-1">{t('category_label', 'Target Category')}</label>
                                     <select
                                         value={oppCategory}
                                         onChange={e => setOppCategory(e.target.value)}
@@ -429,7 +429,7 @@ export default function CorporateDashboard() {
                                 </div>
 
                                 <div>
-                                    <label className="font-semibold text-slate-700 block mb-1">Total Allocated Budget (₹)</label>
+                                    <label className="font-semibold text-slate-700 block mb-1">{t('th_escrow_budget', 'Total Allocated Budget')} (₹)</label>
                                     <input
                                         type="number"
                                         placeholder="2500000"
@@ -441,7 +441,7 @@ export default function CorporateDashboard() {
                             </div>
 
                             <div>
-                                <label className="font-semibold text-slate-700 block mb-1">Target Location</label>
+                                <label className="font-semibold text-slate-700 block mb-1">{t('state_district', 'Target Location')}</label>
                                 <input
                                     type="text"
                                     placeholder="e.g. Pune & Satara Districts, Maharashtra"
@@ -452,7 +452,7 @@ export default function CorporateDashboard() {
                             </div>
 
                             <div>
-                                <label className="font-semibold text-slate-700 block mb-1">Project Scope & Guidelines</label>
+                                <label className="font-semibold text-slate-700 block mb-1">{t('detailed_description', 'Project Scope & Guidelines')}</label>
                                 <textarea
                                     rows={3}
                                     placeholder="Specify goals, required milestones, and NGO eligibility criteria..."
@@ -474,7 +474,7 @@ export default function CorporateDashboard() {
                                     type="submit"
                                     className="px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-bold shadow-md shadow-indigo-200 flex items-center gap-1.5"
                                 >
-                                    <FileSignature className="w-3.5 h-3.5" /> Publish to Verified NGOs
+                                    <FileSignature className="w-3.5 h-3.5" /> {t('publish_opportunity', 'Publish to Verified NGOs')}
                                 </button>
                             </div>
                         </form>

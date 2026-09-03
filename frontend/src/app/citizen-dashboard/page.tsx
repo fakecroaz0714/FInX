@@ -9,9 +9,11 @@ import {
 } from 'lucide-react';
 import { CitizenNearbyProjectsMap } from '@/components/maps/CitizenNearbyProjectsMap';
 import { useAuth, CitizenProfile } from '@/lib/AuthContext';
+import { useLanguage } from '@/lib/LanguageContext';
 
 export default function CitizenDashboard() {
     const { user } = useAuth();
+    const { t } = useLanguage();
     const [activeTab, setActiveTab] = useState('Overview');
     const [evidenceFile, setEvidenceFile] = useState('');
 
@@ -35,44 +37,44 @@ export default function CitizenDashboard() {
                     <Card className="max-w-3xl mx-auto border-indigo-100 shadow-sm mt-4">
                         <CardHeader className="bg-indigo-50/50 border-b border-indigo-50 pb-4">
                             <CardTitle className="text-xl text-indigo-900 flex items-center gap-2">
-                                <Megaphone className="w-5 h-5" /> Voice a Community Need
+                                <Megaphone className="w-5 h-5" /> {t('citizen_voice_need', 'Voice a Community Need')}
                             </CardTitle>
                         </CardHeader>
                         <CardContent className="p-6">
                             <form onSubmit={formSubmit} className="space-y-6">
                                 <div className="space-y-4">
-                                    <h3 className="text-sm font-bold text-slate-500 uppercase tracking-widest border-b border-slate-100 pb-2">1. Core Issue Details</h3>
+                                    <h3 className="text-sm font-bold text-slate-500 uppercase tracking-widest border-b border-slate-100 pb-2">{t('core_issue_details', '1. Core Issue Details')}</h3>
                                     <div>
-                                        <label className="block text-sm font-semibold text-slate-700 mb-1">Problem Title</label>
-                                        <input required type="text" placeholder="e.g. Broken water pipeline in village square" className="w-full p-2.5 border border-slate-200 rounded-lg bg-white focus:ring-2 focus:ring-indigo-600 outline-none transition" />
+                                        <label className="block text-sm font-semibold text-slate-700 mb-1">{t('problem_title', 'Problem Title')}</label>
+                                        <input required type="text" placeholder={t('problem_title_placeholder', 'e.g. Broken water pipeline in village square')} className="w-full p-2.5 border border-slate-200 rounded-lg bg-white focus:ring-2 focus:ring-indigo-600 outline-none transition" />
                                     </div>
                                     <div className="grid grid-cols-2 gap-4">
                                         <div>
-                                            <label className="block text-sm font-semibold text-slate-700 mb-1">Category</label>
+                                            <label className="block text-sm font-semibold text-slate-700 mb-1">{t('category_label', 'Category')}</label>
                                             <select className="w-full p-2.5 border border-slate-200 rounded-lg bg-white">
-                                                <option>Education & Schools</option>
-                                                <option>Healthcare & Clinics</option>
-                                                <option>Environment (Water/Solar)</option>
-                                                <option>Sanitation</option>
-                                                <option>Infrastructure (Roads/Bridges)</option>
+                                                <option>{t('cat_education', 'Education & Schools')}</option>
+                                                <option>{t('cat_healthcare', 'Healthcare & Clinics')}</option>
+                                                <option>{t('cat_environment', 'Environment (Water/Solar)')}</option>
+                                                <option>{t('cat_sanitation', 'Sanitation')}</option>
+                                                <option>{t('cat_infrastructure', 'Infrastructure (Roads/Bridges)')}</option>
                                             </select>
                                         </div>
                                         <div>
-                                            <label className="block text-sm font-semibold text-slate-700 mb-1">Estimated Beneficiaries</label>
+                                            <label className="block text-sm font-semibold text-slate-700 mb-1">{t('est_beneficiaries', 'Estimated Beneficiaries')}</label>
                                             <input type="number" placeholder="e.g. 500" className="w-full p-2.5 border border-slate-200 rounded-lg bg-white" />
                                         </div>
                                     </div>
                                     <div>
-                                        <label className="block text-sm font-semibold text-slate-700 mb-1">Detailed Description</label>
-                                        <textarea required rows={4} placeholder="Describe the severity of the problem and how it affects the community..." className="w-full p-2.5 border border-slate-200 rounded-lg bg-white resize-none"></textarea>
+                                        <label className="block text-sm font-semibold text-slate-700 mb-1">{t('detailed_description', 'Detailed Description')}</label>
+                                        <textarea required rows={4} placeholder={t('description_placeholder', 'Describe the severity of the problem and how it affects the community...')} className="w-full p-2.5 border border-slate-200 rounded-lg bg-white resize-none"></textarea>
                                     </div>
                                 </div>
 
                                 <div className="space-y-4">
-                                    <h3 className="text-sm font-bold text-slate-500 uppercase tracking-widest border-b border-slate-100 pb-2 mt-8">2. Location & Evidence</h3>
+                                    <h3 className="text-sm font-bold text-slate-500 uppercase tracking-widest border-b border-slate-100 pb-2 mt-8">{t('field_evidence_photos', '2. Field Evidence & Photos')}</h3>
                                     <div className="grid grid-cols-2 gap-4">
                                         <div>
-                                            <label className="block text-sm font-semibold text-slate-700 mb-1">Village / Town</label>
+                                            <label className="block text-sm font-semibold text-slate-700 mb-1">{t('state_district', 'Village / Town')}</label>
                                             <input required type="text" placeholder="Location name" className="w-full p-2.5 border border-slate-200 rounded-lg bg-white" />
                                         </div>
                                         <div>
@@ -81,7 +83,7 @@ export default function CitizenDashboard() {
                                         </div>
                                     </div>
                                     <div>
-                                        <label className="block text-sm font-semibold text-slate-700 mb-1">Attach Photos / Video Proof</label>
+                                        <label className="block text-sm font-semibold text-slate-700 mb-1">{t('upload_photo_label', 'Attach Photos / Video Proof')}</label>
                                         <label className="border-2 border-dashed border-slate-300 rounded-xl p-8 flex flex-col items-center justify-center text-slate-500 bg-slate-50 hover:bg-slate-100 hover:border-indigo-400 transition cursor-pointer relative overflow-hidden">
                                             <input
                                                 type="file"
@@ -102,7 +104,7 @@ export default function CitizenDashboard() {
                                             ) : (
                                                 <>
                                                     <Camera className="w-8 h-8 mb-2 text-indigo-400" />
-                                                    <span className="text-sm font-medium text-slate-700">Click to upload ground-reality photos</span>
+                                                    <span className="text-sm font-medium text-slate-700">{t('upload_photo_label', 'Click to upload ground-reality photos')}</span>
                                                     <span className="text-xs mt-1 text-slate-400">Supports JPG, PNG, MP4 (Max 50MB)</span>
                                                 </>
                                             )}
@@ -111,7 +113,7 @@ export default function CitizenDashboard() {
                                 </div>
 
                                 <button type="submit" className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3.5 rounded-xl transition flex justify-center items-center gap-2">
-                                    <Upload className="w-5 h-5" /> Submit Petition to Network
+                                    <Upload className="w-5 h-5" /> {t('btn_submit_community_petition', 'Submit Petition to Network')}
                                 </button>
                             </form>
                         </CardContent>
@@ -288,17 +290,17 @@ export default function CitizenDashboard() {
                         {/* Petitions Archive Table */}
                         <div className="md:col-span-3 mt-8">
                             <h3 className="font-bold text-slate-900 text-sm tracking-wider uppercase mb-3 flex items-center gap-2">
-                                <FileText className="w-4 h-4" /> Petition History
+                                <FileText className="w-4 h-4" /> {t('my_petitions_title', 'Petition History')}
                             </h3>
                             <div className="bg-white border focus:outline-none border-slate-200 rounded-xl overflow-hidden shadow-sm">
                                 <table className="w-full text-sm text-left">
                                     <thead className="bg-slate-50 text-slate-500 font-semibold uppercase text-xs">
                                         <tr>
-                                            <th className="p-4">Petition ID</th>
-                                            <th className="p-4">Title</th>
-                                            <th className="p-4">Date Submitted</th>
-                                            <th className="p-4">Status</th>
-                                            <th className="p-4 text-center">Action</th>
+                                            <th className="p-4">{t('th_petition_id', 'Petition ID')}</th>
+                                            <th className="p-4">{t('th_title', 'Title')}</th>
+                                            <th className="p-4">{t('th_date', 'Date Submitted')}</th>
+                                            <th className="p-4">{t('th_status', 'Status')}</th>
+                                            <th className="p-4 text-center">{t('th_action', 'Action')}</th>
                                         </tr>
                                     </thead>
                                     <tbody className="divide-y divide-slate-100">
@@ -306,10 +308,10 @@ export default function CitizenDashboard() {
                                             <td className="p-4 font-mono text-xs text-slate-500">PET-8992</td>
                                             <td className="p-4 font-medium text-slate-900">Build Primary School Roof</td>
                                             <td className="p-4 text-slate-600">Oct 10, 2024</td>
-                                            <td className="p-4"><Badge variant="default">Funded</Badge></td>
+                                            <td className="p-4"><Badge variant="default">{t('status_funded', 'Funded')}</Badge></td>
                                             <td className="p-4 text-center">
                                                 <button className="bg-white border border-indigo-200 text-indigo-600 hover:bg-indigo-50 hover:border-indigo-300 transition-colors px-3 py-1.5 rounded-lg text-xs font-bold inline-flex items-center gap-1">
-                                                    <HardDrive className="w-3 h-3" /> Get Petition
+                                                    <HardDrive className="w-3 h-3" /> {t('btn_get_petition', 'Get Petition')}
                                                 </button>
                                             </td>
                                         </tr>
@@ -317,10 +319,10 @@ export default function CitizenDashboard() {
                                             <td className="p-4 font-mono text-xs text-slate-500">PET-9041</td>
                                             <td className="p-4 font-medium text-slate-900">Solar Lights for Ward 3</td>
                                             <td className="p-4 text-slate-600">Nov 01, 2024</td>
-                                            <td className="p-4"><Badge variant="warning">Verified</Badge></td>
+                                            <td className="p-4"><Badge variant="warning">{t('status_verified', 'Verified')}</Badge></td>
                                             <td className="p-4 text-center">
                                                 <button className="bg-white border border-indigo-200 text-indigo-600 hover:bg-indigo-50 hover:border-indigo-300 transition-colors px-3 py-1.5 rounded-lg text-xs font-bold inline-flex items-center gap-1">
-                                                    <HardDrive className="w-3 h-3" /> Get Petition
+                                                    <HardDrive className="w-3 h-3" /> {t('btn_get_petition', 'Get Petition')}
                                                 </button>
                                             </td>
                                         </tr>
@@ -328,10 +330,10 @@ export default function CitizenDashboard() {
                                             <td className="p-4 font-mono text-xs text-slate-500">PET-9102</td>
                                             <td className="p-4 font-medium text-slate-900">Community Well Cleaning</td>
                                             <td className="p-4 text-slate-600">Jan 15, 2025</td>
-                                            <td className="p-4"><Badge variant="neutral">Under Review</Badge></td>
+                                            <td className="p-4"><Badge variant="neutral">{t('status_under_review', 'Under Review')}</Badge></td>
                                             <td className="p-4 text-center">
                                                 <button className="bg-white border border-indigo-200 text-indigo-600 hover:bg-indigo-50 hover:border-indigo-300 transition-colors px-3 py-1.5 rounded-lg text-xs font-bold inline-flex items-center gap-1">
-                                                    <HardDrive className="w-3 h-3" /> Get Petition
+                                                    <HardDrive className="w-3 h-3" /> {t('btn_get_petition', 'Get Petition')}
                                                 </button>
                                             </td>
                                         </tr>
@@ -347,17 +349,17 @@ export default function CitizenDashboard() {
                         <Card className="border-slate-200 shadow-sm">
                             <CardHeader className="bg-slate-50 border-b border-slate-100 p-5">
                                 <CardTitle className="text-base font-bold text-slate-900 flex items-center gap-2">
-                                    <Users className="w-5 h-5 text-indigo-600" /> Citizen Profile & Location Details
+                                    <Users className="w-5 h-5 text-indigo-600" /> {t('tab_profile_settings', 'Citizen Profile & Location Details')}
                                 </CardTitle>
                             </CardHeader>
                             <CardContent className="p-6 space-y-4">
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
                                     <div className="p-3.5 bg-slate-50 rounded-xl border border-slate-100">
-                                        <span className="text-slate-500 block mb-1 font-semibold">Full Name</span>
+                                        <span className="text-slate-500 block mb-1 font-semibold">{t('official_legal_name', 'Full Name')}</span>
                                         <span className="font-bold text-slate-900 text-sm">{citizenName}</span>
                                     </div>
                                     <div className="p-3.5 bg-slate-50 rounded-xl border border-slate-100">
-                                        <span className="text-slate-500 block mb-1 font-semibold">Email Address</span>
+                                        <span className="text-slate-500 block mb-1 font-semibold">{t('email_address', 'Email Address')}</span>
                                         <span className="font-bold text-slate-900 text-sm">{user?.email || 'ramesh.patil@gramin.in'}</span>
                                     </div>
                                     <div className="p-3.5 bg-slate-50 rounded-xl border border-slate-100">
@@ -365,11 +367,11 @@ export default function CitizenDashboard() {
                                         <span className="font-bold text-slate-900 text-sm font-mono">{citizenMobile}</span>
                                     </div>
                                     <div className="p-3.5 bg-slate-50 rounded-xl border border-slate-100">
-                                        <span className="text-slate-500 block mb-1 font-semibold">Preferred Language</span>
+                                        <span className="text-slate-500 block mb-1 font-semibold">{t('select_language', 'Preferred Language')}</span>
                                         <span className="font-bold text-slate-900 text-sm">{citizenLanguage}</span>
                                     </div>
                                     <div className="p-3.5 bg-slate-50 rounded-xl border border-slate-100">
-                                        <span className="text-slate-500 block mb-1 font-semibold">State / District</span>
+                                        <span className="text-slate-500 block mb-1 font-semibold">{t('state_district', 'State / District')}</span>
                                         <span className="font-bold text-slate-900 text-sm">{citizenProfile.district || 'Pune'}, {citizenProfile.state || 'Maharashtra'}</span>
                                     </div>
                                     <div className="p-3.5 bg-slate-50 rounded-xl border border-slate-100">
@@ -381,7 +383,7 @@ export default function CitizenDashboard() {
                                 <div className="p-4 bg-indigo-50 border border-indigo-100 rounded-xl flex items-center gap-3 text-xs text-indigo-900 mt-2">
                                     <CheckCircle2 className="w-5 h-5 text-indigo-600 shrink-0" />
                                     <div>
-                                        <p className="font-bold">Verified Citizen Account</p>
+                                        <p className="font-bold">{t('status_verified', 'Verified Citizen Account')}</p>
                                         <p className="text-[11px] text-indigo-700 mt-0.5">Your registered district is used to automatically alert local NGOs and CSR funds to your petitions.</p>
                                     </div>
                                 </div>
@@ -403,32 +405,38 @@ export default function CitizenDashboard() {
 
                 <div className="relative z-10 w-full mb-4 md:mb-0">
                     <div className="flex items-center gap-2 mb-2">
-                        <Badge variant="default" className="text-xs">Citizen Impact Portal</Badge>
-                        <span className="text-xs text-indigo-200">Welcome, {citizenName}</span>
+                        <Badge variant="default" className="text-xs">{t('citizen_portal_badge', 'Citizen Impact Portal')}</Badge>
+                        <span className="text-xs text-indigo-200">{t('citizen_welcome', 'Welcome')}, {citizenName}</span>
                     </div>
-                    <h1 className="text-3xl md:text-4xl font-bold tracking-tight">Citizen Impact Portal</h1>
+                    <h1 className="text-3xl md:text-4xl font-bold tracking-tight">{t('citizen_portal_badge', 'Citizen Impact Portal')}</h1>
                     <p className="text-indigo-100 mt-2 font-medium opacity-90 max-w-2xl">
-                        Registered Location: <strong className="text-white">{citizenLocation}</strong> • Submit local issues directly to verified NGOs and Corporate CSR funds. Real-time transparent visibility into your community.
+                        {t('citizen_registered_loc', 'Registered Location')}: <strong className="text-white">{citizenLocation}</strong> • {t('citizen_portal_sub', 'Submit local issues directly to verified NGOs and Corporate CSR funds. Real-time transparent visibility into your community.')}
                     </p>
                 </div>
                 <button
                     onClick={() => setActiveTab('Submit Petition')}
                     className="relative z-10 bg-white text-indigo-900 px-6 py-3 rounded-xl font-bold shadow-md hover:bg-slate-100 transition whitespace-nowrap w-full md:w-auto mt-2 md:mt-0"
                 >
-                    Submit a Petition
+                    {t('btn_submit_petition', 'Submit a Petition')}
                 </button>
             </header>
 
             {/* Mobile-friendly Tab Scroll view */}
             <div className="overflow-x-auto -mx-4 px-4 md:mx-0 md:px-0">
                 <nav className="flex items-center gap-1 min-w-max pb-2 border-b border-slate-200">
-                    {['Overview', 'Submit Petition', 'My Petitions', 'Nearby Projects', 'Profile Settings'].map(tab => (
+                    {[
+                        { id: 'Overview', key: 'tab_overview', label: 'Overview' },
+                        { id: 'Submit Petition', key: 'btn_submit_petition', label: 'Submit Petition' },
+                        { id: 'My Petitions', key: 'tab_my_petitions', label: 'My Petitions' },
+                        { id: 'Nearby Projects', key: 'tab_nearby_projects', label: 'Nearby Projects' },
+                        { id: 'Profile Settings', key: 'tab_profile_settings', label: 'Profile Settings' }
+                    ].map(tab => (
                         <button
-                            key={tab}
-                            onClick={() => setActiveTab(tab)}
-                            className={`px-5 py-3 rounded-t-lg font-semibold text-sm transition-colors ${activeTab === tab ? 'bg-indigo-50 text-indigo-700 border-b-2 border-indigo-700' : 'text-slate-500 hover:text-slate-900 hover:bg-slate-50'}`}
+                            key={tab.id}
+                            onClick={() => setActiveTab(tab.id)}
+                            className={`px-5 py-3 rounded-t-lg font-semibold text-sm transition-colors ${activeTab === tab.id ? 'bg-indigo-50 text-indigo-700 border-b-2 border-indigo-700' : 'text-slate-500 hover:text-slate-900 hover:bg-slate-50'}`}
                         >
-                            {tab}
+                            {t(tab.key, tab.label)}
                         </button>
                     ))}
                 </nav>

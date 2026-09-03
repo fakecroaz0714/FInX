@@ -30,6 +30,7 @@ import {
 import { ValidatorActiveProjectsMap } from '@/components/maps/ValidatorActiveProjectsMap';
 
 import { useProposals } from '@/lib/ProposalContext';
+import { useLanguage } from '@/lib/LanguageContext';
 import {
     NGOValidationRecord,
     AuditLogRecord,
@@ -43,6 +44,7 @@ import {
 } from '@/lib/validatorData';
 
 export default function ValidatorDashboard() {
+    const { t } = useLanguage();
     // Central NGO dataset and audit logs
     const [ngos, setNgos] = useState<NGOValidationRecord[]>([]);
     const [auditLogs, setAuditLogs] = useState<AuditLogRecord[]>([]);
@@ -268,27 +270,27 @@ export default function ValidatorDashboard() {
             <header className="flex flex-col lg:flex-row lg:items-end justify-between gap-6">
                 <div>
                     <div className="flex items-center gap-2 mb-1.5">
-                        <Badge variant="default" className="text-[11px] font-bold">FINX Oversight Engine</Badge>
-                        <span className="text-xs text-slate-400 font-medium">Independent Auditing & Risk Assessment</span>
+                        <Badge variant="default" className="text-[11px] font-bold">{t('validator_engine_badge', 'FINX Oversight Engine')}</Badge>
+                        <span className="text-xs text-slate-400 font-medium">{t('validator_engine_sub', 'Independent Auditing & Risk Assessment')}</span>
                     </div>
-                    <h1 className="text-3xl font-bold tracking-tight text-slate-900">NGO Validator Dashboard</h1>
+                    <h1 className="text-3xl font-bold tracking-tight text-slate-900">{t('validator_dashboard_title', 'NGO Validator Dashboard')}</h1>
                     <p className="text-slate-500 mt-1 font-medium text-sm">
-                        Government-grade compliance verification, risk modeling, and on-chain proposal endorsement.
+                        {t('validator_dashboard_sub', 'Government-grade compliance verification, risk modeling, and on-chain proposal endorsement.')}
                     </p>
                 </div>
 
                 {/* Trust Flow Visual Indicator */}
                 <div className="bg-slate-50 p-3 rounded-xl border border-slate-200/80 flex items-center gap-2 text-[11px] font-semibold text-slate-600 overflow-x-auto">
-                    <span className="text-slate-400">Trust Flow:</span>
-                    <span className="bg-white px-2.5 py-1 rounded shadow-2xs border border-slate-200 text-slate-700">1. Registration</span>
+                    <span className="text-slate-400">{t('trust_flow_label', 'Trust Flow:')}</span>
+                    <span className="bg-white px-2.5 py-1 rounded shadow-2xs border border-slate-200 text-slate-700">{t('step_reg', '1. Registration')}</span>
                     <span className="text-slate-400">→</span>
-                    <span className="bg-indigo-50 text-indigo-700 px-2.5 py-1 rounded border border-indigo-200 font-bold">2. Document Validation</span>
+                    <span className="bg-indigo-50 text-indigo-700 px-2.5 py-1 rounded border border-indigo-200 font-bold">{t('step_doc_val', '2. Document Validation')}</span>
                     <span className="text-slate-400">→</span>
-                    <span className="bg-white px-2.5 py-1 rounded shadow-2xs border border-slate-200 text-slate-700">3. Risk Assessment</span>
+                    <span className="bg-white px-2.5 py-1 rounded shadow-2xs border border-slate-200 text-slate-700">{t('step_risk_assess', '3. Risk Assessment')}</span>
                     <span className="text-slate-400">→</span>
-                    <span className="bg-white px-2.5 py-1 rounded shadow-2xs border border-slate-200 text-slate-700">4. Proposal Review</span>
+                    <span className="bg-white px-2.5 py-1 rounded shadow-2xs border border-slate-200 text-slate-700">{t('step_prop_review', '4. Proposal Review')}</span>
                     <span className="text-slate-400">→</span>
-                    <span className="bg-emerald-50 text-emerald-700 px-2.5 py-1 rounded border border-emerald-200 font-bold">5. CSR Matching</span>
+                    <span className="bg-emerald-50 text-emerald-700 px-2.5 py-1 rounded border border-emerald-200 font-bold">{t('step_csr_match', '5. CSR Matching')}</span>
                 </div>
             </header>
 
@@ -296,28 +298,28 @@ export default function ValidatorDashboard() {
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
                 <Card className="border border-slate-200 shadow-sm">
                     <CardContent className="p-5">
-                        <div className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Total NGOs</div>
+                        <div className="text-xs font-semibold text-slate-500 uppercase tracking-wider">{t('kpi_total_ngos', 'Total NGOs')}</div>
                         <div className="text-3xl font-bold text-slate-900 mt-2 font-mono">{stats.total}</div>
-                        <div className="text-[11px] text-slate-400 mt-1">Platform registered non-profits</div>
+                        <div className="text-[11px] text-slate-400 mt-1">{t('kpi_total_ngos_sub', 'Platform registered non-profits')}</div>
                     </CardContent>
                 </Card>
                 <Card className="border border-slate-200 shadow-sm border-b-4 border-b-emerald-500">
                     <CardContent className="p-5">
-                        <div className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Verified</div>
+                        <div className="text-xs font-semibold text-slate-500 uppercase tracking-wider">{t('status_verified', 'Verified')}</div>
                         <div className="text-3xl font-bold text-emerald-600 mt-2 font-mono">{stats.verified}</div>
-                        <div className="text-[11px] text-emerald-600 font-semibold mt-1">{stats.verificationRate}% Verified Rate</div>
+                        <div className="text-[11px] text-emerald-600 font-semibold mt-1">{stats.verificationRate}% {t('kpi_verified_rate', 'Verified Rate')}</div>
                     </CardContent>
                 </Card>
                 <Card className="border border-slate-200 shadow-sm border-b-4 border-b-amber-500">
                     <CardContent className="p-5">
-                        <div className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Needs Review</div>
+                        <div className="text-xs font-semibold text-slate-500 uppercase tracking-wider">{t('status_needs_review', 'Needs Review')}</div>
                         <div className="text-3xl font-bold text-amber-600 mt-2 font-mono">{stats.needsReview}</div>
-                        <div className="text-[11px] text-amber-600 font-semibold mt-1">Pending validation or docs</div>
+                        <div className="text-[11px] text-amber-600 font-semibold mt-1">{t('kpi_needs_review_sub', 'Pending validation or docs')}</div>
                     </CardContent>
                 </Card>
                 <Card className="border border-slate-200 shadow-sm border-b-4 border-b-rose-500">
                     <CardContent className="p-5">
-                        <div className="text-xs font-semibold text-slate-500 uppercase tracking-wider">High Risk</div>
+                        <div className="text-xs font-semibold text-slate-500 uppercase tracking-wider">{t('status_high_risk', 'High Risk')}</div>
                         <div className="text-3xl font-bold text-rose-600 mt-2 font-mono">{stats.highRisk}</div>
                         <div className="text-[11px] text-rose-600 font-semibold mt-1">{stats.highRiskRate}% of Active NGOs</div>
                     </CardContent>
@@ -328,24 +330,31 @@ export default function ValidatorDashboard() {
             <Card className="border border-slate-200 shadow-sm overflow-hidden">
                 <CardHeader className="bg-slate-50 border-b border-slate-100 p-0 px-6 pt-3 pb-0">
                     <div className="flex items-center gap-6 overflow-x-auto hide-scrollbar">
-                        {(['Overview', 'Active Projects Map', 'Validation Queue', 'Risk Assessment', 'Project Proposals', 'Audit Logs'] as const).map(tab => (
+                        {[
+                            { id: 'Overview', key: 'tab_overview', label: 'Overview' },
+                            { id: 'Active Projects Map', key: 'tab_active_projects_map', label: 'Active Projects Map' },
+                            { id: 'Validation Queue', key: 'tab_validation_queue', label: 'Validation Queue' },
+                            { id: 'Risk Assessment', key: 'tab_risk_assessment', label: 'Risk Assessment' },
+                            { id: 'Project Proposals', key: 'tab_project_proposals', label: 'Project Proposals' },
+                            { id: 'Audit Logs', key: 'tab_audit_logs', label: 'Audit Logs' }
+                        ].map(tab => (
                             <button
-                                key={tab}
-                                onClick={() => setActiveTab(tab)}
+                                key={tab.id}
+                                onClick={() => setActiveTab(tab.id as any)}
                                 className={`text-sm font-semibold pb-3.5 pt-2 border-b-2 transition-colors whitespace-nowrap cursor-pointer flex items-center gap-1.5 ${
-                                    activeTab === tab
+                                    activeTab === tab.id
                                         ? 'text-indigo-600 border-indigo-600'
                                         : 'text-slate-500 border-transparent hover:text-slate-800'
                                 }`}
                             >
-                                {tab === 'Active Projects Map' && <Compass className="w-4 h-4 text-blue-600" />}
-                                {tab}
-                                {tab === 'Validation Queue' && stats.needsReview > 0 && (
+                                {tab.id === 'Active Projects Map' && <Compass className="w-4 h-4 text-blue-600" />}
+                                {t(tab.key, tab.label)}
+                                {tab.id === 'Validation Queue' && stats.needsReview > 0 && (
                                     <span className="ml-2 bg-amber-100 text-amber-800 text-[10px] font-bold px-1.5 py-0.5 rounded-full">
                                         {stats.needsReview}
                                     </span>
                                 )}
-                                {tab === 'Project Proposals' && proposals.filter(p => p.status === 'Submitted').length > 0 && (
+                                {tab.id === 'Project Proposals' && proposals.filter(p => p.status === 'Submitted').length > 0 && (
                                     <span className="ml-2 bg-indigo-100 text-indigo-800 text-[10px] font-bold px-1.5 py-0.5 rounded-full">
                                         {proposals.filter(p => p.status === 'Submitted').length}
                                     </span>
@@ -533,7 +542,7 @@ export default function ValidatorDashboard() {
                                         <Search className="w-4 h-4 absolute left-3 top-3 text-slate-400" />
                                         <input
                                             type="text"
-                                            placeholder="Search NGO name, NGO ID, or PAN..."
+                                            placeholder={t('search_queue_placeholder', 'Search by NGO name, ID, or PAN...')}
                                             value={queueSearch}
                                             onChange={e => setQueueSearch(e.target.value)}
                                             className="w-full pl-9 pr-4 py-2 border border-slate-200 rounded-lg text-xs bg-white focus:ring-2 focus:ring-indigo-500 outline-none"
@@ -545,13 +554,13 @@ export default function ValidatorDashboard() {
                                             onChange={e => setQueueStatusFilter(e.target.value)}
                                             className="p-2 border border-slate-200 rounded-lg bg-white font-medium text-slate-700 outline-none"
                                         >
-                                            <option value="All">All Statuses</option>
+                                            <option value="All">{t('filter_all_status', 'All Statuses')}</option>
                                             <option value="PENDING_REVIEW">Pending Review</option>
-                                            <option value="NEEDS_REVIEW">Needs Review</option>
+                                            <option value="NEEDS_REVIEW">{t('status_needs_review', 'Needs Review')}</option>
                                             <option value="DOCUMENTS_MISSING">Documents Missing</option>
                                             <option value="UNDER_VERIFICATION">Under Verification</option>
-                                            <option value="VERIFIED">Verified</option>
-                                            <option value="HIGH_RISK">High Risk</option>
+                                            <option value="VERIFIED">{t('status_verified', 'Verified')}</option>
+                                            <option value="HIGH_RISK">{t('status_high_risk', 'High Risk')}</option>
                                             <option value="REJECTED">Rejected</option>
                                         </select>
 
@@ -560,7 +569,7 @@ export default function ValidatorDashboard() {
                                             onChange={e => setQueuePriorityFilter(e.target.value)}
                                             className="p-2 border border-slate-200 rounded-lg bg-white font-medium text-slate-700 outline-none"
                                         >
-                                            <option value="All">All Priorities</option>
+                                            <option value="All">{t('filter_all_priority', 'All Priorities')}</option>
                                             <option value="High">High Priority</option>
                                             <option value="Medium">Medium Priority</option>
                                             <option value="Low">Low Priority</option>
@@ -571,7 +580,7 @@ export default function ValidatorDashboard() {
                                             onChange={e => setQueueTypeFilter(e.target.value)}
                                             className="p-2 border border-slate-200 rounded-lg bg-white font-medium text-slate-700 outline-none"
                                         >
-                                            <option value="All">All Reg Types</option>
+                                            <option value="All">{t('filter_all_types', 'All Types')}</option>
                                             <option value="Trust">Trust</option>
                                             <option value="Society">Society</option>
                                             <option value="Section 8 Company">Section 8 Company</option>
@@ -588,7 +597,7 @@ export default function ValidatorDashboard() {
                                                 }}
                                                 className="px-3 py-2 text-indigo-600 hover:text-indigo-800 font-bold"
                                             >
-                                                Reset Filters
+                                                {t('btn_reset_filters', 'Reset Filters')}
                                             </button>
                                         )}
                                     </div>
@@ -605,16 +614,16 @@ export default function ValidatorDashboard() {
                                     <table className="w-full text-xs text-left">
                                         <thead className="bg-slate-50 text-slate-500 font-bold uppercase">
                                             <tr>
-                                                <th className="p-3.5">Organization</th>
+                                                <th className="p-3.5">{t('th_ngo_name_id', 'Organization')}</th>
                                                 <th className="p-3.5">NGO ID</th>
-                                                <th className="p-3.5">Reg Type</th>
-                                                <th className="p-3.5">State</th>
-                                                <th className="p-3.5">Submitted</th>
+                                                <th className="p-3.5">{t('reg_type', 'Reg Type')}</th>
+                                                <th className="p-3.5">{t('state_district', 'State')}</th>
+                                                <th className="p-3.5">{t('th_date', 'Submitted')}</th>
                                                 <th className="p-3.5">Documents</th>
-                                                <th className="p-3.5">Risk Score</th>
-                                                <th className="p-3.5">Priority</th>
-                                                <th className="p-3.5">Status</th>
-                                                <th className="p-3.5 text-right">Action</th>
+                                                <th className="p-3.5">{t('th_risk_score', 'Risk Score')}</th>
+                                                <th className="p-3.5">{t('th_priority', 'Priority')}</th>
+                                                <th className="p-3.5">{t('th_status', 'Status')}</th>
+                                                <th className="p-3.5 text-right">{t('th_action', 'Action')}</th>
                                             </tr>
                                         </thead>
                                         <tbody className="divide-y divide-slate-100">
@@ -913,7 +922,7 @@ export default function ValidatorDashboard() {
                                                     onClick={() => handleValidateProposal(p.id, p.ngoName, p.title)}
                                                     className="bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-2 rounded-xl font-bold text-xs flex items-center gap-2 transition shadow-md shadow-emerald-200 cursor-pointer shrink-0"
                                                 >
-                                                    <CheckCircle2 className="w-4 h-4" /> Verify & Forward to Corporate Funder
+                                                    <CheckCircle2 className="w-4 h-4" /> {t('endorse_proposal', 'Verify & Forward to Corporate Funder')}
                                                 </button>
                                             </div>
                                         </div>
@@ -1098,7 +1107,7 @@ export default function ValidatorDashboard() {
                                         }}
                                         className="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-2.5 rounded-xl font-bold flex items-center justify-center gap-1.5 transition shadow-sm cursor-pointer"
                                     >
-                                        <CheckCircle2 className="w-4 h-4" /> Verify NGO
+                                        <CheckCircle2 className="w-4 h-4" /> {t('status_verified', 'Verify NGO')}
                                     </button>
 
                                     <button
@@ -1107,7 +1116,7 @@ export default function ValidatorDashboard() {
                                         }}
                                         className="w-full bg-white border border-slate-300 text-slate-700 hover:bg-slate-50 py-2 rounded-xl font-semibold flex items-center justify-center gap-1.5 transition cursor-pointer"
                                     >
-                                        <RefreshCw className="w-3.5 h-3.5" /> Request Documents
+                                        <RefreshCw className="w-3.5 h-3.5" /> {t('tab_compliance_docs', 'Request Documents')}
                                     </button>
 
                                     <button
@@ -1116,7 +1125,7 @@ export default function ValidatorDashboard() {
                                         }}
                                         className="w-full bg-white border border-amber-300 text-amber-800 hover:bg-amber-50 py-2 rounded-xl font-semibold flex items-center justify-center gap-1.5 transition cursor-pointer"
                                     >
-                                        <AlertTriangle className="w-3.5 h-3.5 text-amber-600" /> Mark Needs Review
+                                        <AlertTriangle className="w-3.5 h-3.5 text-amber-600" /> {t('status_needs_review', 'Mark Needs Review')}
                                     </button>
 
                                     <button
@@ -1125,7 +1134,7 @@ export default function ValidatorDashboard() {
                                         }}
                                         className="w-full bg-white border border-rose-200 text-rose-700 hover:bg-rose-50 py-2 rounded-xl font-semibold flex items-center justify-center gap-1.5 transition cursor-pointer"
                                     >
-                                        <ShieldAlert className="w-3.5 h-3.5 text-rose-600" /> Flag High Risk
+                                        <ShieldAlert className="w-3.5 h-3.5 text-rose-600" /> {t('status_high_risk', 'Flag High Risk')}
                                     </button>
 
                                     <button
@@ -1134,7 +1143,7 @@ export default function ValidatorDashboard() {
                                         }}
                                         className="w-full bg-rose-600 hover:bg-rose-700 text-white py-2 rounded-xl font-semibold flex items-center justify-center gap-1.5 transition cursor-pointer"
                                     >
-                                        <AlertCircle className="w-3.5 h-3.5" /> Reject NGO
+                                        <AlertCircle className="w-3.5 h-3.5" /> {t('btn_reject', 'Reject NGO')}
                                     </button>
                                 </div>
                             </div>

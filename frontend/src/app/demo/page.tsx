@@ -4,11 +4,13 @@ import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 import { Coins, HardDrive, CheckCircle2, AlertCircle } from "lucide-react";
+import { useLanguage } from "@/lib/LanguageContext";
 
 // Mock ABIs and Data since we are avoiding real ethers connections for the UI mockup if not provided wallet.
 // A full implementation would use Wagmi / ethers.js here.
 
 export default function DemoDashboard() {
+    const { t } = useLanguage();
     const [projectId, setProjectId] = useState("PROJ-SCHOOL-001");
     const [status, setStatus] = useState("Created");
     const [txState, setTxState] = useState("");
@@ -67,8 +69,8 @@ export default function DemoDashboard() {
     return (
         <div className="p-8 pb-20 max-w-5xl mx-auto">
             <header className="mb-8">
-                <h1 className="text-3xl font-bold tracking-tight text-slate-900">FINX Smart Escrow Dashboard</h1>
-                <p className="text-slate-500 mt-1">Prototype Interface for FINXMilestoneEscrow.sol</p>
+                <h1 className="text-3xl font-bold tracking-tight text-slate-900">{t('onchain_escrow_title', 'FINX Smart Escrow Dashboard')}</h1>
+                <p className="text-slate-500 mt-1">{t('onchain_escrow_sub', 'Prototype Interface for FINXMilestoneEscrow.sol')}</p>
             </header>
 
             {txState && (
@@ -84,25 +86,25 @@ export default function DemoDashboard() {
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
                 <Card className="border-indigo-100 bg-indigo-50/30">
                     <CardContent className="p-5">
-                        <div className="text-sm font-medium text-slate-500">Total Funding</div>
+                        <div className="text-sm font-medium text-slate-500">{t('kpi_total_funding', 'Total Funding')}</div>
                         <div className="text-2xl font-bold font-mono text-slate-900">₹{totalFunding.toLocaleString()}</div>
                     </CardContent>
                 </Card>
                 <Card className={status === 'Cancelled' ? 'opacity-50' : ''}>
                     <CardContent className="p-5">
-                        <div className="text-sm font-medium text-slate-500">Locked in Escrow</div>
+                        <div className="text-sm font-medium text-slate-500">{t('kpi_locked_escrow', 'Locked in Escrow')}</div>
                         <div className="text-2xl font-bold font-mono text-indigo-600">₹{lockedFunds.toLocaleString()}</div>
                     </CardContent>
                 </Card>
                 <Card>
                     <CardContent className="p-5">
-                        <div className="text-sm font-medium text-slate-500">Released Funds</div>
+                        <div className="text-sm font-medium text-slate-500">{t('kpi_released_funds', 'Released Funds')}</div>
                         <div className="text-2xl font-bold font-mono text-emerald-600">₹{releasedFunds.toLocaleString()}</div>
                     </CardContent>
                 </Card>
                 <Card>
                     <CardContent className="p-5">
-                        <div className="text-sm font-medium text-slate-500">Milestone</div>
+                        <div className="text-sm font-medium text-slate-500">{t('kpi_current_milestone', 'Milestone')}</div>
                         <div className="text-2xl font-bold text-slate-900">{status === 'Cancelled' ? 'Halted' : `${currentMilestone + 1} / 4`}</div>
                     </CardContent>
                 </Card>
@@ -176,28 +178,28 @@ export default function DemoDashboard() {
                         onClick={handleFund}
                         disabled={status !== "Created"}
                         className="w-full justify-between items-center flex bg-slate-900 text-white px-4 py-3 rounded-lg font-medium hover:bg-slate-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
-                        1. Corporate Funds Escrow <Coins className="w-4 h-4" />
+                        1. {t('btn_fund_project', 'Corporate Funds Escrow')} <Coins className="w-4 h-4" />
                     </button>
 
                     <button
                         onClick={handleSubmit}
                         disabled={status !== "Funded" && status !== "Active"}
                         className="w-full justify-between items-center flex bg-white border border-slate-300 text-slate-700 px-4 py-3 rounded-lg font-medium hover:bg-slate-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
-                        2. NGO Submits Proof <HardDrive className="w-4 h-4 text-slate-400" />
+                        2. {t('btn_submit_proof_tx', 'NGO Submits Proof')} <HardDrive className="w-4 h-4 text-slate-400" />
                     </button>
 
                     <button
                         onClick={handleApprove}
                         disabled={!status.includes("Proof Submitted")}
                         className="w-full justify-between items-center flex bg-white border border-slate-300 text-slate-700 px-4 py-3 rounded-lg font-medium hover:bg-slate-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
-                        3. Reviewer Approves <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+                        3. {t('btn_approve', 'Reviewer Approves')} <CheckCircle2 className="w-4 h-4 text-emerald-500" />
                     </button>
 
                     <button
                         onClick={handleWithdraw}
                         disabled={!status.includes("Approved")}
                         className="w-full justify-between items-center flex bg-indigo-600 text-white px-4 py-3 rounded-lg font-medium hover:bg-indigo-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
-                        4. NGO Withdraws Funds <AlertCircle className="w-4 h-4" />
+                        4. {t('btn_approve_withdraw', 'NGO Withdraws Funds')} <AlertCircle className="w-4 h-4" />
                     </button>
 
                     <hr className="my-4 border-slate-100" />
@@ -206,7 +208,7 @@ export default function DemoDashboard() {
                         onClick={handleCancel}
                         disabled={status === 'Cancelled' || status === 'Created' || status === 'Completed'}
                         className="w-full justify-center items-center flex text-red-600 bg-red-50 border border-red-200 px-4 py-3 rounded-lg font-medium hover:bg-red-100 transition-colors text-sm disabled:opacity-50 disabled:cursor-not-allowed">
-                        Cancel Project (Refund)
+                        {t('btn_cancel_refund', 'Cancel Project (Refund)')}
                     </button>
                 </div>
             </div>

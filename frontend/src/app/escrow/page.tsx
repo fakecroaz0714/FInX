@@ -1,8 +1,12 @@
+'use client';
+
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 import { FileCheck2, Lock, Unlock, Camera, ArrowRight, ShieldCheck, History } from "lucide-react";
+import { useLanguage } from "@/lib/LanguageContext";
 
 export default function EscrowPage() {
+    const { t } = useLanguage();
     const milestones = [
         {
             id: 1,
@@ -34,11 +38,11 @@ export default function EscrowPage() {
         <div className="p-8 pb-20">
             <header className="mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
-                    <h1 className="text-3xl font-bold tracking-tight text-slate-900">Smart Escrow Controls</h1>
-                    <p className="text-slate-500 mt-1">Manage milestone-based fund releases backed by verified impact claims.</p>
+                    <h1 className="text-3xl font-bold tracking-tight text-slate-900">{t('smart_escrow_controls_title', 'Smart Escrow Controls')}</h1>
+                    <p className="text-slate-500 mt-1">{t('smart_escrow_controls_sub', 'Manage milestone-based fund releases backed by verified impact claims.')}</p>
                 </div>
                 <a href="/verified-milestones" className="bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold px-4 py-2.5 rounded-lg flex items-center gap-2 shadow-sm shrink-0">
-                    <ShieldCheck className="w-4 h-4" /> Open Verified Milestone Engine
+                    <ShieldCheck className="w-4 h-4" /> {t('open_proof_engine', 'Open Verified Milestone Engine')}
                 </a>
             </header>
 

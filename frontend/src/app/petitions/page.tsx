@@ -1,8 +1,13 @@
+'use client';
+
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 import { MapPin, Users, ArrowRight, Plus } from "lucide-react";
+import { useLanguage } from "@/lib/LanguageContext";
+import Link from 'next/link';
 
 export default function PetitionsPage() {
+    const { t } = useLanguage();
     const petitions = [
         {
             title: "Clean Water Initiative for Rural Pune",
@@ -37,12 +42,12 @@ export default function PetitionsPage() {
         <div className="p-8 pb-20">
             <header className="mb-8 flex justify-between items-center">
                 <div>
-                    <h1 className="text-3xl font-bold tracking-tight text-slate-900">Community Petitions</h1>
-                    <p className="text-slate-500 mt-1">Discover, support, and track grassroots initiatives.</p>
+                    <h1 className="text-3xl font-bold tracking-tight text-slate-900">{t('nav_community_petitions', 'Community Petitions')}</h1>
+                    <p className="text-slate-500 mt-1">{t('citizen_portal_sub', 'Discover, support, and track grassroots initiatives.')}</p>
                 </div>
-                <button className="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-lg font-medium transition-colors shadow-sm flex items-center gap-2">
-                    <Plus className="w-5 h-5" /> Start Petition
-                </button>
+                <Link href="/petitions/new" className="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-lg font-medium transition-colors shadow-sm flex items-center gap-2">
+                    <Plus className="w-5 h-5" /> {t('btn_submit_petition', 'Start Petition')}
+                </Link>
             </header>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
