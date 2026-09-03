@@ -8,9 +8,11 @@ import {
     Coins, MapPin, Building2, TrendingUp, ShieldCheck, FileCheck2, Filter, ChevronRight, CheckCircle2, AlertCircle
 } from 'lucide-react';
 import { PieChart as RechartsPie, Pie, Cell, ResponsiveContainer, Tooltip as RechartsTooltip, BarChart, CartesianGrid, XAxis, YAxis, Tooltip, Bar } from 'recharts';
+import { useProposals } from '@/lib/ProposalContext';
 
 export default function CorporateDashboard() {
     const [activeTab, setActiveTab] = useState('Overview');
+    const { proposals, approveFunding } = useProposals();
 
     const budgetData = [
         { name: 'Education', value: 4000000, color: '#3b82f6' },
@@ -76,12 +78,14 @@ export default function CorporateDashboard() {
                     </div>
                 );
             case 'Compare NGOs':
+                const validatedProposals = proposals.filter(p => p.status === 'NGO Validated');
+
                 return (
                     <div className="space-y-6">
                         <div className="flex justify-between items-center bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
                             <div>
-                                <h3 className="font-bold text-slate-900">Project: Rural Solar Electrification</h3>
-                                <p className="text-sm text-slate-500">Comparing 2 shortlisted NGOs for ₹2.5M grant</p>
+                                <h3 className="font-bold text-slate-900">Validated NGO Proposals</h3>
+                                <p className="text-sm text-slate-500">Awaiting your CSR budget approval and escrow locking.</p>
                             </div>
                             <div className="flex gap-3">
                                 <Badge variant="neutral">Filter by FINX Score &gt; 90</Badge>
@@ -89,96 +93,82 @@ export default function CorporateDashboard() {
                             </div>
                         </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            {/* NGO A */}
-                            <Card className="border-emerald-200 shadow-sm relative overflow-hidden">
-                                <div className="absolute top-0 right-0 bg-emerald-500 text-white px-3 py-1 text-xs font-bold rounded-bl-lg">Recommended</div>
-                                <CardContent className="p-6">
-                                    <h2 className="text-xl font-bold text-slate-900 mb-1">Green Earth Foundation</h2>
-                                    <div className="flex gap-2 mb-4">
-                                        <Badge variant="success">Verified Validator</Badge>
-                                        <Badge variant="neutral">ESG Compliant</Badge>
-                                    </div>
-                                    <table className="w-full text-sm">
-                                        <tbody className="divide-y divide-slate-100">
-                                            <tr><td className="py-2 text-slate-500">FINX Score</td><td className="py-2 font-mono font-bold text-emerald-600">94/100</td></tr>
-                                            <tr><td className="py-2 text-slate-500">Proposed Cost</td><td className="py-2 font-mono font-bold">₹2,400,000</td></tr>
-                                            <tr><td className="py-2 text-slate-500">Target Beneficiaries</td><td className="py-2 font-semibold">1,200 Households</td></tr>
-                                            <tr><td className="py-2 text-slate-500">Cost per Beneficiary</td><td className="py-2 font-semibold">₹2,000</td></tr>
-                                            <tr><td className="py-2 text-slate-500">Past Performance</td><td className="py-2 font-semibold text-emerald-600">Excellent (4 Projects)</td></tr>
-                                        </tbody>
-                                    </table>
-                                    <div className="flex gap-3 mt-6">
-                                        <button className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-2 rounded-lg transition">Approve & Fund</button>
-                                        <button className="px-4 border border-slate-300 text-slate-700 hover:bg-slate-50 rounded-lg font-medium transition">View Proposal</button>
-                                    </div>
-                                </CardContent>
-                            </Card>
-
-                            {/* NGO B */}
-                            <Card className="border-slate-200 shadow-sm">
-                                <CardContent className="p-6">
-                                    <h2 className="text-xl font-bold text-slate-900 mb-1">Solar Future Org</h2>
-                                    <div className="flex gap-2 mb-4">
-                                        <Badge variant="warning">Needs Review</Badge>
-                                        <Badge variant="neutral">New Organization</Badge>
-                                    </div>
-                                    <table className="w-full text-sm">
-                                        <tbody className="divide-y divide-slate-100">
-                                            <tr><td className="py-2 text-slate-500">FINX Score</td><td className="py-2 font-mono font-bold text-amber-500">68/100</td></tr>
-                                            <tr><td className="py-2 text-slate-500">Proposed Cost</td><td className="py-2 font-mono font-bold">₹1,900,000</td></tr>
-                                            <tr><td className="py-2 text-slate-500">Target Beneficiaries</td><td className="py-2 font-semibold">800 Households</td></tr>
-                                            <tr><td className="py-2 text-slate-500">Cost per Beneficiary</td><td className="py-2 font-semibold">₹2,375</td></tr>
-                                            <tr><td className="py-2 text-slate-500">Past Performance</td><td className="py-2 font-semibold text-slate-400">N/A (First Project)</td></tr>
-                                        </tbody>
-                                    </table>
-                                    <div className="flex gap-3 mt-6">
-                                        <button className="flex-1 bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 font-medium py-2 rounded-lg transition">Request Clarification</button>
-                                        <button className="px-4 border border-red-200 text-red-600 hover:bg-red-50 rounded-lg font-medium transition">Reject</button>
-                                    </div>
-                                </CardContent>
-                            </Card>
-                        </div>
+                        {validatedProposals.length === 0 ? (
+                            <div className="p-8 text-center bg-slate-50 rounded-xl text-slate-500 font-medium border border-slate-200">
+                                No new validated proposals awaiting your review right now.
+                            </div>
+                        ) : (
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                {validatedProposals.map((p) => (
+                                    <Card key={p.id} className="border-emerald-200 shadow-sm relative overflow-hidden">
+                                        <div className="absolute top-0 right-0 bg-emerald-500 text-white px-3 py-1 text-xs font-bold rounded-bl-lg">Recommended</div>
+                                        <CardContent className="p-6">
+                                            <h2 className="text-xl font-bold text-slate-900 mb-1">{p.ngoName}</h2>
+                                            <div className="text-xs text-slate-500 mb-4">{p.title}</div>
+                                            <div className="flex gap-2 mb-4">
+                                                <Badge variant="success">Verified Validator</Badge>
+                                                <Badge variant="neutral">{p.category}</Badge>
+                                            </div>
+                                            <table className="w-full text-sm">
+                                                <tbody className="divide-y divide-slate-100">
+                                                    <tr><td className="py-2 text-slate-500">Proposed Cost</td><td className="py-2 font-mono font-bold">₹{p.totalFunding.toLocaleString()}</td></tr>
+                                                    <tr><td className="py-2 text-slate-500">Target Beneficiaries</td><td className="py-2 font-semibold">{p.beneficiaries}</td></tr>
+                                                    <tr><td className="py-2 text-slate-500">Cost per Beneficiary</td><td className="py-2 font-semibold text-emerald-600">₹{p.beneficiaries ? Math.round(p.totalFunding / p.beneficiaries) : 0}</td></tr>
+                                                    <tr><td className="py-2 text-slate-500">Location</td><td className="py-2 font-semibold">{p.location}</td></tr>
+                                                    <tr><td className="py-2 text-slate-500">Milestones</td><td className="py-2 font-semibold">Total {p.milestones.length} Stages</td></tr>
+                                                </tbody>
+                                            </table>
+                                            <div className="flex gap-3 mt-6">
+                                                <button onClick={() => approveFunding(p.id, 'Global Corp CSR')} className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-2 rounded-lg transition">Approve & Fund</button>
+                                                <button className="px-4 border border-slate-300 text-slate-700 hover:bg-slate-50 rounded-lg font-medium transition">Reject</button>
+                                            </div>
+                                        </CardContent>
+                                    </Card>
+                                ))}
+                            </div>
+                        )}
                     </div>
                 );
             case 'Escrow Control':
+                const escrowProposals = proposals.filter(p => ['Escrow Funded', 'Active', 'Completed'].includes(p.status));
+
                 return (
                     <Card className="border-slate-200">
                         <CardHeader className="border-b border-slate-100 pb-4">
                             <CardTitle className="text-lg">Active Escrow Contracts</CardTitle>
                         </CardHeader>
                         <CardContent className="p-0">
-                            <table className="w-full text-sm text-left">
-                                <thead className="bg-slate-50 text-slate-500 uppercase text-xs">
-                                    <tr><th className="p-4">Contract ID</th><th className="p-4">NGO Partner</th><th className="p-4">Total Value</th><th className="p-4">Released</th><th className="p-4">Next Action</th></tr>
-                                </thead>
-                                <tbody className="divide-y divide-slate-100">
-                                    <tr className="hover:bg-slate-50">
-                                        <td className="p-4 font-mono font-bold text-indigo-600">0xESC...8A92</td>
-                                        <td className="p-4">EduCare Org</td>
-                                        <td className="p-4 font-mono">₹4,000,000</td>
-                                        <td className="p-4">
-                                            <div className="flex items-center gap-2">
-                                                <div className="w-20 bg-slate-200 rounded-full h-2"><div className="bg-emerald-500 w-1/2 h-full rounded-full"></div></div>
-                                                <span className="font-mono text-xs">50%</span>
-                                            </div>
-                                        </td>
-                                        <td className="p-4"><Badge variant="warning">Awaiting Milestone 3 Proof</Badge></td>
-                                    </tr>
-                                    <tr className="hover:bg-slate-50">
-                                        <td className="p-4 font-mono font-bold text-indigo-600">0xESC...B4C1</td>
-                                        <td className="p-4">Jal Seva NGO</td>
-                                        <td className="p-4 font-mono">₹1,500,000</td>
-                                        <td className="p-4">
-                                            <div className="flex items-center gap-2">
-                                                <div className="w-20 bg-slate-200 rounded-full h-2"></div>
-                                                <span className="font-mono text-xs">0%</span>
-                                            </div>
-                                        </td>
-                                        <td className="p-4"><button className="text-xs bg-slate-900 text-white px-3 py-1 rounded">Deposit Funds</button></td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                            {escrowProposals.length === 0 ? (
+                                <div className="p-8 text-center text-slate-500 font-medium">No active escrow contracts found.</div>
+                            ) : (
+                                <table className="w-full text-sm text-left">
+                                    <thead className="bg-slate-50 text-slate-500 uppercase text-xs">
+                                        <tr><th className="p-4">Contract ID</th><th className="p-4">NGO Partner</th><th className="p-4">Total Value</th><th className="p-4">Released</th><th className="p-4">Next Action</th></tr>
+                                    </thead>
+                                    <tbody className="divide-y divide-slate-100">
+                                        {escrowProposals.map(p => {
+                                            const releasedSum = p.milestones.filter(m => m.status === 'Released').reduce((s, m) => s + m.amount, 0);
+                                            const progress = p.totalFunding ? Math.round((releasedSum / p.totalFunding) * 100) : 0;
+                                            return (
+                                                <tr key={p.id} className="hover:bg-slate-50">
+                                                    <td className="p-4 font-mono font-bold text-indigo-600">{p.escrowId || '0xESC...'}</td>
+                                                    <td className="p-4">{p.ngoName}</td>
+                                                    <td className="p-4 font-mono">₹{p.totalFunding.toLocaleString()}</td>
+                                                    <td className="p-4">
+                                                        <div className="flex items-center gap-2">
+                                                            <div className="w-20 bg-slate-200 rounded-full h-2"><div className="bg-emerald-500 h-full rounded-full" style={{ width: `${progress}%` }}></div></div>
+                                                            <span className="font-mono text-xs">{progress}%</span>
+                                                        </div>
+                                                    </td>
+                                                    <td className="p-4">
+                                                        <Badge variant={p.status === 'Completed' ? 'success' : 'warning'}>{p.status === 'Completed' ? 'Closed' : 'Awaiting Milestones'}</Badge>
+                                                    </td>
+                                                </tr>
+                                            );
+                                        })}
+                                    </tbody>
+                                </table>
+                            )}
                         </CardContent>
                     </Card>
                 );

@@ -5,6 +5,8 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
 import { Search, ShieldAlert, FileCheck2, Building2, MapPin, Eye, AlertTriangle, CheckCircle2, FileText, AlertCircle, RefreshCw } from 'lucide-react';
 
+import { useProposals } from '@/lib/ProposalContext';
+
 const mockNGOs = [
     {
         id: "NGO-1004", name: "Jal Seva NGO", type: "Trust", regNum: "TR-2015-893",
@@ -29,6 +31,7 @@ const mockNGOs = [
 export default function ValidatorDashboard() {
     const [selectedNGO, setSelectedNGO] = useState<any | null>(null);
     const [activeTab, setActiveTab] = useState('Overview');
+    const { proposals, validateProposal } = useProposals();
 
     if (selectedNGO) {
         return (
@@ -203,47 +206,53 @@ export default function ValidatorDashboard() {
                 <CardContent className="p-0">
                     {activeTab === 'Project Proposals' ? (
                         <div className="p-6 space-y-6">
-                            <div className="bg-slate-50 border border-slate-200 p-6 rounded-xl relative">
-                                <Badge variant="warning" className="absolute top-4 right-4">Awaiting Validator Review</Badge>
+                            {proposals.filter(p => p.status === 'Submitted').length === 0 ? (
+                                <div className="text-center p-8 bg-slate-50 rounded-xl text-slate-500">No new proposals awaiting validation.</div>
+                            ) : (
+                                proposals.filter(p => p.status === 'Submitted').map((p) => (
+                                    <div key={p.id} className="bg-slate-50 border border-slate-200 p-6 rounded-xl relative">
+                                        <Badge variant="warning" className="absolute top-4 right-4">Awaiting Validator Review</Badge>
 
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                                    {/* Left: Citizen Petition */}
-                                    <div>
-                                        <h3 className="text-sm font-bold text-slate-400 uppercase tracking-widest mb-3">1. Citizen Petition</h3>
-                                        <div className="bg-white p-4 border border-slate-200 rounded-lg shadow-sm">
-                                            <h4 className="font-bold text-slate-900">Build Primary School Roof</h4>
-                                            <div className="text-xs text-slate-500 mt-2 flex gap-3">
-                                                <span className="flex items-center gap-1"><MapPin className="w-3 h-3" /> Pune, MH</span>
-                                                <span>Beneficiaries: <strong className="text-slate-700">250 Children</strong></span>
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                            {/* Left: Citizen Petition Simulator */}
+                                            <div>
+                                                <h3 className="text-sm font-bold text-slate-400 uppercase tracking-widest mb-3">1. Citizen Petition</h3>
+                                                <div className="bg-white p-4 border border-slate-200 rounded-lg shadow-sm">
+                                                    <h4 className="font-bold text-slate-900">{p.title}</h4>
+                                                    <div className="text-xs text-slate-500 mt-2 flex gap-3">
+                                                        <span className="flex items-center gap-1"><MapPin className="w-3 h-3" /> {p.location}</span>
+                                                        <span>Beneficiaries: <strong className="text-slate-700">{p.beneficiaries}</strong></span>
+                                                    </div>
+                                                    <p className="text-sm mt-3 text-slate-600 italic border-l-2 border-slate-200 pl-3">"{p.problem}"</p>
+                                                </div>
                                             </div>
-                                            <p className="text-sm mt-3 text-slate-600 italic border-l-2 border-slate-200 pl-3">"Currently studying under open sun. Monsoons destroy books every year."</p>
+
+                                            {/* Right: NGO Proposal */}
+                                            <div>
+                                                <h3 className="text-sm font-bold text-slate-400 uppercase tracking-widest mb-3">2. NGO Funding Proposal</h3>
+                                                <div className="bg-white p-4 border border-indigo-100 rounded-lg shadow-sm">
+                                                    <h4 className="font-bold text-indigo-900 border-b border-indigo-50 pb-2 mb-2">{p.ngoName} (Reg: {p.ngoRegNum})</h4>
+                                                    <div className="grid grid-cols-2 gap-4 text-sm mt-3">
+                                                        <div><span className="text-slate-500 block">Requested Fund</span><span className="font-bold font-mono">₹{p.totalFunding.toLocaleString()}</span></div>
+                                                        <div><span className="text-slate-500 block">Timeline</span><span className="font-bold">{p.targetDate}</span></div>
+                                                    </div>
+                                                    <div className="mt-3 flex flex-wrap gap-2">
+                                                        <Badge variant="neutral">{p.milestones.length} Milestones Planned</Badge>
+                                                        <Badge variant="neutral">{p.category}</Badge>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div className="mt-6 border-t border-slate-200 pt-6 flex justify-between items-center">
+                                            <div className="text-sm font-medium text-slate-600">Review documents and field reports before forwarding to CSR matching.</div>
+                                            <button onClick={() => validateProposal(p.id)} className="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-2.5 rounded-lg font-bold flex items-center gap-2 transition shadow-sm">
+                                                <CheckCircle2 className="w-5 h-5" /> Verify & Forward to Corporate Funder
+                                            </button>
                                         </div>
                                     </div>
-
-                                    {/* Right: NGO Proposal */}
-                                    <div>
-                                        <h3 className="text-sm font-bold text-slate-400 uppercase tracking-widest mb-3">2. NGO Funding Proposal</h3>
-                                        <div className="bg-white p-4 border border-indigo-100 rounded-lg shadow-sm">
-                                            <h4 className="font-bold text-indigo-900 border-b border-indigo-50 pb-2 mb-2">EduCare Org (Verified)</h4>
-                                            <div className="grid grid-cols-2 gap-4 text-sm mt-3">
-                                                <div><span className="text-slate-500 block">Requested Fund</span><span className="font-bold font-mono">₹800,000</span></div>
-                                                <div><span className="text-slate-500 block">Timeline</span><span className="font-bold">3 Months</span></div>
-                                            </div>
-                                            <div className="mt-3 flex flex-wrap gap-2">
-                                                <Badge variant="neutral">Milestone Plan Attached</Badge>
-                                                <Badge variant="neutral">Contractors Vetted</Badge>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div className="mt-6 border-t border-slate-200 pt-6 flex justify-between items-center">
-                                    <div className="text-sm font-medium text-slate-600">Review documents and field reports before forwarding to CSR matching.</div>
-                                    <button className="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-2.5 rounded-lg font-bold flex items-center gap-2 transition shadow-sm">
-                                        <CheckCircle2 className="w-5 h-5" /> Verify & Forward to Corporate Funder
-                                    </button>
-                                </div>
-                            </div>
+                                ))
+                            )}
                         </div>
                     ) : (
                         <table className="w-full text-sm text-left">
