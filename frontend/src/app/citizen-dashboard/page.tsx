@@ -5,13 +5,22 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
 import {
     Megaphone, MapPin, Search, FileText, Camera, Upload, CheckCircle2,
-    Clock, Building2, BellRing, Target, ShieldCheck, HardDrive, Info, Navigation
+    Clock, Building2, BellRing, Target, ShieldCheck, HardDrive, Info, Navigation, Users
 } from 'lucide-react';
 import { CitizenNearbyProjectsMap } from '@/components/maps/CitizenNearbyProjectsMap';
+import { useAuth, CitizenProfile } from '@/lib/AuthContext';
 
 export default function CitizenDashboard() {
+    const { user } = useAuth();
     const [activeTab, setActiveTab] = useState('Overview');
     const [evidenceFile, setEvidenceFile] = useState('');
+
+    const citizenProfile = (user?.profile as CitizenProfile) || {};
+    const citizenName = citizenProfile.fullName || user?.name || 'Ramesh Patil';
+    const citizenMobile = citizenProfile.mobile || user?.mobile || '9876543210';
+    const citizenLocation = `${citizenProfile.cityVillage || 'Shirur Village'}, ${citizenProfile.district || 'Pune'}, ${citizenProfile.state || 'Maharashtra'}`;
+    const citizenPincode = citizenProfile.pincode || '412210';
+    const citizenLanguage = citizenProfile.preferredLanguage === 'mr' ? 'मराठी (Marathi)' : citizenProfile.preferredLanguage === 'hi' ? 'हिन्दी (Hindi)' : 'English';
 
     const formSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -332,6 +341,54 @@ export default function CitizenDashboard() {
                         </div>
                     </div>
                 );
+            case 'Profile Settings':
+                return (
+                    <div className="max-w-3xl mx-auto space-y-6">
+                        <Card className="border-slate-200 shadow-sm">
+                            <CardHeader className="bg-slate-50 border-b border-slate-100 p-5">
+                                <CardTitle className="text-base font-bold text-slate-900 flex items-center gap-2">
+                                    <Users className="w-5 h-5 text-indigo-600" /> Citizen Profile & Location Details
+                                </CardTitle>
+                            </CardHeader>
+                            <CardContent className="p-6 space-y-4">
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                                    <div className="p-3.5 bg-slate-50 rounded-xl border border-slate-100">
+                                        <span className="text-slate-500 block mb-1 font-semibold">Full Name</span>
+                                        <span className="font-bold text-slate-900 text-sm">{citizenName}</span>
+                                    </div>
+                                    <div className="p-3.5 bg-slate-50 rounded-xl border border-slate-100">
+                                        <span className="text-slate-500 block mb-1 font-semibold">Email Address</span>
+                                        <span className="font-bold text-slate-900 text-sm">{user?.email || 'ramesh.patil@gramin.in'}</span>
+                                    </div>
+                                    <div className="p-3.5 bg-slate-50 rounded-xl border border-slate-100">
+                                        <span className="text-slate-500 block mb-1 font-semibold">Mobile Number</span>
+                                        <span className="font-bold text-slate-900 text-sm font-mono">{citizenMobile}</span>
+                                    </div>
+                                    <div className="p-3.5 bg-slate-50 rounded-xl border border-slate-100">
+                                        <span className="text-slate-500 block mb-1 font-semibold">Preferred Language</span>
+                                        <span className="font-bold text-slate-900 text-sm">{citizenLanguage}</span>
+                                    </div>
+                                    <div className="p-3.5 bg-slate-50 rounded-xl border border-slate-100">
+                                        <span className="text-slate-500 block mb-1 font-semibold">State / District</span>
+                                        <span className="font-bold text-slate-900 text-sm">{citizenProfile.district || 'Pune'}, {citizenProfile.state || 'Maharashtra'}</span>
+                                    </div>
+                                    <div className="p-3.5 bg-slate-50 rounded-xl border border-slate-100">
+                                        <span className="text-slate-500 block mb-1 font-semibold">Village / Pincode</span>
+                                        <span className="font-bold text-slate-900 text-sm">{citizenProfile.cityVillage || 'Shirur Village'} ({citizenPincode})</span>
+                                    </div>
+                                </div>
+
+                                <div className="p-4 bg-indigo-50 border border-indigo-100 rounded-xl flex items-center gap-3 text-xs text-indigo-900 mt-2">
+                                    <CheckCircle2 className="w-5 h-5 text-indigo-600 shrink-0" />
+                                    <div>
+                                        <p className="font-bold">Verified Citizen Account</p>
+                                        <p className="text-[11px] text-indigo-700 mt-0.5">Your registered district is used to automatically alert local NGOs and CSR funds to your petitions.</p>
+                                    </div>
+                                </div>
+                            </CardContent>
+                        </Card>
+                    </div>
+                );
         }
     };
 
@@ -345,8 +402,14 @@ export default function CitizenDashboard() {
                 </div>
 
                 <div className="relative z-10 w-full mb-4 md:mb-0">
+                    <div className="flex items-center gap-2 mb-2">
+                        <Badge variant="default" className="text-xs">Citizen Impact Portal</Badge>
+                        <span className="text-xs text-indigo-200">Welcome, {citizenName}</span>
+                    </div>
                     <h1 className="text-3xl md:text-4xl font-bold tracking-tight">Citizen Impact Portal</h1>
-                    <p className="text-indigo-100 mt-2 font-medium opacity-90 max-w-2xl">Submit local issues directly to verified NGOs and Corporate CSR funds. Real-time transparent visibility into your community.</p>
+                    <p className="text-indigo-100 mt-2 font-medium opacity-90 max-w-2xl">
+                        Registered Location: <strong className="text-white">{citizenLocation}</strong> • Submit local issues directly to verified NGOs and Corporate CSR funds. Real-time transparent visibility into your community.
+                    </p>
                 </div>
                 <button
                     onClick={() => setActiveTab('Submit Petition')}

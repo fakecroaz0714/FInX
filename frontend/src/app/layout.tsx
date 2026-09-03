@@ -4,6 +4,7 @@ import "./globals.css";
 import Sidebar from "@/components/Sidebar";
 import { AuthProvider } from "@/lib/AuthContext";
 import { ProposalProvider } from "@/lib/ProposalContext";
+import { LanguageProvider } from "@/lib/LanguageContext";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -20,14 +21,16 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.className} bg-slate-50 text-slate-900 flex h-screen overflow-hidden`}>
-        <AuthProvider>
-          <ProposalProvider>
-            <Sidebar />
-            <main className="flex-1 overflow-y-auto w-full">
-              {children}
-            </main>
-          </ProposalProvider>
-        </AuthProvider>
+        <LanguageProvider>
+          <AuthProvider>
+            <ProposalProvider>
+              <Sidebar />
+              <main className="flex-1 overflow-y-auto w-full">
+                {children}
+              </main>
+            </ProposalProvider>
+          </AuthProvider>
+        </LanguageProvider>
       </body>
     </html>
   );
