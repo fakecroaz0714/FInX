@@ -18,7 +18,7 @@ const navItems = [
     { name: 'Petitions', href: '/petitions', icon: MapPin },
     { name: 'NGO Network', href: '/ngos', icon: Users },
     { name: 'NGO Validator', href: '/validator', icon: ShieldCheck },
-    { name: 'CSR Matches', href: '/csr', icon: Briefcase },
+    { name: 'Corporate Hub', href: '/corporate-dashboard', icon: Briefcase },
     { name: 'Escrow & Milestones', href: '/escrow', icon: FileCheck2 },
     { name: 'On-Chain Demo', href: '/demo', icon: ShieldCheck },
     { name: 'Corporate Partners', href: '/corporate', icon: Building2 },
