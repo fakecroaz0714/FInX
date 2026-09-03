@@ -10,6 +10,7 @@ import {
 import { PieChart as RechartsPie, Pie, Cell, ResponsiveContainer, Tooltip as RechartsTooltip } from 'recharts';
 import { useProposals } from '@/lib/ProposalContext';
 import { useAuth, CorporateProfile } from '@/lib/AuthContext';
+import ImpactEvidenceUploader from '@/components/ImpactEvidenceUploader';
 
 export default function CorporateDashboard() {
     const { user } = useAuth();
@@ -243,19 +244,7 @@ export default function CorporateDashboard() {
                             <Card className="bg-indigo-50 border-indigo-200"><CardContent className="p-6"><div className="text-indigo-700 font-bold mb-1">Fund Utilization</div><div className="text-3xl font-bold font-mono">92%</div></CardContent></Card>
                             <Card className="bg-amber-50 border-amber-200"><CardContent className="p-6"><div className="text-amber-700 font-bold mb-1">Active Regions</div><div className="text-3xl font-bold font-mono">8 States</div></CardContent></Card>
                         </div>
-                        <Card>
-                            <CardHeader><CardTitle>Before & After Evidence (School Rebuilding)</CardTitle></CardHeader>
-                            <CardContent className="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <div className="border border-slate-200 rounded-lg p-2 bg-slate-50 flex flex-col items-center justify-center h-48 uppercase text-slate-400 font-bold tracking-widest relative">
-                                    <span className="absolute top-2 left-2 bg-slate-800 text-white text-xs px-2 py-1 rounded">BEFORE: Aug 2023</span>
-                                    [Uploaded Photo of Dilapidated Building]
-                                </div>
-                                <div className="border border-slate-200 rounded-lg p-2 bg-indigo-50 flex flex-col items-center justify-center h-48 uppercase text-indigo-400 font-bold tracking-widest relative">
-                                    <span className="absolute top-2 left-2 bg-emerald-600 text-white text-xs px-2 py-1 rounded">AFTER: Jan 2024</span>
-                                    [Uploaded Photo of Renovated Classrooms]
-                                </div>
-                            </CardContent>
-                        </Card>
+                        <ImpactEvidenceUploader />
                     </div>
                 );
             default:
