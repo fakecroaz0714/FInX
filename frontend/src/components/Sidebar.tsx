@@ -27,6 +27,11 @@ const navItems = [
 
 export default function Sidebar() {
     const pathname = usePathname();
+    const { user, role, logout, changeRole } = require('@/lib/AuthContext').useAuth();
+
+    if (pathname.startsWith('/auth')) {
+        return null; // hide sidebar on auth pages
+    }
 
     return (
         <div className="w-64 bg-white border-r border-slate-200 flex flex-col h-full shadow-sm z-10 shrink-0">
@@ -63,16 +68,30 @@ export default function Sidebar() {
             </div>
 
             <div className="p-4 border-t border-slate-100">
-                <div className="bg-slate-50 rounded-lg p-4 border border-slate-200">
-                    <div className="text-xs font-semibold text-slate-500 mb-1">Active Role</div>
-                    <div className="text-sm font-bold text-slate-900 flex items-center justify-between">
-                        Admin / Reviewer
-                        <div className="w-2 h-2 rounded-full bg-emerald-500"></div>
+                {user ? (
+                    <div className="bg-slate-50 rounded-lg p-3 border border-slate-200">
+                        <div className="text-xs font-semibold text-slate-500 mb-1">Active Role ({user.name})</div>
+
+                        <select
+                            value={role || ''}
+                            onChange={(e) => changeRole(e.target.value)}
+                            className="w-full bg-white text-sm font-bold text-slate-900 p-1.5 border border-slate-200 rounded mt-1 focus:ring-1 focus:ring-indigo-500 outline-none"
+                        >
+                            <option value="Admin">Admin / Reviewer</option>
+                            <option value="Corporate">Corporate Funder</option>
+                            <option value="NGO">NGO Validation</option>
+                            <option value="Citizen">Citizen User</option>
+                        </select>
+
+                        <button onClick={logout} className="text-xs text-red-600 font-medium mt-3 hover:underline w-full text-left">
+                            Log out
+                        </button>
                     </div>
-                    <button className="text-xs text-indigo-600 font-medium mt-3 hover:underline">
-                        Switch Role
-                    </button>
-                </div>
+                ) : (
+                    <Link href="/auth/login" className="block text-center text-sm bg-indigo-600 text-white p-2 rounded-lg font-medium hover:bg-indigo-700">
+                        Sign In
+                    </Link>
+                )}
             </div>
         </div>
     );
