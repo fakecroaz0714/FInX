@@ -15,21 +15,35 @@ import {
 } from 'lucide-react';
 
 const navItems = [
-    { name: 'Dashboard', href: '/', icon: LayoutDashboard },
-    { name: 'Workflow Engine', href: '/matching', icon: Network },
-    { name: 'Citizen Hub', href: '/citizen-dashboard', icon: MapPin },
-    { name: 'NGO Validator', href: '/validator', icon: ShieldCheck },
-    { name: 'Corporate Hub', href: '/corporate-dashboard', icon: Briefcase },
-    { name: 'On-Chain Demo', href: '/demo', icon: FileCheck2 },
+    { name: 'Dashboard', href: '/', icon: LayoutDashboard, roles: ['Admin', 'NGO'] },
+    { name: 'Workflow Engine', href: '/matching', icon: Network, roles: ['Admin'] },
+    { name: 'Citizen Hub', href: '/citizen-dashboard', icon: MapPin, roles: ['Admin', 'Citizen'] },
+    { name: 'NGO Validator', href: '/validator', icon: ShieldCheck, roles: ['Admin', 'NGO'] },
+    { name: 'Corporate Hub', href: '/corporate-dashboard', icon: Briefcase, roles: ['Admin', 'Corporate'] },
+    { name: 'On-Chain Demo', href: '/demo', icon: FileCheck2, roles: ['Admin', 'Corporate', 'NGO', 'Citizen'] },
 ];
+
+import { useRouter } from 'next/navigation';
 
 export default function Sidebar() {
     const pathname = usePathname();
+    const router = useRouter();
     const { user, role, logout, changeRole } = require('@/lib/AuthContext').useAuth();
 
     if (pathname.startsWith('/auth')) {
         return null; // hide sidebar on auth pages
     }
+
+    const handleRoleSwitch = (newRole: string) => {
+        changeRole(newRole);
+        // Switch dashboard view dynamically
+        if (newRole === 'Corporate') router.push('/corporate-dashboard');
+        else if (newRole === 'Citizen') router.push('/citizen-dashboard');
+        else if (newRole === 'Admin') router.push('/matching');
+        else router.push('/');
+    };
+
+    const visibleNavItems = navItems.filter(item => !role || !item.roles || item.roles.includes(role));
 
     return (
         <div className="w-64 bg-white border-r border-slate-200 flex flex-col h-full shadow-sm z-10 shrink-0">
@@ -45,7 +59,7 @@ export default function Sidebar() {
 
             <div className="flex-1 overflow-y-auto p-4 space-y-1">
                 <div className="text-xs font-semibold text-slate-400 mb-4 px-3 uppercase tracking-wider">Main Navigation</div>
-                {navItems.map((item) => {
+                {visibleNavItems.map((item) => {
                     const isActive = pathname === item.href;
                     const Icon = item.icon;
 
@@ -72,7 +86,7 @@ export default function Sidebar() {
 
                         <select
                             value={role || ''}
-                            onChange={(e) => changeRole(e.target.value)}
+                            onChange={(e) => handleRoleSwitch(e.target.value)}
                             className="w-full bg-white text-sm font-bold text-slate-900 p-1.5 border border-slate-200 rounded mt-1 focus:ring-1 focus:ring-indigo-500 outline-none"
                         >
                             <option value="Admin">Admin / Reviewer</option>

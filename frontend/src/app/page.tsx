@@ -1,9 +1,23 @@
+'use client';
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 import { ArrowRight, CheckCircle2, AlertTriangle, ShieldCheck } from "lucide-react";
 import DashboardChart from "@/components/DashboardChart";
+import { useAuth } from "@/lib/AuthContext";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 export default function Dashboard() {
+  const { role } = useAuth();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (role === 'Corporate') router.push('/corporate-dashboard');
+    else if (role === 'Citizen') router.push('/citizen-dashboard');
+    else if (role === 'Admin') router.push('/matching');
+  }, [role, router]);
+
   return (
     <div className="p-8 pb-20">
       <header className="mb-8 flex justify-between items-center">

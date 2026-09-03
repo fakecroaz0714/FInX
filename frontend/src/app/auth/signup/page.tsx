@@ -16,7 +16,10 @@ export default function SignupPage() {
     const handleSignup = (e: React.FormEvent) => {
         e.preventDefault();
         signup(email, password, role);
-        router.push('/');
+        if (role === 'Corporate') router.push('/corporate-dashboard');
+        else if (role === 'Citizen') router.push('/citizen-dashboard');
+        else if (role === 'Admin') router.push('/matching');
+        else router.push('/');
     };
 
     return (
