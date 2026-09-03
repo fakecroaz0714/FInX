@@ -18,6 +18,7 @@ const navItems = [
     { name: 'Dashboard', href: '/', icon: LayoutDashboard, roles: ['Admin', 'NGO'] },
     { name: 'Workflow Engine', href: '/matching', icon: Network, roles: ['Admin'] },
     { name: 'Citizen Hub', href: '/citizen-dashboard', icon: MapPin, roles: ['Admin', 'Citizen'] },
+    { name: 'Community Petitions', href: '/petitions', icon: ShieldCheck, roles: ['Admin', 'NGO', 'Corporate'] },
     { name: 'NGO Validator', href: '/validator', icon: ShieldCheck, roles: ['Admin', 'NGO'] },
     { name: 'Corporate Hub', href: '/corporate-dashboard', icon: Briefcase, roles: ['Admin', 'Corporate'] },
     { name: 'On-Chain Demo', href: '/demo', icon: FileCheck2, roles: ['Admin', 'Corporate', 'NGO', 'Citizen'] },

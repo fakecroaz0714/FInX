@@ -293,6 +293,61 @@ export default function CitizenDashboard() {
                                 </div>
                             </div>
                         </div>
+
+                        {/* Petitions Archive Table */}
+                        <div className="md:col-span-3 mt-8">
+                            <h3 className="font-bold text-slate-900 text-sm tracking-wider uppercase mb-3 flex items-center gap-2">
+                                <FileText className="w-4 h-4" /> Petition History
+                            </h3>
+                            <div className="bg-white border focus:outline-none border-slate-200 rounded-xl overflow-hidden shadow-sm">
+                                <table className="w-full text-sm text-left">
+                                    <thead className="bg-slate-50 text-slate-500 font-semibold uppercase text-xs">
+                                        <tr>
+                                            <th className="p-4">Petition ID</th>
+                                            <th className="p-4">Title</th>
+                                            <th className="p-4">Date Submitted</th>
+                                            <th className="p-4">Status</th>
+                                            <th className="p-4 text-center">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody className="divide-y divide-slate-100">
+                                        <tr className="hover:bg-slate-50 transition-colors">
+                                            <td className="p-4 font-mono text-xs text-slate-500">PET-8992</td>
+                                            <td className="p-4 font-medium text-slate-900">Build Primary School Roof</td>
+                                            <td className="p-4 text-slate-600">Oct 10, 2024</td>
+                                            <td className="p-4"><Badge variant="default">Funded</Badge></td>
+                                            <td className="p-4 text-center">
+                                                <button className="bg-white border border-indigo-200 text-indigo-600 hover:bg-indigo-50 hover:border-indigo-300 transition-colors px-3 py-1.5 rounded-lg text-xs font-bold inline-flex items-center gap-1">
+                                                    <HardDrive className="w-3 h-3" /> Get Petition
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        <tr className="hover:bg-slate-50 transition-colors">
+                                            <td className="p-4 font-mono text-xs text-slate-500">PET-9041</td>
+                                            <td className="p-4 font-medium text-slate-900">Solar Lights for Ward 3</td>
+                                            <td className="p-4 text-slate-600">Nov 01, 2024</td>
+                                            <td className="p-4"><Badge variant="warning">Verified</Badge></td>
+                                            <td className="p-4 text-center">
+                                                <button className="bg-white border border-indigo-200 text-indigo-600 hover:bg-indigo-50 hover:border-indigo-300 transition-colors px-3 py-1.5 rounded-lg text-xs font-bold inline-flex items-center gap-1">
+                                                    <HardDrive className="w-3 h-3" /> Get Petition
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        <tr className="hover:bg-slate-50 transition-colors">
+                                            <td className="p-4 font-mono text-xs text-slate-500">PET-9102</td>
+                                            <td className="p-4 font-medium text-slate-900">Community Well Cleaning</td>
+                                            <td className="p-4 text-slate-600">Jan 15, 2025</td>
+                                            <td className="p-4"><Badge variant="neutral">Under Review</Badge></td>
+                                            <td className="p-4 text-center">
+                                                <button className="bg-white border border-indigo-200 text-indigo-600 hover:bg-indigo-50 hover:border-indigo-300 transition-colors px-3 py-1.5 rounded-lg text-xs font-bold inline-flex items-center gap-1">
+                                                    <HardDrive className="w-3 h-3" /> Get Petition
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
                     </div>
                 );
         }
