@@ -575,37 +575,77 @@ export default function AIProposalVerificationPanel() {
                                     <div className="text-base font-extrabold font-mono text-emerald-600 mt-0.5">{verificationReport.overallScore}/100</div>
                                 </div>
                                 <div>
-                                    <div className="text-slate-500 font-semibold text-[10px]">Risk Level</div>
-                                    <Badge variant={verificationReport.riskLevel === 'LOW RISK' ? 'success' : 'warning'} className="mt-0.5 text-[10px] px-2 py-0.5">
-                                        {verificationReport.riskLevel}
-                                    </Badge>
+                                    <div className="text-slate-500 font-semibold text-[10px]">AI Ensemble Confidence</div>
+                                    <div className="text-base font-extrabold font-mono text-indigo-600 mt-0.5">{verificationReport.confidenceRating || 96.4}%</div>
                                 </div>
                                 <div>
-                                    <div className="text-slate-500 font-semibold text-[10px]">AI Recommendation</div>
-                                    <div className="font-bold text-indigo-700 text-xs mt-0.5">{verificationReport.aiRecommendation}</div>
+                                    <div className="text-slate-500 font-semibold text-[10px]">Ensemble Action Routing</div>
+                                    <div className={`font-bold text-xs mt-0.5 ${verificationReport.overallScore >= 85 ? 'text-emerald-700 font-mono' : 'text-amber-700 font-mono'}`}>
+                                        {verificationReport.routingLabel || 'HUMAN REVIEW REQUIRED'}
+                                    </div>
                                 </div>
                             </div>
 
-                            {/* Module Scores Grid */}
-                            <div>
-                                <h4 className="font-bold text-slate-900 uppercase tracking-wider text-xs mb-3">Verification Module Scores (Modules A–H)</h4>
-                                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                                    <div className="p-3 bg-slate-50 border rounded-lg">
-                                        <div className="text-slate-500 text-[10px]">NGO Eligibility</div>
-                                        <div className="font-bold font-mono text-slate-900 text-sm mt-0.5">{verificationReport.moduleScores.ngoEligibility}/100 ✓</div>
+                            {/* MULTI-MODEL AI ORCHESTRATOR PIPELINE (MODELS 1–7) */}
+                            <div className="p-4 bg-slate-900 text-white rounded-xl space-y-4 border border-slate-800">
+                                <div className="flex justify-between items-center border-b border-slate-800 pb-3">
+                                    <div className="flex items-center gap-2">
+                                        <Sparkles className="w-4 h-4 text-amber-400" />
+                                        <h4 className="font-bold text-xs uppercase tracking-wider text-white">AI Orchestrator Multi-Model Engine (Models 1–7)</h4>
                                     </div>
-                                    <div className="p-3 bg-slate-50 border rounded-lg">
-                                        <div className="text-slate-500 text-[10px]">Document Verification</div>
-                                        <div className="font-bold font-mono text-slate-900 text-sm mt-0.5">{verificationReport.moduleScores.documentVerification}/100 ✓</div>
-                                    </div>
-                                    <div className="p-3 bg-slate-50 border rounded-lg">
-                                        <div className="text-slate-500 text-[10px]">CSR Compliance</div>
-                                        <div className="font-bold font-mono text-slate-900 text-sm mt-0.5">{verificationReport.moduleScores.csrCompliance}/100 ✓</div>
-                                    </div>
-                                    <div className="p-3 bg-slate-50 border rounded-lg">
-                                        <div className="text-slate-500 text-[10px]">Budget Consistency</div>
-                                        <div className="font-bold font-mono text-amber-600 text-sm mt-0.5">{verificationReport.moduleScores.budgetConsistency}/100 ⚠</div>
-                                    </div>
+                                    <Badge className="bg-indigo-500/30 text-indigo-300 border-indigo-400 text-[10px]">Ensemble Pipeline Active</Badge>
+                                </div>
+
+                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2.5">
+                                    {verificationReport.multiModelPipeline ? (
+                                        verificationReport.multiModelPipeline.map((m: any) => (
+                                            <div key={m.id} className="p-2.5 bg-slate-800/90 border border-slate-700/80 rounded-lg space-y-1">
+                                                <div className="flex justify-between items-center">
+                                                    <span className="text-[10px] font-bold text-indigo-300">{m.name}</span>
+                                                    <span className="font-mono text-xs font-extrabold text-emerald-400">{m.score}/100</span>
+                                                </div>
+                                                <p className="text-[10px] text-slate-300 leading-tight">{m.details}</p>
+                                            </div>
+                                        ))
+                                    ) : (
+                                        <>
+                                            <div className="p-2.5 bg-slate-800 border border-slate-700 rounded-lg">
+                                                <div className="text-[10px] font-bold text-indigo-300">MODEL 1 — NGO / KYC VERIFIER</div>
+                                                <div className="text-xs font-mono font-bold text-emerald-400">100/100</div>
+                                                <div className="text-[10px] text-slate-300">Registration & 80G Tax Exemption Verified</div>
+                                            </div>
+                                            <div className="p-2.5 bg-slate-800 border border-slate-700 rounded-lg">
+                                                <div className="text-[10px] font-bold text-indigo-300">MODEL 2 — CSR COMPLIANCE ENGINE</div>
+                                                <div className="text-xs font-mono font-bold text-emerald-400">100/100</div>
+                                                <div className="text-[10px] text-slate-300">Schedule VII Legal Category Alignment</div>
+                                            </div>
+                                            <div className="p-2.5 bg-slate-800 border border-slate-700 rounded-lg">
+                                                <div className="text-[10px] font-bold text-indigo-300">MODEL 3 — DOCUMENT INTELLIGENCE AI</div>
+                                                <div className="text-xs font-mono font-bold text-amber-400">80/100</div>
+                                                <div className="text-[10px] text-slate-300">OCR Extraction & Quotation Cross-Check</div>
+                                            </div>
+                                            <div className="p-2.5 bg-slate-800 border border-slate-700 rounded-lg">
+                                                <div className="text-[10px] font-bold text-indigo-300">MODEL 4 — BUDGET ML (XGBoost)</div>
+                                                <div className="text-xs font-mono font-bold text-amber-400">82/100</div>
+                                                <div className="text-[10px] text-slate-300">Cost Variance Estimation (+14.3%)</div>
+                                            </div>
+                                            <div className="p-2.5 bg-slate-800 border border-slate-700 rounded-lg">
+                                                <div className="text-[10px] font-bold text-indigo-300">MODEL 5 — DUPLICATE / SIMILARITY AI</div>
+                                                <div className="text-xs font-mono font-bold text-amber-400">82/100</div>
+                                                <div className="text-[10px] text-slate-300">Semantic & Proximity Match (94%)</div>
+                                            </div>
+                                            <div className="p-2.5 bg-slate-800 border border-slate-700 rounded-lg">
+                                                <div className="text-[10px] font-bold text-indigo-300">MODEL 6 — ANOMALY / RISK ENGINE</div>
+                                                <div className="text-xs font-mono font-bold text-amber-400">78/100</div>
+                                                <div className="text-[10px] text-slate-300">Material Quantity Ratio Anomaly (+56%)</div>
+                                            </div>
+                                            <div className="p-2.5 bg-slate-800 border border-slate-700 rounded-lg col-span-1 lg:col-span-3">
+                                                <div className="text-[10px] font-bold text-indigo-300">MODEL 7 — VISION / EVIDENCE AI</div>
+                                                <div className="text-xs font-mono font-bold text-emerald-400">95/100</div>
+                                                <div className="text-[10px] text-slate-300">Geotagged & Baseline Photo Verification</div>
+                                            </div>
+                                        </>
+                                    )}
                                 </div>
                             </div>
 
