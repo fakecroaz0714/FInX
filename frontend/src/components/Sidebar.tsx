@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import {
     LayoutDashboard,
     Users,
@@ -11,7 +11,8 @@ import {
     MapPin,
     ShieldCheck,
     BarChart4,
-    Globe
+    Globe,
+    Network
 } from 'lucide-react';
 import { useAuth } from '@/lib/AuthContext';
 import { useLanguage, Language } from '@/lib/LanguageContext';
@@ -19,14 +20,15 @@ import { useLanguage, Language } from '@/lib/LanguageContext';
 const roleNavItems: Record<string, Array<{ key: string; defaultName: string; href: string; icon: any }>> = {
     Admin: [
         { key: 'nav_dashboard', defaultName: 'Dashboard', href: '/', icon: LayoutDashboard },
+        { key: 'nav_matching', defaultName: 'Matching Engine', href: '/matching', icon: Network },
         { key: 'nav_verified_milestones', defaultName: 'Verified Milestones', href: '/verified-milestones', icon: ShieldCheck },
-        { key: 'nav_ngo_validation', defaultName: 'NGO Validation', href: '/validation', icon: ShieldCheck },
+        { key: 'nav_ngo_validation', defaultName: 'NGO Validation', href: '/validator', icon: ShieldCheck },
         { key: 'nav_escrow', defaultName: 'Escrow Controls', href: '/escrow', icon: FileCheck2 },
         { key: 'nav_demo', defaultName: 'On-Chain Demo', href: '/demo', icon: ShieldCheck },
         { key: 'nav_impact', defaultName: 'Impact Reports', href: '/impact', icon: BarChart4 },
     ],
     Corporate: [
-        { key: 'nav_dashboard', defaultName: 'Dashboard', href: '/', icon: LayoutDashboard },
+        { key: 'nav_dashboard', defaultName: 'Dashboard', href: '/corporate-dashboard', icon: LayoutDashboard },
         { key: 'nav_verified_milestones', defaultName: 'Milestone Funding Control', href: '/verified-milestones', icon: ShieldCheck },
         { key: 'nav_csr_matches', defaultName: 'CSR Matches & Mandates', href: '/csr', icon: Briefcase },
         { key: 'nav_escrow', defaultName: 'Escrow Accounts', href: '/escrow', icon: FileCheck2 },
@@ -34,14 +36,14 @@ const roleNavItems: Record<string, Array<{ key: string; defaultName: string; hre
         { key: 'nav_impact', defaultName: 'Impact Analytics', href: '/impact', icon: BarChart4 },
     ],
     NGO: [
-        { key: 'nav_dashboard', defaultName: 'Dashboard', href: '/', icon: LayoutDashboard },
+        { key: 'nav_dashboard', defaultName: 'Dashboard', href: '/ngo-dashboard', icon: LayoutDashboard },
         { key: 'nav_submit_evidence', defaultName: 'Submit Evidence', href: '/verified-milestones', icon: ShieldCheck },
         { key: 'nav_ngo_dir', defaultName: 'NGO Directory', href: '/ngos', icon: Users },
         { key: 'nav_csr_matches', defaultName: 'CSR Opportunities', href: '/csr', icon: Briefcase },
         { key: 'nav_petitions', defaultName: 'Village Petitions', href: '/petitions', icon: MapPin },
     ],
     Citizen: [
-        { key: 'nav_dashboard', defaultName: 'Dashboard', href: '/', icon: LayoutDashboard },
+        { key: 'nav_dashboard', defaultName: 'Dashboard', href: '/citizen-dashboard', icon: LayoutDashboard },
         { key: 'nav_petitions', defaultName: 'Village Petitions', href: '/petitions', icon: MapPin },
         { key: 'nav_verified_milestones', defaultName: 'Public Milestone Proofs', href: '/verified-milestones', icon: ShieldCheck },
         { key: 'nav_impact', defaultName: 'Impact Reports', href: '/impact', icon: BarChart4 },
@@ -50,8 +52,18 @@ const roleNavItems: Record<string, Array<{ key: string; defaultName: string; hre
 
 export default function Sidebar() {
     const pathname = usePathname();
+    const router = useRouter();
     const { user, role, logout, changeRole } = useAuth();
     const { lang, setLang, t } = useLanguage();
+
+    const handleRoleSwitch = (newRole: any) => {
+        changeRole(newRole);
+        if (newRole === 'Corporate') router.push('/corporate-dashboard');
+        else if (newRole === 'NGO') router.push('/ngo-dashboard');
+        else if (newRole === 'Citizen') router.push('/citizen-dashboard');
+        else if (newRole === 'Admin') router.push('/matching');
+        else router.push('/');
+    };
 
     if (pathname.startsWith('/auth')) {
         return null; // hide sidebar on auth pages
@@ -134,7 +146,7 @@ export default function Sidebar() {
 
                     <select
                         value={role || 'Admin'}
-                        onChange={(e) => changeRole(e.target.value as any)}
+                        onChange={(e) => handleRoleSwitch(e.target.value as any)}
                         className="w-full bg-slate-50 text-xs font-bold text-slate-900 p-1.5 border border-slate-200 rounded focus:ring-1 focus:ring-indigo-500 outline-none cursor-pointer"
                     >
                         <option value="Admin">🛡️ Admin / Reviewer</option>

@@ -751,7 +751,7 @@ export default function VerifiedMilestonesEngine() {
                         <div className="flex justify-between items-start border-b border-slate-100 pb-3">
                             <div>
                                 <div className="flex items-center gap-2">
-                                    <Badge variant="indigo">Corporate Human-in-the-Loop Review</Badge>
+                                    <Badge variant="default">Corporate Human-in-the-Loop Review</Badge>
                                     <span className="text-xs text-slate-400 font-mono">Milestone {selectedMilestone.milestoneNumber}</span>
                                 </div>
                                 <h3 className="text-xl font-bold text-slate-900 mt-1">{selectedMilestone.title}</h3>

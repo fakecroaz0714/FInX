@@ -306,7 +306,9 @@ function CorporateDashboardView() {
    3. NGO PARTNER / INSPECTOR DASHBOARD VIEW
    ========================================================================= */
 function NGODashboardView() {
+  const { user } = useAuth();
   const { t } = useLanguage();
+  const ngoName = (user?.profile as any)?.organizationName || user?.name || 'Jal Seva NGO';
   return (
     <div className="space-y-6">
       <header className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
@@ -327,7 +329,7 @@ function NGODashboardView() {
           <CardContent className="p-4">
             <div className="text-xs font-semibold text-slate-500 mb-1">Assigned Projects</div>
             <div className="text-xl md:text-2xl font-extrabold text-slate-900 mb-1">3</div>
-            <div className="text-[10px] text-emerald-600 font-semibold">Jal Seva NGO</div>
+            <div className="text-[10px] text-emerald-600 font-semibold truncate">{ngoName}</div>
           </CardContent>
         </Card>
         <Card className="border border-slate-200/80 card-hover-effect">
