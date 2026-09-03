@@ -185,7 +185,7 @@ export default function ValidatorDashboard() {
             <Card className="border border-slate-200 shadow-sm">
                 <CardHeader className="bg-slate-50 border-b border-slate-100 flex flex-row justify-between items-center pb-4">
                     <div className="flex gap-4">
-                        {['Overview', 'Validation Queue', 'Risk Assessment', 'Audit Logs'].map(tab => (
+                        {['Overview', 'Validation Queue', 'Risk Assessment', 'Project Proposals', 'Audit Logs'].map(tab => (
                             <button
                                 key={tab}
                                 onClick={() => setActiveTab(tab)}
@@ -201,51 +201,97 @@ export default function ValidatorDashboard() {
                     </div>
                 </CardHeader>
                 <CardContent className="p-0">
-                    <table className="w-full text-sm text-left">
-                        <thead className="bg-slate-50 text-slate-500 font-semibold uppercase text-xs tracking-wider">
-                            <tr>
-                                <th className="p-4">Organization</th>
-                                <th className="p-4">Type</th>
-                                <th className="p-4">State</th>
-                                <th className="p-4">Risk Score</th>
-                                <th className="p-4">Status</th>
-                                <th className="p-4">Action</th>
-                            </tr>
-                        </thead>
-                        <tbody className="divide-y divide-slate-100">
-                            {mockNGOs.map((ngo, idx) => (
-                                <tr key={idx} className="hover:bg-indigo-50/30 transition-colors">
-                                    <td className="p-4">
-                                        <div className="font-bold text-slate-900">{ngo.name}</div>
-                                        <div className="font-mono text-xs text-slate-500 mt-1">{ngo.id}</div>
-                                    </td>
-                                    <td className="p-4 text-slate-600 font-medium">{ngo.type}</td>
-                                    <td className="p-4 text-slate-600">{ngo.location.split(',')[0]}</td>
-                                    <td className="p-4">
-                                        <div className="flex items-center gap-2">
-                                            <div className="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden w-20">
-                                                <div className="h-full rounded-full" style={{ width: `${ngo.score}%`, backgroundColor: ngo.score > 80 ? '#10b981' : ngo.score > 50 ? '#f59e0b' : '#ef4444' }}></div>
+                    {activeTab === 'Project Proposals' ? (
+                        <div className="p-6 space-y-6">
+                            <div className="bg-slate-50 border border-slate-200 p-6 rounded-xl relative">
+                                <Badge variant="warning" className="absolute top-4 right-4">Awaiting Validator Review</Badge>
+
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                    {/* Left: Citizen Petition */}
+                                    <div>
+                                        <h3 className="text-sm font-bold text-slate-400 uppercase tracking-widest mb-3">1. Citizen Petition</h3>
+                                        <div className="bg-white p-4 border border-slate-200 rounded-lg shadow-sm">
+                                            <h4 className="font-bold text-slate-900">Build Primary School Roof</h4>
+                                            <div className="text-xs text-slate-500 mt-2 flex gap-3">
+                                                <span className="flex items-center gap-1"><MapPin className="w-3 h-3" /> Pune, MH</span>
+                                                <span>Beneficiaries: <strong className="text-slate-700">250 Children</strong></span>
                                             </div>
-                                            <span className="font-mono text-xs font-bold">{ngo.score}</span>
+                                            <p className="text-sm mt-3 text-slate-600 italic border-l-2 border-slate-200 pl-3">"Currently studying under open sun. Monsoons destroy books every year."</p>
                                         </div>
-                                    </td>
-                                    <td className="p-4">
-                                        <Badge variant={ngo.status === 'Verified' ? 'success' : ngo.status === 'Needs Review' ? 'warning' : 'danger'}>
-                                            {ngo.status}
-                                        </Badge>
-                                    </td>
-                                    <td className="p-4">
-                                        <button
-                                            onClick={() => setSelectedNGO(ngo)}
-                                            className="text-indigo-600 font-semibold hover:text-indigo-800 bg-indigo-50 px-3 py-1.5 rounded transition-colors"
-                                        >
-                                            Audit Docs
-                                        </button>
-                                    </td>
+                                    </div>
+
+                                    {/* Right: NGO Proposal */}
+                                    <div>
+                                        <h3 className="text-sm font-bold text-slate-400 uppercase tracking-widest mb-3">2. NGO Funding Proposal</h3>
+                                        <div className="bg-white p-4 border border-indigo-100 rounded-lg shadow-sm">
+                                            <h4 className="font-bold text-indigo-900 border-b border-indigo-50 pb-2 mb-2">EduCare Org (Verified)</h4>
+                                            <div className="grid grid-cols-2 gap-4 text-sm mt-3">
+                                                <div><span className="text-slate-500 block">Requested Fund</span><span className="font-bold font-mono">₹800,000</span></div>
+                                                <div><span className="text-slate-500 block">Timeline</span><span className="font-bold">3 Months</span></div>
+                                            </div>
+                                            <div className="mt-3 flex flex-wrap gap-2">
+                                                <Badge variant="neutral">Milestone Plan Attached</Badge>
+                                                <Badge variant="neutral">Contractors Vetted</Badge>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="mt-6 border-t border-slate-200 pt-6 flex justify-between items-center">
+                                    <div className="text-sm font-medium text-slate-600">Review documents and field reports before forwarding to CSR matching.</div>
+                                    <button className="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-2.5 rounded-lg font-bold flex items-center gap-2 transition shadow-sm">
+                                        <CheckCircle2 className="w-5 h-5" /> Verify & Forward to Corporate Funder
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    ) : (
+                        <table className="w-full text-sm text-left">
+                            <thead className="bg-slate-50 text-slate-500 font-semibold uppercase text-xs tracking-wider">
+                                <tr>
+                                    <th className="p-4">Organization</th>
+                                    <th className="p-4">Type</th>
+                                    <th className="p-4">State</th>
+                                    <th className="p-4">Risk Score</th>
+                                    <th className="p-4">Status</th>
+                                    <th className="p-4">Action</th>
                                 </tr>
-                            ))}
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody className="divide-y divide-slate-100">
+                                {mockNGOs.map((ngo, idx) => (
+                                    <tr key={idx} className="hover:bg-indigo-50/30 transition-colors">
+                                        <td className="p-4">
+                                            <div className="font-bold text-slate-900">{ngo.name}</div>
+                                            <div className="font-mono text-xs text-slate-500 mt-1">{ngo.id}</div>
+                                        </td>
+                                        <td className="p-4 text-slate-600 font-medium">{ngo.type}</td>
+                                        <td className="p-4 text-slate-600">{ngo.location.split(',')[0]}</td>
+                                        <td className="p-4">
+                                            <div className="flex items-center gap-2">
+                                                <div className="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden w-20">
+                                                    <div className="h-full rounded-full" style={{ width: `${ngo.score}%`, backgroundColor: ngo.score > 80 ? '#10b981' : ngo.score > 50 ? '#f59e0b' : '#ef4444' }}></div>
+                                                </div>
+                                                <span className="font-mono text-xs font-bold">{ngo.score}</span>
+                                            </div>
+                                        </td>
+                                        <td className="p-4">
+                                            <Badge variant={ngo.status === 'Verified' ? 'success' : ngo.status === 'Needs Review' ? 'warning' : 'danger'}>
+                                                {ngo.status}
+                                            </Badge>
+                                        </td>
+                                        <td className="p-4">
+                                            <button
+                                                onClick={() => setSelectedNGO(ngo)}
+                                                className="text-indigo-600 font-semibold hover:text-indigo-800 bg-indigo-50 px-3 py-1.5 rounded transition-colors"
+                                            >
+                                                Audit Docs
+                                            </button>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    )}
                 </CardContent>
             </Card>
         </div>
