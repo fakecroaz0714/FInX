@@ -18,7 +18,7 @@ export default function LoginPage() {
         login(email, password, role);
         if (role === 'Corporate') router.push('/corporate-dashboard');
         else if (role === 'Citizen') router.push('/citizen-dashboard');
-        else if (role === 'Admin') router.push('/matching');
+        else if (role === 'Admin') router.push('/');
         else router.push('/');
     };
 

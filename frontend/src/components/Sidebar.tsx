@@ -82,7 +82,9 @@ export default function Sidebar() {
                     <span className="text-[9px] bg-slate-100 text-slate-600 px-1.5 py-0.5 rounded font-mono font-medium">Active</span>
                 </div>
                 {activeNavItems.map((item) => {
-                    const isActive = pathname === item.href;
+                    const isActive = item.href === '/'
+                        ? (pathname === '/' || pathname === '/dashboard')
+                        : pathname === item.href;
                     const Icon = item.icon;
                     const translatedName = t(item.key) || item.defaultName;
 
