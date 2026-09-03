@@ -20,6 +20,8 @@ import {
   ChevronRight,
   ExternalLink,
 } from "lucide-react";
+import { GeotagProofModal } from "@/components/maps/GeotagProofModal";
+import { PROJECT_PROOFS_MAP } from "@/lib/projectProofsData";
 
 export interface ValidatorActiveProject {
   id: string;
@@ -120,8 +122,10 @@ export function ValidatorActiveProjectsMap() {
   const [selectedId, setSelectedId] = useState<string>("VAL-PUN-084");
   const [statusFilter, setStatusFilter] = useState<string>("All");
   const [notification, setNotification] = useState<string | null>(null);
+  const [proofsModalOpen, setProofsModalOpen] = useState(false);
 
   const selectedProject = projects.find((p) => p.id === selectedId) || projects[0];
+  const currentProjectProofs = PROJECT_PROOFS_MAP[selectedProject.id] || [];
 
   const filteredProjects = projects.filter((p) => {
     if (statusFilter === "All") return true;
@@ -144,6 +148,17 @@ export function ValidatorActiveProjectsMap() {
       prev.map((p) => (p.id === id ? { ...p, status: "High Risk Flagged" as const } : p))
     );
     setNotification(`Project ${id} has been flagged for on-ground audit re-investigation.`);
+    setTimeout(() => setNotification(null), 3500);
+  };
+
+  const handleApproveProof = (proofId: string) => {
+    setNotification(`Evidence ${proofId} verified and recorded on-chain!`);
+    setTimeout(() => setNotification(null), 3500);
+  };
+
+  const handleFlagProof = (proofId: string) => {
+    handleFlag(selectedProject.id);
+    setNotification(`Evidence ${proofId} flagged: Project ${selectedProject.id} set to High Risk.`);
     setTimeout(() => setNotification(null), 3500);
   };
 
@@ -376,14 +391,14 @@ export function ValidatorActiveProjectsMap() {
 
               <div className="grid grid-cols-2 gap-2">
                 <button
-                  onClick={() => alert(`Reviewing ${selectedProject.evidenceCount} geotagged proof files for ${selectedProject.id}`)}
-                  className="flex items-center justify-center gap-1.5 py-2 px-2.5 bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 rounded-lg font-medium text-xs transition"
+                  onClick={() => setProofsModalOpen(true)}
+                  className="flex items-center justify-center gap-1.5 py-2 px-2.5 bg-white border border-slate-300 hover:bg-blue-50/50 hover:border-blue-300 text-slate-700 hover:text-blue-800 rounded-lg font-medium text-xs transition shadow-2xs cursor-pointer group"
                 >
-                  <Eye className="w-3.5 h-3.5 text-blue-600" /> Proofs ({selectedProject.evidenceCount})
+                  <Eye className="w-3.5 h-3.5 text-blue-600 group-hover:scale-110 transition-transform" /> Proofs ({currentProjectProofs.length || selectedProject.evidenceCount})
                 </button>
                 <button
                   onClick={() => handleFlag(selectedProject.id)}
-                  className="flex items-center justify-center gap-1.5 py-2 px-2.5 bg-white border border-amber-300 hover:bg-amber-50 text-amber-800 rounded-lg font-medium text-xs transition"
+                  className="flex items-center justify-center gap-1.5 py-2 px-2.5 bg-white border border-amber-300 hover:bg-amber-50 text-amber-800 rounded-lg font-medium text-xs transition cursor-pointer"
                 >
                   <AlertTriangle className="w-3.5 h-3.5 text-amber-600" /> Flag Issue
                 </button>
@@ -432,6 +447,19 @@ export function ValidatorActiveProjectsMap() {
           </div>
         </div>
       </div>
+
+      {/* Geotagged Proof Files Modal */}
+      <GeotagProofModal
+        isOpen={proofsModalOpen}
+        onClose={() => setProofsModalOpen(false)}
+        projectId={selectedProject.id}
+        projectTitle={selectedProject.title}
+        ngoName={selectedProject.ngoName}
+        locationName={selectedProject.locationName}
+        proofs={currentProjectProofs}
+        onApproveProof={handleApproveProof}
+        onFlagProof={handleFlagProof}
+      />
     </div>
   );
 }
