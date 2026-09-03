@@ -305,15 +305,7 @@ export default function ValidatorDashboard() {
                                     )}
                                 </div>
                             ) : (
-                                                <CheckCircle2 className="w-5 h-5" /> Verify & Forward to Corporate Funder
-                                            </button>
-                                        </div>
-                                    </div>
-                                ))
-                            )}
-                        </div>
-                    ) : (
-                        <table className="w-full text-sm text-left">
+                                <table className="w-full text-sm text-left">
                             <thead className="bg-slate-50 text-slate-500 font-semibold uppercase text-xs tracking-wider">
                                 <tr>
                                     <th className="p-4">Organization</th>
