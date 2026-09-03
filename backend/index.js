@@ -14,6 +14,11 @@ const {
     validateMilestoneBudgetSum
 } = require('./services/stateMachine');
 
+const {
+    runFullProposalVerification,
+    evaluateCorporateGoalMatch
+} = require('./services/proposalVerificationEngine');
+
 const app = express();
 const PORT = process.env.PORT || 5001;
 
@@ -588,6 +593,399 @@ app.post('/api/demo/fraud-scenario', async (req, res) => {
     });
 });
 
+// =========================================================================
+// AI NGO PROPOSAL VERIFICATION ENGINE ENDPOINTS
+// =========================================================================
+
+// Proposal Data Store (Initial pre-seeded realistic dataset)
+store.proposals = {
+    'FINX-PR-00241': {
+        id: 'FINX-PR-00241',
+        proposalCode: 'FINX-PR-00241',
+        ngoId: 'NGO-ABC-001',
+        ngoName: 'ABC Foundation',
+        projectName: 'Rural Road Development Project',
+        projectDescription: 'Construction of 2.4 km paved rural access road connecting Shirur village to district market.',
+        csrCategory: 'RURAL_DEVELOPMENT',
+        projectLocation: 'Shirur Village, Pune District, Maharashtra',
+        latitude: 18.5204,
+        longitude: 73.8567,
+        beneficiaryCount: 4500,
+        projectDurationMonths: 6,
+        requestedAmount: 4000000, // ₹40,00,000
+        submissionDate: '2026-08-20T10:00:00Z',
+        status: 'AWAITING_VALIDATION',
+        aiVerificationScore: 88,
+        riskLevel: 'LOW RISK',
+        aiRecommendation: 'RECOMMEND ACCEPTANCE (HUMAN VALIDATION REQUIRED)'
+    },
+    'FINX-PR-00109': {
+        id: 'FINX-PR-00109',
+        proposalCode: 'FINX-PR-00109',
+        ngoId: 'NGO-WATER-001',
+        ngoName: 'Jal Seva Foundation',
+        projectName: 'Clean Drinking Water & Sanitation Initiative',
+        projectDescription: 'Multi-stage filtration tower, pipeline network, and solar pump installation for 6,000 villagers.',
+        csrCategory: 'CLEAN_WATER_SANITATION',
+        projectLocation: 'Shirur Village, Pune District, Maharashtra',
+        latitude: 18.5204,
+        longitude: 73.8567,
+        beneficiaryCount: 6000,
+        projectDurationMonths: 8,
+        requestedAmount: 4000000,
+        submissionDate: '2026-08-10T14:30:00Z',
+        status: 'VALIDATOR_ACCEPTED',
+        aiVerificationScore: 94,
+        riskLevel: 'LOW RISK',
+        aiRecommendation: 'RECOMMEND ACCEPTANCE (HUMAN VALIDATION REQUIRED)'
+    },
+    'FINX-PR-00305': {
+        id: 'FINX-PR-00305',
+        proposalCode: 'FINX-PR-00305',
+        ngoId: 'NGO-GREEN-002',
+        ngoName: 'Green Earth Org',
+        projectName: 'Solar Microgrid & Lighting Initiative',
+        projectDescription: 'Installing 45 solar streetlights and microgrid power for village primary school.',
+        csrCategory: 'RENEWABLE_ENERGY',
+        projectLocation: 'Haveli District, Maharashtra',
+        latitude: 18.4500,
+        longitude: 73.8000,
+        beneficiaryCount: 2200,
+        projectDurationMonths: 4,
+        requestedAmount: 1500000,
+        submissionDate: '2026-08-25T09:15:00Z',
+        status: 'CHANGES_REQUESTED',
+        aiVerificationScore: 72,
+        riskLevel: 'MEDIUM RISK',
+        aiRecommendation: 'HUMAN REVIEW REQUIRED'
+    }
+};
+
+store.ngoProfiles = {
+    'NGO-ABC-001': { name: 'ABC Foundation', registrationNumber: 'REG-MH-2018-9941', darpanId: 'MH/2018/0192841', tax80gCertified: true },
+    'NGO-WATER-001': { name: 'Jal Seva Foundation', registrationNumber: 'REG-MH-2016-4412', darpanId: 'MH/2016/0081231', tax80gCertified: true },
+    'NGO-GREEN-002': { name: 'Green Earth Org', registrationNumber: 'REG-MH-2020-1102', darpanId: 'MH/2020/0987123', tax80gCertified: true }
+};
+
+store.proposalDocs = {
+    'FINX-PR-00241': [
+        { documentType: 'REGISTRATION_CERTIFICATE', documentName: 'NGO_Registration_Certificate.pdf', fileUrl: 'https://example.com/docs/reg.pdf' },
+        { documentType: 'NGO_PAN', documentName: 'NGO_PAN_Card.pdf', fileUrl: 'https://example.com/docs/pan.pdf' },
+        { documentType: 'AUDITED_FINANCIALS', documentName: 'Audited_Financials_2025.pdf', fileUrl: 'https://example.com/docs/audit.pdf' }
+    ]
+};
+
+store.proposalBudgets = {
+    'FINX-PR-00241': [
+        { category: 'Excavation', itemDescription: 'Road excavation & earthwork', quantity: 2, unitPrice: 500000, lineTotal: 1000000 },
+        { category: 'Materials', itemDescription: 'Material supply (Tar & Gravel)', quantity: 500, unitPrice: 4000, lineTotal: 2000000 },
+        { category: 'Labour', itemDescription: 'Labour & supervision', quantity: 6, unitPrice: 166666.67, lineTotal: 1000000 }
+    ]
+};
+
+store.validatorReviews = {
+    'FINX-PR-00109': {
+        proposalId: 'FINX-PR-00109',
+        validatorId: 'VAL-INSPECTOR-88',
+        validatorName: 'Inspector R. Sharma (Senior Hydrologist)',
+        decision: 'ACCEPT',
+        comments: 'Verified NGO credentials, technical feasibility and beneficiary impact. Accepted for Corporate CSR matching.',
+        aiScoreAtDecision: 94,
+        decidedAt: '2026-08-18T11:00:00Z'
+    }
+};
+
+store.corporateGoals = {
+    'CORP-TECH-101': {
+        corporateId: 'CORP-TECH-101',
+        corporateName: 'TechCorp CSR Trust',
+        preferredCategories: ['RURAL_DEVELOPMENT', 'CLEAN_WATER_SANITATION'],
+        preferredLocations: ['Maharashtra', 'Tamil Nadu'],
+        allocatedBudget: 50000000,
+        availableBudget: 42000000
+    }
+};
+
+store.proposalAuditLogs = [
+    {
+        auditId: 'AUDIT-PROP-001',
+        proposalId: 'FINX-PR-00241',
+        actorId: 'NGO-ABC-001',
+        actorRole: 'NGO',
+        action: 'PROPOSAL_SUBMITTED',
+        oldStatus: 'DRAFT',
+        newStatus: 'SUBMITTED',
+        aiScore: null,
+        timestamp: '2026-08-20T10:00:00Z'
+    },
+    {
+        auditId: 'AUDIT-PROP-002',
+        proposalId: 'FINX-PR-00241',
+        actorId: 'AI-VERIFICATION-ENGINE',
+        actorRole: 'SYSTEM_AI',
+        action: 'AI_VERIFICATION_REPORT_GENERATED',
+        oldStatus: 'SUBMITTED',
+        newStatus: 'AWAITING_VALIDATION',
+        aiScore: 88,
+        timestamp: '2026-08-20T10:02:15Z'
+    }
+];
+
+// Helper: Log Proposal Audit Event
+function logProposalAudit(proposalId, actorId, actorRole, action, oldStatus, newStatus, aiScore = null, reason = '') {
+    const entry = {
+        auditId: `AUDIT-PROP-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
+        proposalId,
+        actorId,
+        actorRole,
+        action,
+        oldStatus,
+        newStatus,
+        aiScore,
+        reason,
+        timestamp: new Date().toISOString()
+    };
+    store.proposalAuditLogs.unshift(entry);
+    return entry;
+}
+
+// 1. GET /api/proposals - List all proposals with stats
+app.get('/api/proposals', (req, res) => {
+    const list = Object.values(store.proposals);
+    const summary = {
+        pendingAi: list.filter(p => p.status === 'SUBMITTED' || p.status === 'AI_VERIFYING').length,
+        awaitingValidation: list.filter(p => p.status === 'AWAITING_VALIDATION').length,
+        accepted: list.filter(p => p.status === 'VALIDATOR_ACCEPTED' || p.status === 'CORPORATE_MATCHED').length,
+        changesRequested: list.filter(p => p.status === 'CHANGES_REQUESTED').length,
+        rejected: list.filter(p => p.status === 'VALIDATOR_REJECTED').length,
+        highRisk: list.filter(p => p.riskLevel === 'HIGH RISK' || p.riskLevel === 'CRITICAL REVIEW').length,
+    };
+    res.json({ success: true, summary, proposals: list });
+});
+
+// 2. GET /api/proposals/:id - Proposal Details
+app.get('/api/proposals/:id', (req, res) => {
+    const proposal = store.proposals[req.params.id];
+    if (!proposal) return res.status(404).json({ success: false, error: 'Proposal not found' });
+
+    const ngo = store.ngoProfiles[proposal.ngoId] || { name: proposal.ngoName, registrationNumber: 'REG-MH-2018-9941', darpanId: 'MH/2018/0192841', tax80gCertified: true };
+    const docs = store.proposalDocs[proposal.id] || [];
+    const budget = store.proposalBudgets[proposal.id] || [];
+    const review = store.validatorReviews[proposal.id] || null;
+
+    res.json({ success: true, proposal, ngo, docs, budget, review });
+});
+
+// 3. GET /api/proposals/:id/verification-report - Run or Return AI Verification Report
+app.get('/api/proposals/:id/verification-report', (req, res) => {
+    const proposal = store.proposals[req.params.id];
+    if (!proposal) return res.status(404).json({ success: false, error: 'Proposal not found' });
+
+    const ngo = store.ngoProfiles[proposal.ngoId] || { name: proposal.ngoName, registrationNumber: 'REG-MH-2018-9941', darpanId: 'MH/2018/0192841', tax80gCertified: true };
+    const docs = store.proposalDocs[proposal.id] || [];
+    const budget = store.proposalBudgets[proposal.id] || [];
+    const existing = Object.values(store.proposals);
+    const corpGoal = store.corporateGoals['CORP-TECH-101'];
+
+    const report = runFullProposalVerification({
+        proposalData: proposal,
+        ngoData: ngo,
+        uploadedDocuments: docs,
+        budgetItems: budget,
+        vendorQuotations: [],
+        existingProposals: existing,
+        corporateGoal: corpGoal
+    });
+
+    res.json({ success: true, report });
+});
+
+// 4. GET /api/validator/proposals - Proposals for Human Validator Dashboard
+app.get('/api/validator/proposals', (req, res) => {
+    const list = Object.values(store.proposals);
+    res.json({ success: true, proposals: list });
+});
+
+// 5. POST /api/validator/proposals/:id/accept - Human Validator Accepts Proposal
+app.post('/api/validator/proposals/:id/accept', (req, res) => {
+    const proposal = store.proposals[req.params.id];
+    if (!proposal) return res.status(404).json({ success: false, error: 'Proposal not found' });
+
+    const { validatorId = 'VAL-INSPECTOR-88', validatorName = 'Inspector R. Sharma', comments = 'Proposal verified and accepted.' } = req.body;
+
+    const oldStatus = proposal.status;
+    proposal.status = 'VALIDATOR_ACCEPTED';
+
+    store.validatorReviews[proposal.id] = {
+        proposalId: proposal.id,
+        validatorId,
+        validatorName,
+        decision: 'ACCEPT',
+        comments,
+        aiScoreAtDecision: proposal.aiVerificationScore,
+        decidedAt: new Date().toISOString()
+    };
+
+    logProposalAudit(proposal.id, validatorId, 'VALIDATOR', 'VALIDATOR_ACCEPTED', oldStatus, 'VALIDATOR_ACCEPTED', proposal.aiVerificationScore, comments);
+
+    res.json({
+        success: true,
+        message: 'Proposal ACCEPTED by validator. Now eligible for Corporate CSR Dashboard.',
+        proposal,
+        review: store.validatorReviews[proposal.id]
+    });
+});
+
+// 6. POST /api/validator/proposals/:id/request-changes - Human Validator Requests Changes
+app.post('/api/validator/proposals/:id/request-changes', (req, res) => {
+    const proposal = store.proposals[req.params.id];
+    if (!proposal) return res.status(404).json({ success: false, error: 'Proposal not found' });
+
+    const { validatorId = 'VAL-INSPECTOR-88', validatorName = 'Inspector R. Sharma', comments } = req.body;
+    if (!comments) return res.status(400).json({ success: false, error: 'Validator comments are required when requesting changes.' });
+
+    const oldStatus = proposal.status;
+    proposal.status = 'CHANGES_REQUESTED';
+
+    store.validatorReviews[proposal.id] = {
+        proposalId: proposal.id,
+        validatorId,
+        validatorName,
+        decision: 'REQUEST_CHANGES',
+        comments,
+        aiScoreAtDecision: proposal.aiVerificationScore,
+        decidedAt: new Date().toISOString()
+    };
+
+    logProposalAudit(proposal.id, validatorId, 'VALIDATOR', 'CHANGES_REQUESTED', oldStatus, 'CHANGES_REQUESTED', proposal.aiVerificationScore, comments);
+
+    res.json({
+        success: true,
+        message: 'Proposal returned to NGO with Request for Changes.',
+        proposal,
+        review: store.validatorReviews[proposal.id]
+    });
+});
+
+// 7. POST /api/validator/proposals/:id/reject - Human Validator Rejects Proposal
+app.post('/api/validator/proposals/:id/reject', (req, res) => {
+    const proposal = store.proposals[req.params.id];
+    if (!proposal) return res.status(404).json({ success: false, error: 'Proposal not found' });
+
+    const { validatorId = 'VAL-INSPECTOR-88', validatorName = 'Inspector R. Sharma', comments } = req.body;
+    if (!comments) return res.status(400).json({ success: false, error: 'Rejection reason is required.' });
+
+    const oldStatus = proposal.status;
+    proposal.status = 'VALIDATOR_REJECTED';
+
+    store.validatorReviews[proposal.id] = {
+        proposalId: proposal.id,
+        validatorId,
+        validatorName,
+        decision: 'REJECT',
+        comments,
+        aiScoreAtDecision: proposal.aiVerificationScore,
+        decidedAt: new Date().toISOString()
+    };
+
+    logProposalAudit(proposal.id, validatorId, 'VALIDATOR', 'VALIDATOR_REJECTED', oldStatus, 'VALIDATOR_REJECTED', proposal.aiVerificationScore, comments);
+
+    res.json({
+        success: true,
+        message: 'Proposal REJECTED by validator. Excluded from Corporate CSR Dashboard.',
+        proposal,
+        review: store.validatorReviews[proposal.id]
+    });
+});
+
+// 8. GET /api/corporate/eligible-proposals - ABSOLUTE SERVER-SIDE ELIGIBILITY ENFORCEMENT
+// ONLY proposals where status === 'VALIDATOR_ACCEPTED' OR 'CORPORATE_MATCHED' are returned!
+app.get('/api/corporate/eligible-proposals', (req, res) => {
+    const allProposals = Object.values(store.proposals);
+    const eligibleList = allProposals.filter(p => p.status === 'VALIDATOR_ACCEPTED' || p.status === 'CORPORATE_MATCHED');
+
+    const corpGoal = store.corporateGoals['CORP-TECH-101'];
+
+    // Append AI Corporate CSR Goal Match Score (Module G) for each accepted proposal
+    const matchedList = eligibleList.map(p => {
+        const match = evaluateCorporateGoalMatch(p, corpGoal);
+        const review = store.validatorReviews[p.id];
+        return {
+            ...p,
+            csrGoalMatchScore: match.score,
+            matchReason: match.matchReason,
+            validatorReview: review
+        };
+    });
+
+    res.json({
+        success: true,
+        corporateGoal: corpGoal,
+        count: matchedList.length,
+        eligibleProposals: matchedList
+    });
+});
+
+// 9. POST /api/corporate/match - Run Module G CSR Goal Match
+app.post('/api/corporate/match', (req, res) => {
+    const { proposalId, corporateId = 'CORP-TECH-101' } = req.body;
+    const proposal = store.proposals[proposalId];
+    if (!proposal) return res.status(404).json({ success: false, error: 'Proposal not found' });
+
+    if (proposal.status !== 'VALIDATOR_ACCEPTED' && proposal.status !== 'CORPORATE_MATCHED') {
+        return res.status(403).json({ success: false, error: 'Security Exception: Only Human Validator ACCEPTED proposals are eligible for Corporate CSR Matching.' });
+    }
+
+    const corpGoal = store.corporateGoals[corporateId] || store.corporateGoals['CORP-TECH-101'];
+    const match = evaluateCorporateGoalMatch(proposal, corpGoal);
+
+    proposal.status = 'CORPORATE_MATCHED';
+
+    logProposalAudit(proposal.id, corporateId, 'CORPORATE', 'CORPORATE_MATCHED', 'VALIDATOR_ACCEPTED', 'CORPORATE_MATCHED', proposal.aiVerificationScore, `Matched to CSR Goals with score ${match.score}/100`);
+
+    res.json({
+        success: true,
+        proposal,
+        match
+    });
+});
+
+// 10. GET /api/proposals/:id/audit - Immutable Audit Trail
+app.get('/api/proposals/:id/audit', (req, res) => {
+    const logs = store.proposalAuditLogs.filter(a => a.proposalId === req.params.id);
+    res.json({ success: true, proposalId: req.params.id, auditTrail: logs });
+});
+
+// 11. POST /api/demo/proposal-scenario - Live 1-Click Interactive Demo Triggers
+app.post('/api/demo/proposal-scenario', (req, res) => {
+    const { scenario } = req.body;
+
+    if (scenario === 'suspicious_proposal') {
+        store.proposals['FINX-PR-00241'].requestedAmount = 4000000;
+        store.proposals['FINX-PR-00241'].status = 'AWAITING_VALIDATION';
+        store.proposals['FINX-PR-00241'].aiVerificationScore = 88;
+        store.proposals['FINX-PR-00241'].riskLevel = 'MEDIUM RISK';
+    } else if (scenario === 'valid_proposal') {
+        store.proposals['FINX-PR-00241'].requestedAmount = 3500000;
+        store.proposals['FINX-PR-00241'].status = 'VALIDATOR_ACCEPTED';
+        store.proposals['FINX-PR-00241'].aiVerificationScore = 96;
+        store.proposals['FINX-PR-00241'].riskLevel = 'LOW RISK';
+    } else if (scenario === 'reset') {
+        store.proposals['FINX-PR-00241'].requestedAmount = 4000000;
+        store.proposals['FINX-PR-00241'].status = 'AWAITING_VALIDATION';
+        store.proposals['FINX-PR-00241'].aiVerificationScore = 88;
+        store.proposals['FINX-PR-00241'].riskLevel = 'LOW RISK';
+    }
+
+    res.json({
+        success: true,
+        scenario,
+        message: `Demo Scenario '${scenario}' executed successfully.`,
+        proposal: store.proposals['FINX-PR-00241']
+    });
+});
+
 app.listen(PORT, () => {
     console.log(`FINX Verified Milestone Funding Engine listening on port ${PORT}`);
 });
+
