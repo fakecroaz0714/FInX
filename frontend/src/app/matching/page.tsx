@@ -12,7 +12,7 @@ import Link from 'next/link';
 import { useLanguage } from '@/lib/LanguageContext';
 import { safeJsonFetch } from '@/lib/apiUtils';
 
-const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:5001';
+const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || '';
 const STORAGE_KEY_WORKFLOWS = 'finx_matching_workflows';
 const STORAGE_KEY_KPI = 'finx_matching_kpi';
 

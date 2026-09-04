@@ -30,7 +30,7 @@ import Link from 'next/link';
 import { useLanguage } from '@/lib/LanguageContext';
 import { safeJsonFetch } from '@/lib/apiUtils';
 
-const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:5001';
+const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || '';
 
 const VERIFY_STAGES = [
     { num: 1, name: 'Stage 1: Document Intelligence', desc: 'OCR parsing, Darpan ID, 80G tax certificates & quotation hashes' },

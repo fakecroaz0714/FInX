@@ -79,7 +79,9 @@ export interface SignupData {
 
 interface AuthContextType {
     user: User | null;
+    currentUser: User | null;
     role: Role;
+    currentRole: Role;
     loading: boolean;
     isAuthenticated: boolean;
     login: (email: string, pass: string, selectedRole: Role) => void;
@@ -320,7 +322,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setUser(null);
         setRole('Admin');
         if (typeof window !== 'undefined') {
-            window.location.replace('/auth/login');
+            window.location.replace('/login');
         }
     };
 
@@ -333,7 +335,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return (
         <AuthContext.Provider value={{
             user,
+            currentUser: user,
             role,
+            currentRole: user?.role || role,
             loading,
             isAuthenticated: Boolean(user),
             login,

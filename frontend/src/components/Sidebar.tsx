@@ -76,8 +76,8 @@ export default function Sidebar() {
     const { user, role, logout } = useAuth();
     const { lang, setLang, t } = useLanguage();
 
-    if (pathname.startsWith('/auth')) {
-        return null; // hide sidebar on auth pages
+    if (pathname === '/' || pathname === '/login' || pathname.startsWith('/login/') || pathname.startsWith('/auth')) {
+        return null; // hide sidebar on auth and login pages
     }
 
     const activeRoleKey: Role = (user?.role as Role) || (role as Role) || 'Admin';

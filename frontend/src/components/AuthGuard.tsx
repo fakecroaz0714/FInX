@@ -6,11 +6,16 @@ import { useAuth, Role } from '@/lib/AuthContext';
 import Sidebar from '@/components/Sidebar';
 
 export default function AuthGuard({ children }: { children: React.ReactNode }) {
-    const { user, role, loading } = useAuth();
+    const { user, loading } = useAuth();
     const pathname = usePathname();
     const router = useRouter();
 
-    const isAuthRoute = pathname.startsWith('/auth');
+    // Check if the current route is a public authentication route
+    const isAuthRoute = (path: string): boolean => {
+        return path === '/' || path === '/login' || path.startsWith('/login/') || path.startsWith('/auth');
+    };
+
+    const authPath = isAuthRoute(pathname);
 
     // Role to home dashboard mapping
     const getRoleDashboard = (userRole: Role): string => {
@@ -26,26 +31,21 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
     useEffect(() => {
         if (loading) return;
 
-        // 1. Not logged in and attempting to access a protected route -> redirect to login
-        if (!user && !isAuthRoute) {
-            router.replace('/auth/login');
+        // 1. Not logged in and attempting to access a protected internal route -> redirect to login
+        if (!user && !authPath) {
+            router.replace('/login');
             return;
         }
 
-        // 2. Already logged in and accessing an auth route -> redirect to their role dashboard
-        if (user && isAuthRoute) {
-            router.replace(getRoleDashboard(user.role));
-            return;
-        }
-
-        // 3. Logged in and accessing the root route "/" -> redirect to their role dashboard
-        if (user && pathname === '/') {
+        // 2. Authenticated user visiting an auth route (including '/', '/login', '/auth/login')
+        // -> Route immediately to that user's specific role dashboard
+        if (user && authPath) {
             const dest = getRoleDashboard(user.role);
             router.replace(dest);
             return;
         }
 
-        // 4. Role-based access control for specialized portals
+        // 3. Role-based access control for specialized portals
         if (user) {
             // Citizen trying to access Corporate, Admin validator, or NGO portals
             if (user.role === 'Citizen' && (pathname.startsWith('/corporate') || pathname.startsWith('/validator') || pathname.startsWith('/ngo-dashboard'))) {
@@ -68,39 +68,46 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
                 return;
             }
         }
-    }, [user, loading, pathname, isAuthRoute, router]);
+    }, [user, loading, pathname, authPath, router]);
 
-    // Public routes (e.g. /auth/login, /auth/signup) render immediately
-    if (isAuthRoute) {
+    // 1. While checking authentication status: DO NOT render any dashboard or protected UI.
+    // On protected routes, display the exact requested simple loading state to guarantee ZERO dashboard flash.
+    if (loading) {
+        if (authPath && !user) {
+            return <main className="w-full min-h-screen">{children}</main>;
+        }
+        return (
+            <div className="flex flex-col items-center justify-center min-h-screen w-full bg-slate-900 text-white select-none">
+                <div className="w-10 h-10 border-3 border-indigo-500 border-t-transparent rounded-full animate-spin mb-4" />
+                <span className="text-xl font-bold tracking-wider">FINX</span>
+                <span className="text-slate-400 text-xs mt-1 font-medium">Checking authentication...</span>
+            </div>
+        );
+    }
+
+    // 2. If unauthenticated user is on an auth route ('/', '/login', '/auth/login', etc.):
+    // Render the login/signup interface directly with full screen layout (no sidebar)
+    if (!user && authPath) {
         return <main className="w-full min-h-screen">{children}</main>;
     }
 
-    // Loading screen while session is being evaluated from storage
-    if (loading) {
-        return (
-            <div className="flex flex-col items-center justify-center h-screen w-full bg-slate-900 text-white select-none">
-                <div className="w-10 h-10 border-3 border-indigo-500 border-t-transparent rounded-full animate-spin mb-4" />
-                <span className="text-xl font-bold tracking-wider">FINX</span>
-                <span className="text-slate-400 text-xs mt-1 font-medium">Loading secure session...</span>
-            </div>
-        );
-    }
-
-    // If unauthenticated on a protected route, show loading screen while redirecting to /auth/login
+    // 3. If unauthenticated user attempts to view a protected route:
+    // Display loading redirect screen while redirecting to /login
     if (!user) {
         return (
-            <div className="flex flex-col items-center justify-center h-screen w-full bg-slate-900 text-white select-none">
+            <div className="flex flex-col items-center justify-center min-h-screen w-full bg-slate-900 text-white select-none">
                 <div className="w-10 h-10 border-3 border-indigo-500 border-t-transparent rounded-full animate-spin mb-4" />
                 <span className="text-xl font-bold tracking-wider">FINX</span>
-                <span className="text-slate-400 text-xs mt-1 font-medium">Redirecting to login...</span>
+                <span className="text-slate-400 text-xs mt-1 font-medium">Checking authentication... Redirecting to login</span>
             </div>
         );
     }
 
-    // If on root route, show brief transition while redirecting to role dashboard
-    if (pathname === '/') {
+    // 4. If authenticated user is on an auth route ('/', '/login'):
+    // Show transition screen while routing to role dashboard
+    if (user && authPath) {
         return (
-            <div className="flex flex-col items-center justify-center h-screen w-full bg-slate-900 text-white select-none">
+            <div className="flex flex-col items-center justify-center min-h-screen w-full bg-slate-900 text-white select-none">
                 <div className="w-10 h-10 border-3 border-indigo-500 border-t-transparent rounded-full animate-spin mb-4" />
                 <span className="text-xl font-bold tracking-wider">FINX</span>
                 <span className="text-slate-400 text-xs mt-1 font-medium">Routing to {user.role} Dashboard...</span>
@@ -108,7 +115,8 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
         );
     }
 
-    // Authenticated user on a valid protected route
+    // 5. Authenticated user on a protected internal route:
+    // Render the complete dashboard layout with sidebar navigation
     return (
         <div className="flex h-screen overflow-hidden w-full bg-slate-50 text-slate-900">
             <Sidebar />

@@ -3,7 +3,7 @@
 import React, { Suspense } from 'react';
 import LoginForm from '@/components/LoginForm';
 
-export default function AuthLoginPage() {
+export default function LoginPage() {
     return (
         <Suspense fallback={
             <div className="flex flex-col items-center justify-center min-h-screen w-full bg-slate-900 text-white select-none">

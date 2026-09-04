@@ -30,7 +30,7 @@ import {
 import { useLanguage } from '@/lib/LanguageContext';
 import { safeJsonFetch } from '@/lib/apiUtils';
 
-const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:5001';
+const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || '';
 
 const WORKFLOW_STAGES = [
     { num: 1, name: 'Stage 1: Document Intelligence', desc: 'NGO credential OCR, registration verification & quotation hashes' },

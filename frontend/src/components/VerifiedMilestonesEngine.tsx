@@ -28,7 +28,7 @@ import {
 import { useLanguage } from '@/lib/LanguageContext';
 import { safeJsonFetch } from '@/lib/apiUtils';
 
-const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:5001';
+const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || '';
 
 export default function VerifiedMilestonesEngine() {
     const { t } = useLanguage();

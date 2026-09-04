@@ -1,0 +1,19 @@
+{
+  "name": "finx-monorepo",
+  "version": "1.0.0",
+  "description": "FINX - AI & Blockchain Verified CSR Milestone Funding Engine",
+  "private": true,
+  "scripts": {
+    "dev": "node dev.js",
+    "start": "node dev.js",
+    "backend": "cd backend && npm run dev",
+    "frontend": "cd frontend && npm run dev"
+  },
+  "keywords": [
+    "finx",
+    "csr",
+    "milestone-funding",
+    "blockchain",
+    "ai-verification"
+  ]
+}

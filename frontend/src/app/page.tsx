@@ -1,41 +1,33 @@
 'use client';
 
-import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { useAuth, Role } from '@/lib/AuthContext';
+import React, { Suspense } from 'react';
+import { useAuth } from '@/lib/AuthContext';
+import LoginForm from '@/components/LoginForm';
 
 export default function RootHomePage() {
-    const { user, loading } = useAuth();
-    const router = useRouter();
+    const { user } = useAuth();
 
-    useEffect(() => {
-        if (loading) return;
+    // If authenticated, AuthGuard will route to the role-specific dashboard
+    if (user) {
+        return (
+            <div className="flex flex-col items-center justify-center min-h-screen w-full bg-slate-900 text-white select-none">
+                <div className="w-10 h-10 border-3 border-indigo-500 border-t-transparent rounded-full animate-spin mb-4" />
+                <span className="text-xl font-bold tracking-wider">FINX</span>
+                <span className="text-slate-400 text-xs mt-1 font-medium">Routing to {user.role} Dashboard...</span>
+            </div>
+        );
+    }
 
-        // If unauthenticated, redirect immediately to login
-        if (!user) {
-            router.replace('/auth/login');
-            return;
-        }
-
-        // If authenticated, route to the role-specific dashboard
-        const roleDestinations: Record<Role, string> = {
-            Corporate: '/corporate-dashboard',
-            NGO: '/ngo-dashboard',
-            Citizen: '/citizen-dashboard',
-            Admin: '/validator'
-        };
-
-        const target = roleDestinations[user.role] || '/validator';
-        router.replace(target);
-    }, [user, loading, router]);
-
+    // Unauthenticated user opens root route -> show the Login / Sign In page immediately
     return (
-        <div className="flex flex-col items-center justify-center min-h-[80vh] w-full text-slate-500 select-none">
-            <div className="w-10 h-10 border-3 border-indigo-500 border-t-transparent rounded-full animate-spin mb-3" />
-            <span className="text-base font-bold text-slate-800">FINX Platform</span>
-            <span className="text-xs text-slate-400 mt-0.5 font-medium">
-                {user ? `Routing to ${user.role} Dashboard...` : 'Loading secure session...'}
-            </span>
-        </div>
+        <Suspense fallback={
+            <div className="flex flex-col items-center justify-center min-h-screen w-full bg-slate-900 text-white select-none">
+                <div className="w-10 h-10 border-3 border-indigo-500 border-t-transparent rounded-full animate-spin mb-4" />
+                <span className="text-xl font-bold tracking-wider">FINX</span>
+                <span className="text-slate-400 text-xs mt-1 font-medium">Checking authentication...</span>
+            </div>
+        }>
+            <LoginForm />
+        </Suspense>
     );
 }
