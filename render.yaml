@@ -1,0 +1,53 @@
+# Render Blueprint for FInX
+# Docs: https://render.com/docs/blueprint-spec
+
+version: "1"
+
+services:
+  # ============================================================================
+  # 1. Express Backend API
+  # ============================================================================
+  - type: web
+    name: finx-backend
+    runtime: node
+    rootDir: backend
+    plan: free
+    region: oregon # or ohio, frankfurt, singapore
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /api/milestones/project/PROJ-CLEAN-WATER-PUNE
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 5001
+
+  # ============================================================================
+  # 2. Next.js Frontend Application
+  # ============================================================================
+  - type: web
+    name: finx-frontend
+    runtime: node
+    rootDir: frontend
+    plan: free
+    region: oregon # or ohio, frankfurt, singapore
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    healthCheckPath: /
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3000
+      # Internal private networking URL connecting frontend SSR & Next rewrites to backend:
+      - key: BACKEND_URL
+        fromService:
+          type: web
+          name: finx-backend
+          property: host
+      # Public HTTPS URL of the backend for client-side API calls if needed:
+      - key: NEXT_PUBLIC_BACKEND_URL
+        fromService:
+          type: web
+          name: finx-backend
+          property: url

@@ -38,6 +38,7 @@ export default function VerifiedMilestonesEngine() {
     const [showSubmitModal, setShowSubmitModal] = useState(false);
     const [showReviewModal, setShowReviewModal] = useState(false);
     const [showReleaseModal, setShowReleaseModal] = useState(false);
+    const [reviewModalTab, setReviewModalTab] = useState<'evidence' | 'invoice'>('evidence');
     const [actionMsg, setActionMsg] = useState('');
     const [demoLoading, setDemoLoading] = useState(false);
 
@@ -250,50 +251,6 @@ export default function VerifiedMilestonesEngine() {
                     <button onClick={() => setActionMsg('')} className="text-xs opacity-60 hover:opacity-100 font-bold px-2">✕</button>
                 </div>
             )}
-
-            {/* FRAUD DEMO CONTROL BAR */}
-            <Card className="border border-slate-800 bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white shadow-sm overflow-hidden">
-                <CardContent className="p-4 md:p-5">
-                    <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-3">
-                        <div>
-                            <div className="flex items-center gap-2 mb-0.5">
-                                <Sparkles className="w-4 h-4 text-amber-400 animate-pulse" />
-                                <h3 className="font-bold text-sm text-white">Interactive Fraud Demo Mode</h3>
-                                <Badge className="bg-amber-500/30 text-amber-300 border-amber-400/40 text-[10px] px-2 py-0.5">Live Testing</Badge>
-                            </div>
-                            <p className="text-slate-300 text-xs">
-                                Test FINX automated fraud detection engine. Simulate fake GPS photos or duplicate image uploads to verify fund locking.
-                            </p>
-                        </div>
-                        <div className="flex flex-wrap items-center gap-2 shrink-0">
-                            <button
-                                onClick={() => handleTriggerDemo('gps_mismatch')}
-                                disabled={demoLoading}
-                                className="bg-red-600 hover:bg-red-700 text-white text-xs font-semibold px-3 py-2 rounded-lg transition-colors flex items-center gap-1.5 shadow-sm disabled:opacity-50">
-                                {t('btn_demo_gps')}
-                            </button>
-                            <button
-                                onClick={() => handleTriggerDemo('duplicate_image')}
-                                disabled={demoLoading}
-                                className="bg-amber-600 hover:bg-amber-700 text-white text-xs font-semibold px-3 py-2 rounded-lg transition-colors flex items-center gap-1.5 shadow-sm disabled:opacity-50">
-                                {t('btn_demo_dup')}
-                            </button>
-                            <button
-                                onClick={() => handleTriggerDemo('valid_verification')}
-                                disabled={demoLoading}
-                                className="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold px-3 py-2 rounded-lg transition-colors flex items-center gap-1.5 shadow-sm disabled:opacity-50">
-                                {t('btn_demo_valid')}
-                            </button>
-                            <button
-                                onClick={() => handleTriggerDemo('reset')}
-                                disabled={demoLoading}
-                                className="bg-slate-700 hover:bg-slate-600 text-slate-200 text-xs font-medium px-3 py-2 rounded-lg transition-colors flex items-center gap-1">
-                                <RefreshCw className="w-3.5 h-3.5" /> {t('btn_reset')}
-                            </button>
-                        </div>
-                    </div>
-                </CardContent>
-            </Card>
 
             {/* MILESTONE FUNDING CONTROL PANEL */}
             <Card className="border border-slate-200 shadow-sm overflow-hidden">
@@ -761,31 +718,86 @@ export default function VerifiedMilestonesEngine() {
                             <button onClick={() => setShowReviewModal(false)} className="text-slate-400 hover:text-slate-600 font-bold">✕</button>
                         </div>
 
-                        {/* Side by Side Image Comparison */}
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div className="border border-slate-200 rounded-xl p-3 bg-slate-50">
-                                <div className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Baseline Geotagged Site Photo</div>
-                                <div className="h-40 w-full rounded-lg overflow-hidden bg-slate-200 mb-2">
-                                    <img src={project.baselinePhotoUrl} alt="Baseline" className="w-full h-full object-cover" />
-                                </div>
-                                <div className="text-[11px] text-slate-600 font-mono">GPS: {project.latitude}, {project.longitude}</div>
-                            </div>
-
-                            <div className="border border-slate-200 rounded-xl p-3 bg-slate-50">
-                                <div className="flex justify-between items-center mb-2">
-                                    <span className="text-xs font-bold text-slate-700 uppercase tracking-wider">Submitted Milestone Photo</span>
-                                    <Badge variant={selectedMilestone.verification.locationStatus === 'VERIFIED' ? 'success' : 'danger'}>
-                                        {selectedMilestone.verification.locationStatus}
-                                    </Badge>
-                                </div>
-                                <div className="h-40 w-full rounded-lg overflow-hidden bg-slate-200 mb-2">
-                                    <img src={selectedMilestone.evidence.photoUrl} alt="Evidence" className="w-full h-full object-cover" />
-                                </div>
-                                <div className="text-[11px] text-slate-600 font-mono">
-                                    Captured: {selectedMilestone.evidence.latitude}, {selectedMilestone.evidence.longitude} ({selectedMilestone.verification.distanceMeters}m away)
-                                </div>
-                            </div>
+                        {/* Tab Selector */}
+                        <div className="flex items-center gap-2 border-b border-slate-100 pb-2">
+                            <button
+                                onClick={() => setReviewModalTab('evidence')}
+                                className={`px-3.5 py-1.5 rounded-lg font-bold text-xs flex items-center gap-1.5 transition cursor-pointer ${
+                                    reviewModalTab === 'evidence'
+                                        ? 'bg-indigo-600 text-white shadow-xs'
+                                        : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                                }`}
+                            >
+                                <Camera className="w-3.5 h-3.5" /> Geotagged Field Comparison
+                            </button>
+                            <button
+                                onClick={() => setReviewModalTab('invoice')}
+                                className={`px-3.5 py-1.5 rounded-lg font-bold text-xs flex items-center gap-1.5 transition cursor-pointer ${
+                                    reviewModalTab === 'invoice'
+                                        ? 'bg-indigo-600 text-white shadow-xs'
+                                        : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                                }`}
+                            >
+                                <FileText className="w-3.5 h-3.5" /> Supplier GST Tax Invoice
+                            </button>
                         </div>
+
+                        {reviewModalTab === 'evidence' ? (
+                            /* Side by Side Image Comparison */
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div className="border border-slate-200 rounded-xl p-3 bg-slate-50">
+                                    <div className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Baseline Geotagged Site Photo</div>
+                                    <div className="h-44 w-full rounded-lg overflow-hidden bg-slate-200 mb-2">
+                                        <img src={project.baselinePhotoUrl} alt="Baseline" className="w-full h-full object-cover" />
+                                    </div>
+                                    <div className="text-[11px] text-slate-600 font-mono">GPS: {project.latitude}, {project.longitude}</div>
+                                </div>
+
+                                <div className="border border-slate-200 rounded-xl p-3 bg-slate-50">
+                                    <div className="flex justify-between items-center mb-2">
+                                        <span className="text-xs font-bold text-slate-700 uppercase tracking-wider">Submitted Milestone Photo</span>
+                                        <Badge variant={selectedMilestone.verification.locationStatus === 'VERIFIED' ? 'success' : 'danger'}>
+                                            {selectedMilestone.verification.locationStatus}
+                                        </Badge>
+                                    </div>
+                                    <div className="h-44 w-full rounded-lg overflow-hidden bg-slate-200 mb-2">
+                                        <img src={selectedMilestone.evidence.photoUrl} alt="Evidence" className="w-full h-full object-cover" />
+                                    </div>
+                                    <div className="text-[11px] text-slate-600 font-mono">
+                                        Captured: {selectedMilestone.evidence.latitude}, {selectedMilestone.evidence.longitude} ({selectedMilestone.verification.distanceMeters}m away)
+                                    </div>
+                                </div>
+                            </div>
+                        ) : (
+                            /* Scanned GST Tax Invoice Tab */
+                            <div className="space-y-3 border border-slate-200 rounded-xl p-4 bg-slate-50">
+                                <div className="flex items-center justify-between">
+                                    <div>
+                                        <span className="text-xs font-bold text-slate-800">Shree Balaji Building Materials &bull; Inv #INV-2024-884</span>
+                                        <div className="text-[11px] text-slate-500 font-mono">GSTIN: 27AAAAA0000A1Z5 &bull; HSN 2523 / 7214</div>
+                                    </div>
+                                    <a
+                                        href="/invoices/gst-tax-invoice-shree-balaji.svg"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="bg-white hover:bg-slate-100 border border-slate-300 text-slate-700 px-3 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1.5 transition"
+                                    >
+                                        <FileText className="w-3.5 h-3.5 text-indigo-600" /> Open Full Invoice
+                                    </a>
+                                </div>
+                                <div className="rounded-lg border border-slate-200 bg-white p-2 max-h-60 overflow-y-auto">
+                                    <img
+                                        src="/invoices/gst-tax-invoice-shree-balaji.svg"
+                                        alt="GST Tax Invoice"
+                                        className="w-full h-auto rounded"
+                                    />
+                                </div>
+                                <div className="flex justify-between items-center text-xs pt-1">
+                                    <span className="text-slate-600">Billed Materials: 120 Bags UltraTech Cement & Tata Tiscon Rebar</span>
+                                    <span className="font-mono font-bold text-emerald-700 text-sm">₹25,000.00 Verified</span>
+                                </div>
+                            </div>
+                        )}
 
                         {/* Verification Score Breakdown */}
                         <div className="bg-slate-900 text-white p-5 rounded-xl space-y-3">

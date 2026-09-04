@@ -22,7 +22,7 @@ export type Proposal = {
     targetDate: string;
     totalFunding: number;
     milestones: Milestone[];
-    status: 'Draft' | 'Submitted' | 'NGO Validated' | 'Approved' | 'Escrow Funded' | 'Active' | 'Completed';
+    status: 'Draft' | 'Submitted' | 'NGO Validated' | 'Approved' | 'Escrow Funded' | 'Active' | 'Completed' | 'Rejected';
     createdAt: string;
     funderId?: string;
     escrowId?: string;
@@ -34,6 +34,7 @@ type ProposalContextType = {
     updateStatus: (id: string, newStatus: Proposal['status']) => void;
     validateProposal: (id: string) => void;
     approveFunding: (id: string, funderName: string) => void;
+    rejectProposal: (id: string) => void;
     releaseMilestone: (id: string, milestoneIndex: number) => void;
 };
 
@@ -92,6 +93,10 @@ export const ProposalProvider = ({ children }: { children: React.ReactNode }) =>
         }));
     };
 
+    const rejectProposal = (id: string) => {
+        setProposals(prev => prev.map(p => p.id === id ? { ...p, status: 'Rejected' } : p));
+    };
+
     const releaseMilestone = (id: string, milestoneIndex: number) => {
         setProposals(prev => prev.map(p => {
             if (p.id === id) {
@@ -110,7 +115,7 @@ export const ProposalProvider = ({ children }: { children: React.ReactNode }) =>
     };
 
     return (
-        <ProposalContext.Provider value={{ proposals, addProposal, updateStatus, validateProposal, approveFunding, releaseMilestone }}>
+        <ProposalContext.Provider value={{ proposals, addProposal, updateStatus, validateProposal, approveFunding, rejectProposal, releaseMilestone }}>
             {children}
         </ProposalContext.Provider>
     );

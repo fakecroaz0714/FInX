@@ -1,0 +1,146 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1050" width="100%" height="100%" style="background:#ffffff; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
+  <defs>
+    <filter id="shadow3" x="-5%" y="-5%" width="110%" height="110%">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-opacity="0.08" />
+    </filter>
+  </defs>
+
+  <rect x="20" y="20" width="760" height="1010" rx="8" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5" filter="url(#shadow3)" />
+  <rect x="20" y="20" width="760" height="8" rx="4" fill="#16a34a" />
+
+  <g transform="translate(50, 50)">
+    <text x="0" y="24" font-size="22" font-weight="800" fill="#0f172a" letter-spacing="1">TAX INVOICE</text>
+    <text x="0" y="42" font-size="11" font-weight="600" fill="#64748b">SOLAR RO PURIFICATION &amp; IOT DISPENSER SKID</text>
+  </g>
+
+  <g transform="translate(560, 45)">
+    <rect x="120" y="0" width="70" height="70" rx="4" fill="#f8fafc" stroke="#94a3b8" stroke-width="1" />
+    <rect x="128" y="8" width="18" height="18" fill="#0f172a" />
+    <rect x="132" y="12" width="10" height="10" fill="#ffffff" />
+    <rect x="164" y="8" width="18" height="18" fill="#0f172a" />
+    <rect x="168" y="12" width="10" height="10" fill="#ffffff" />
+    <rect x="128" y="44" width="18" height="18" fill="#0f172a" />
+    <rect x="132" y="48" width="10" height="10" fill="#ffffff" />
+    <circle cx="158" cy="38" r="4" fill="#0f172a" />
+    
+    <text x="110" y="20" font-size="10" font-weight="700" text-anchor="end" fill="#0f172a">e-Way Bill No:</text>
+    <text x="110" y="34" font-size="10" font-family="monospace" text-anchor="end" fill="#16a34a">3910 8820 1149</text>
+    <text x="110" y="50" font-size="9" text-anchor="end" fill="#64748b">IRN: 7c1e89...119b</text>
+  </g>
+
+  <line x1="50" y1="125" x2="750" y2="125" stroke="#e2e8f0" stroke-width="1.5" />
+
+  <g transform="translate(50, 140)">
+    <text x="0" y="16" font-size="14" font-weight="800" fill="#1e293b">SURYASHAKTI WATER &amp; RENEWABLES PVT LTD</text>
+    <text x="0" y="32" font-size="11" fill="#475569">Tech Park Phase 2, Hinjewadi, Pune - 411057</text>
+    <text x="0" y="48" font-size="11" fill="#475569">Maharashtra, India | Phone: +91 99221 00192</text>
+    <text x="0" y="66" font-size="11" font-weight="700" fill="#0f172a">GSTIN: <tspan fill="#16a34a" font-family="monospace">27AAACS4412R1Z2</tspan> &bull; PAN: <tspan font-family="monospace">AAACS4412R</tspan></text>
+
+    <rect x="420" y="0" width="280" height="95" rx="6" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1" />
+    <text x="435" y="22" font-size="11" font-weight="600" fill="#64748b">Invoice No:</text>
+    <text x="540" y="22" font-size="11" font-weight="800" font-family="monospace" fill="#0f172a">ST-2024-509</text>
+
+    <text x="435" y="42" font-size="11" font-weight="600" fill="#64748b">Invoice Date:</text>
+    <text x="540" y="42" font-size="11" font-weight="700" fill="#0f172a">02-Sep-2026</text>
+
+    <text x="435" y="62" font-size="11" font-weight="600" fill="#64748b">CSR Project ID:</text>
+    <text x="540" y="62" font-size="11" font-weight="700" font-family="monospace" fill="#16a34a">FINX-PUN-084-M3</text>
+
+    <text x="435" y="82" font-size="11" font-weight="600" fill="#64748b">Escrow Status:</text>
+    <text x="540" y="82" font-size="11" font-weight="700" fill="#d97706">Milestone Locked (Ready)</text>
+  </g>
+
+  <g transform="translate(50, 255)">
+    <rect x="0" y="0" width="340" height="105" rx="6" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1" />
+    <text x="16" y="22" font-size="11" font-weight="800" fill="#475569" letter-spacing="0.5">BILLED TO (BUYER):</text>
+    <text x="16" y="40" font-size="12" font-weight="800" fill="#0f172a">JAL SEVA FOUNDATION (NGO)</text>
+    <text x="16" y="56" font-size="11" fill="#475569">42 Gramin Road, Haveli Taluka, Pune - 412210</text>
+    <text x="16" y="72" font-size="11" fill="#475569">NGO Darpan ID: MH/2016/0109283</text>
+    <text x="16" y="90" font-size="11" font-weight="700" fill="#0f172a">GSTIN: <tspan font-family="monospace">27AAATJ9999K1ZY</tspan></text>
+
+    <rect x="360" y="0" width="340" height="105" rx="6" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1" />
+    <text x="376" y="22" font-size="11" font-weight="800" fill="#475569" letter-spacing="0.5">INSTALLATION SITE:</text>
+    <text x="376" y="40" font-size="12" font-weight="800" fill="#0f172a">Village Community Center RO Room</text>
+    <text x="376" y="56" font-size="11" fill="#475569">Near Gram Panchayat Office, Shirur</text>
+    <text x="376" y="72" font-size="11" font-family="monospace" fill="#16a34a">RTK GPS: 18.5204° N, 73.8567° E</text>
+    <text x="376" y="90" font-size="11" fill="#059669" font-weight="700">IoT Flow-Meter Sensor ID: IOT-FLW-881</text>
+  </g>
+
+  <g transform="translate(50, 380)">
+    <rect x="0" y="0" width="700" height="32" rx="4" fill="#065f46" />
+    <text x="15" y="20" font-size="10" font-weight="700" fill="#ffffff">#</text>
+    <text x="45" y="20" font-size="10" font-weight="700" fill="#ffffff">PRODUCT &amp; EQUIPMENT SPECIFICATION</text>
+    <text x="360" y="20" font-size="10" font-weight="700" fill="#ffffff">HSN / SAC</text>
+    <text x="450" y="20" font-size="10" font-weight="700" fill="#ffffff">QTY</text>
+    <text x="520" y="20" font-size="10" font-weight="700" fill="#ffffff">RATE (₹)</text>
+    <text x="685" y="20" font-size="10" font-weight="700" fill="#ffffff" text-anchor="end">TOTAL (₹)</text>
+  </g>
+
+  <g transform="translate(50, 415)">
+    <rect x="0" y="0" width="700" height="42" fill="#ffffff" />
+    <text x="15" y="24" font-size="11" font-weight="600" fill="#64748b">1</text>
+    <text x="45" y="18" font-size="11" font-weight="700" fill="#0f172a">1000 LPH Commercial Reverse Osmosis Skid Unit</text>
+    <text x="45" y="32" font-size="10" fill="#64748b">Dow Filmtec Membranes &bull; Stainless Steel 304 High-Pressure Piping</text>
+    <text x="360" y="24" font-size="10" font-family="monospace" fill="#475569">842121</text>
+    <text x="450" y="24" font-size="11" font-weight="600" fill="#0f172a">1 Unit</text>
+    <text x="520" y="24" font-size="11" font-family="monospace" fill="#0f172a">8,500.00</text>
+    <text x="685" y="24" font-size="11" font-weight="700" font-family="monospace" fill="#0f172a" text-anchor="end">8,500.00</text>
+    <line x1="0" y1="42" x2="700" y2="42" stroke="#f1f5f9" stroke-width="1" />
+
+    <rect x="0" y="42" width="700" height="42" fill="#f8fafc" />
+    <text x="15" y="66" font-size="11" font-weight="600" fill="#64748b">2</text>
+    <text x="45" y="60" font-size="11" font-weight="700" fill="#0f172a">IoT Smart Card Water Dispenser &amp; Flow Sensor</text>
+    <text x="45" y="74" font-size="10" fill="#64748b">Cellular Telemetry &bull; 4G SIM &bull; FINX Public Dashboard Link</text>
+    <text x="360" y="66" font-size="10" font-family="monospace" fill="#475569">902820</text>
+    <text x="450" y="66" font-size="11" font-weight="600" fill="#0f172a">1 Unit</text>
+    <text x="520" y="66" font-size="11" font-family="monospace" fill="#0f172a">4,000.00</text>
+    <text x="685" y="66" font-size="11" font-weight="700" font-family="monospace" fill="#0f172a" text-anchor="end">4,000.00</text>
+    <line x1="0" y1="84" x2="700" y2="84" stroke="#cbd5e1" stroke-width="1.5" />
+  </g>
+
+  <g transform="translate(50, 520)">
+    <g transform="translate(0, 0)">
+      <text x="0" y="18" font-size="10" font-weight="700" fill="#64748b" text-transform="uppercase">Total Amount In Words:</text>
+      <text x="0" y="34" font-size="11" font-weight="700" fill="#0f172a">Twelve Thousand Five Hundred Indian Rupees Only</text>
+    </g>
+
+    <g transform="translate(420, 0)">
+      <text x="0" y="18" font-size="11" fill="#64748b">Taxable Equipment Subtotal:</text>
+      <text x="280" y="18" font-size="11" font-mono font-weight="600" text-anchor="end" fill="#0f172a">₹10,593.22</text>
+
+      <text x="0" y="38" font-size="11" fill="#64748b">GST @ 18.0% (Renewables):</text>
+      <text x="280" y="38" font-size="11" font-mono font-weight="600" text-anchor="end" fill="#0f172a">₹1,906.78</text>
+
+      <line x1="0" y1="52" x2="280" y2="52" stroke="#cbd5e1" stroke-width="1.5" />
+
+      <rect x="-10" y="60" width="300" height="38" rx="6" fill="#065f46" />
+      <text x="5" y="84" font-size="12" font-weight="800" fill="#ffffff">TOTAL INVOICE (INR):</text>
+      <text x="275" y="84" font-size="14" font-family="monospace" font-weight="900" fill="#6ee7b7" text-anchor="end">₹12,500.00</text>
+    </g>
+  </g>
+
+  <g transform="translate(50, 720)">
+    <g transform="translate(30, 20) rotate(-2)">
+      <rect x="0" y="0" width="220" height="85" rx="8" fill="#f0fdf4" stroke="#16a34a" stroke-width="2" stroke-dasharray="4,2" />
+      <text x="110" y="24" font-size="10" font-weight="800" fill="#15803d" text-anchor="middle">FACTORY INSPECTION PASSED</text>
+      <text x="110" y="40" font-size="9" fill="#166534" text-anchor="middle">Flow Rate Tested: 1,020 LPH @ 14 bar</text>
+      <text x="110" y="56" font-size="8" font-family="monospace" fill="#15803d" text-anchor="middle">QC Inspector: M. K. Deshpande</text>
+      <text x="110" y="72" font-size="9" font-weight="700" fill="#059669" text-anchor="middle">&#10004; DISPATCH READY &amp; BENCH TESTED</text>
+    </g>
+
+    <g transform="translate(420, 10) rotate(1)">
+      <circle cx="140" cy="50" r="45" fill="#f0fdf4" stroke="#16a34a" stroke-width="2" stroke-dasharray="5,2" />
+      <text x="140" y="34" font-size="8" font-weight="800" fill="#15803d" text-anchor="middle">SURYASHAKTI WATER</text>
+      <text x="140" y="46" font-size="7" font-weight="700" fill="#15803d" text-anchor="middle">&amp; RENEWABLES PVT LTD</text>
+      <text x="140" y="60" font-size="10" font-weight="900" fill="#065f46" text-anchor="middle">PAID / DISPATCH</text>
+      <text x="140" y="72" font-size="8" fill="#15803d" text-anchor="middle">PUNE</text>
+      <path d="M 105 85 Q 140 75 175 83" stroke="#15803d" stroke-width="2" fill="none" stroke-linecap="round" />
+    </g>
+  </g>
+
+  <g transform="translate(50, 930)">
+    <line x1="0" y1="0" x2="700" y2="0" stroke="#e2e8f0" stroke-width="1" />
+    <text x="0" y="24" font-size="9" fill="#94a3b8">Smart Escrow Contract Lock for Milestone 3 (0x8F92a34bc4812f8a9e).</text>
+    <text x="0" y="38" font-size="9" font-family="monospace" fill="#64748b">Tx Hash: 0x9812...dca00192 &bull; IoT Sensor Serial: #IOT-FLW-881</text>
+  </g>
+</svg>

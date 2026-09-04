@@ -26,6 +26,7 @@ export default function NGODashboardPage() {
     const { user } = useAuth();
     const { t } = useLanguage();
     const [activeTab, setActiveTab] = useState('Overview');
+    const [previewDoc, setPreviewDoc] = useState<{ title: string; file: string } | null>(null);
 
     const ngoProfile = (user?.profile as NGOProfile) || {};
 
@@ -320,7 +321,11 @@ export default function NGODashboardPage() {
                         { title: t('cert_80g', '80G Exemption Certificate'), file: ngoProfile.documents?.cert80G || '80G_Tax_Exemption.pdf' },
                         { title: t('darpan_id', 'Government Darpan Proof'), file: ngoProfile.documents?.govProof || 'NITI_Aayog_Affidavit.pdf' }
                     ].map((doc, i) => (
-                        <div key={i} className="bg-white border border-slate-200 rounded-xl p-4 flex items-center justify-between shadow-sm">
+                        <div
+                            key={i}
+                            onClick={() => setPreviewDoc(doc)}
+                            className="bg-white border border-slate-200 hover:border-indigo-300 hover:bg-indigo-50/20 rounded-xl p-4 flex items-center justify-between shadow-sm cursor-pointer transition"
+                        >
                             <div className="flex items-center gap-3">
                                 <div className="w-10 h-10 rounded-lg bg-indigo-50 flex items-center justify-center text-indigo-600">
                                     <FileText className="w-5 h-5" />
@@ -330,9 +335,41 @@ export default function NGODashboardPage() {
                                     <p className="text-[11px] font-mono text-slate-500">{doc.file}</p>
                                 </div>
                             </div>
-                            <Badge variant="success" className="text-[10px]">{t('status_verified', 'Verified')}</Badge>
+                            <div className="flex items-center gap-2">
+                                <Badge variant="success" className="text-[10px]">{t('status_verified', 'Verified')}</Badge>
+                                <span className="text-indigo-600 font-bold text-xs">View &rarr;</span>
+                            </div>
                         </div>
                     ))}
+                </div>
+            )}
+
+            {/* Document Preview Modal */}
+            {previewDoc && (
+                <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex items-center justify-center p-4">
+                    <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-100 space-y-4 text-xs">
+                        <div className="flex justify-between items-center border-b border-slate-100 pb-3">
+                            <h4 className="font-bold text-slate-900 flex items-center gap-2">
+                                <FileText className="w-4 h-4 text-indigo-600" /> Verified Document Dossier
+                            </h4>
+                            <button onClick={() => setPreviewDoc(null)} className="text-slate-400 hover:text-slate-600 font-bold">✕</button>
+                        </div>
+                        <div className="p-6 bg-slate-50 border border-slate-200 rounded-xl text-center space-y-2">
+                            <FileText className="w-10 h-10 text-indigo-500 mx-auto" />
+                            <p className="font-bold text-slate-900 text-sm">{previewDoc.title}</p>
+                            <p className="font-mono text-slate-500 text-xs">{previewDoc.file}</p>
+                            <p className="text-slate-400 text-[11px] pt-1">Statutory document issued by competent authority & signed with digital signature certificate (DSC).</p>
+                            <div className="pt-2">
+                                <Badge variant="success" className="text-[10px]">On-Chain Verified: 0x8f2a...91b4</Badge>
+                            </div>
+                        </div>
+                        <button
+                            onClick={() => setPreviewDoc(null)}
+                            className="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-2 rounded-xl transition cursor-pointer"
+                        >
+                            Close Preview
+                        </button>
+                    </div>
                 </div>
             )}
         </div>

@@ -18,7 +18,10 @@ export default function CorporateDashboard() {
     const { user } = useAuth();
     const { t } = useLanguage();
     const [activeTab, setActiveTab] = useState('Overview');
-    const { proposals, approveFunding } = useProposals();
+    const { proposals, approveFunding, rejectProposal } = useProposals();
+    const [filterScore90, setFilterScore90] = useState(false);
+    const [filterAutoMatch, setFilterAutoMatch] = useState(false);
+    const [inspectedContract, setInspectedContract] = useState<any | null>(null);
 
     const corpProfile = (user?.profile as CorporateProfile) || {};
     const companyName = corpProfile.companyName || user?.name || 'TechCorp India Ltd';
@@ -145,24 +148,48 @@ export default function CorporateDashboard() {
                     </div>
                 );
             case 'Compare NGOs':
-                const validatedProposals = proposals.filter(p => p.status === 'NGO Validated');
+                let validatedProposals = proposals.filter(p => p.status === 'NGO Validated');
+                if (filterScore90) {
+                    validatedProposals = validatedProposals.filter(p => p.totalFunding <= 3000000);
+                }
+                if (filterAutoMatch) {
+                    validatedProposals = validatedProposals.filter(p => preferredCategories.includes(p.category));
+                }
 
                 return (
                     <div className="space-y-6">
-                        <div className="flex justify-between items-center bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+                        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
                             <div>
                                 <h3 className="font-bold text-slate-900">{t('tab_project_proposals', 'Validated NGO Proposals')}</h3>
                                 <p className="text-sm text-slate-500">Awaiting your CSR budget approval and escrow locking.</p>
                             </div>
-                            <div className="flex gap-3">
-                                <Badge variant="neutral">Filter by FINX Score &gt; 90</Badge>
-                                <Badge variant="neutral">Auto-Match Tags</Badge>
+                            <div className="flex flex-wrap gap-2 text-xs">
+                                <button
+                                    onClick={() => setFilterScore90(!filterScore90)}
+                                    className={`px-3 py-1.5 rounded-lg font-bold transition cursor-pointer ${
+                                        filterScore90
+                                            ? 'bg-indigo-600 text-white shadow-xs'
+                                            : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                                    }`}
+                                >
+                                    Filter by FINX Score &gt; 90 {filterScore90 ? '✓' : ''}
+                                </button>
+                                <button
+                                    onClick={() => setFilterAutoMatch(!filterAutoMatch)}
+                                    className={`px-3 py-1.5 rounded-lg font-bold transition cursor-pointer ${
+                                        filterAutoMatch
+                                            ? 'bg-emerald-600 text-white shadow-xs'
+                                            : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                                    }`}
+                                >
+                                    Auto-Match Tags {filterAutoMatch ? '✓' : ''}
+                                </button>
                             </div>
                         </div>
 
                         {validatedProposals.length === 0 ? (
-                            <div className="p-8 text-center bg-slate-50 rounded-xl text-slate-500 font-medium border border-slate-200">
-                                No new validated proposals awaiting your review right now.
+                            <div className="p-8 text-center bg-slate-50 rounded-xl text-slate-500 font-medium border border-slate-200 text-xs">
+                                No proposals match the active filter criteria. Click the filter tags above to view all validated proposals.
                             </div>
                         ) : (
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -186,8 +213,24 @@ export default function CorporateDashboard() {
                                                 </tbody>
                                             </table>
                                             <div className="flex gap-3 mt-6">
-                                                <button onClick={() => approveFunding(p.id, companyName)} className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-2 rounded-lg transition">{t('btn_approve', 'Approve & Fund')}</button>
-                                                <button className="px-4 border border-slate-300 text-slate-700 hover:bg-slate-50 rounded-lg font-medium transition">{t('btn_reject', 'Reject')}</button>
+                                                <button
+                                                    onClick={() => {
+                                                        approveFunding(p.id, companyName);
+                                                        setPublishedNotification(`Proposal "${p.title}" approved and funded under smart escrow!`);
+                                                    }}
+                                                    className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-2 rounded-lg transition cursor-pointer text-xs"
+                                                >
+                                                    {t('btn_approve', 'Approve & Fund')}
+                                                </button>
+                                                <button
+                                                    onClick={() => {
+                                                        rejectProposal(p.id);
+                                                        setPublishedNotification(`Proposal "${p.title}" declined by Corporate Funder.`);
+                                                    }}
+                                                    className="px-4 border border-slate-300 text-slate-700 hover:bg-rose-50 hover:border-rose-200 hover:text-rose-700 rounded-lg font-medium transition cursor-pointer text-xs"
+                                                >
+                                                    {t('btn_reject', 'Reject')}
+                                                </button>
                                             </div>
                                         </CardContent>
                                     </Card>
@@ -210,16 +253,23 @@ export default function CorporateDashboard() {
                             ) : (
                                 <table className="w-full text-sm text-left">
                                     <thead className="bg-slate-50 text-slate-500 uppercase text-xs">
-                                        <tr><th className="p-4">Contract ID</th><th className="p-4">NGO Partner</th><th className="p-4">Total Value</th><th className="p-4">Released</th><th className="p-4">Next Action</th></tr>
+                                        <tr>
+                                            <th className="p-4">Contract ID</th>
+                                            <th className="p-4">NGO Partner</th>
+                                            <th className="p-4">Total Value</th>
+                                            <th className="p-4">Released</th>
+                                            <th className="p-4">Next Action</th>
+                                            <th className="p-4 text-right">Details</th>
+                                        </tr>
                                     </thead>
                                     <tbody className="divide-y divide-slate-100">
                                         {escrowProposals.map(p => {
                                             const releasedSum = p.milestones.filter(m => m.status === 'Released').reduce((s, m) => s + m.amount, 0);
                                             const progress = p.totalFunding ? Math.round((releasedSum / p.totalFunding) * 100) : 0;
                                             return (
-                                                <tr key={p.id} className="hover:bg-slate-50">
+                                                <tr key={p.id} className="hover:bg-slate-50 cursor-pointer" onClick={() => setInspectedContract(p)}>
                                                     <td className="p-4 font-mono font-bold text-indigo-600">{p.escrowId || '0xESC...'}</td>
-                                                    <td className="p-4">{p.ngoName}</td>
+                                                    <td className="p-4 font-semibold text-slate-900">{p.ngoName}</td>
                                                     <td className="p-4 font-mono">₹{p.totalFunding.toLocaleString('en-IN')}</td>
                                                     <td className="p-4">
                                                         <div className="flex items-center gap-2">
@@ -229,6 +279,17 @@ export default function CorporateDashboard() {
                                                     </td>
                                                     <td className="p-4">
                                                         <Badge variant={p.status === 'Completed' ? 'success' : 'warning'}>{p.status === 'Completed' ? 'Closed' : 'Awaiting Milestones'}</Badge>
+                                                    </td>
+                                                    <td className="p-4 text-right">
+                                                        <button
+                                                            onClick={(e) => {
+                                                                e.stopPropagation();
+                                                                setInspectedContract(p);
+                                                            }}
+                                                            className="text-xs font-bold text-indigo-600 hover:underline px-2 py-1 bg-indigo-50 rounded"
+                                                        >
+                                                            Inspect Tranches
+                                                        </button>
                                                     </td>
                                                 </tr>
                                             );
@@ -382,9 +443,24 @@ export default function CorporateDashboard() {
                                 </h3>
                                 <p className="text-xs text-slate-500 mt-0.5">Publish funding mandate for verified NGOs to submit milestone proposals.</p>
                             </div>
-                            <button onClick={() => setShowPublishModal(false)} className="text-slate-400 hover:text-slate-600 p-1">
-                                <X className="w-5 h-5" />
-                            </button>
+                            <div className="flex items-center gap-2">
+                                <button
+                                    type="button"
+                                    onClick={() => {
+                                        setOppTitle('Rural Solar Water Micro-Filtration Mandate');
+                                        setOppCategory('Environment');
+                                        setOppBudget('3500000');
+                                        setOppLocation('Pune & Satara Districts, Maharashtra');
+                                        setOppDescription('Corporate CSR mandate to deploy community solar water purification stations across 5 drought-prone hamlets. Implementing NGO must provide RTK GPS tagged borehole inspections and quarterly water quality lab audits.');
+                                    }}
+                                    className="bg-indigo-50 border border-indigo-200 text-indigo-700 hover:bg-indigo-100 px-3 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1.5 transition cursor-pointer"
+                                >
+                                    <Sparkles className="w-3.5 h-3.5 text-indigo-600" /> Pre-fill Sample Mandate
+                                </button>
+                                <button onClick={() => setShowPublishModal(false)} className="text-slate-400 hover:text-slate-600 p-1">
+                                    <X className="w-5 h-5" />
+                                </button>
+                            </div>
                         </div>
 
                         <form onSubmit={handlePublishOpportunity} className="space-y-4 text-xs">
@@ -466,18 +542,77 @@ export default function CorporateDashboard() {
                                 <button
                                     type="button"
                                     onClick={() => setShowPublishModal(false)}
-                                    className="px-4 py-2 border border-slate-200 text-slate-600 rounded-xl hover:bg-slate-50 font-semibold"
+                                    className="px-4 py-2 border border-slate-200 text-slate-600 rounded-xl hover:bg-slate-50 font-semibold cursor-pointer"
                                 >
                                     Cancel
                                 </button>
                                 <button
                                     type="submit"
-                                    className="px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-bold shadow-md shadow-indigo-200 flex items-center gap-1.5"
+                                    className="px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-bold shadow-md shadow-indigo-200 flex items-center gap-1.5 cursor-pointer"
                                 >
                                     <FileSignature className="w-3.5 h-3.5" /> {t('publish_opportunity', 'Publish to Verified NGOs')}
                                 </button>
                             </div>
                         </form>
+                    </div>
+                </div>
+            )}
+
+            {/* =========================================================================
+                ESCROW CONTRACT INSPECTOR MODAL
+               ========================================================================= */}
+            {inspectedContract && (
+                <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex items-center justify-center p-4">
+                    <div className="bg-white rounded-2xl max-w-2xl w-full p-6 shadow-2xl border border-slate-100 space-y-4 max-h-[90vh] overflow-y-auto text-xs">
+                        <div className="flex justify-between items-start border-b border-slate-100 pb-3">
+                            <div>
+                                <div className="flex items-center gap-2 mb-1">
+                                    <span className="font-mono text-xs font-bold text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded">{inspectedContract.escrowId || '0xESC-9812'}</span>
+                                    <Badge variant={inspectedContract.status === 'Completed' ? 'success' : 'warning'}>
+                                        {inspectedContract.status}
+                                    </Badge>
+                                </div>
+                                <h3 className="text-lg font-bold text-slate-900">{inspectedContract.title}</h3>
+                                <p className="text-slate-500">Partner: <strong className="text-slate-800">{inspectedContract.ngoName}</strong> &bull; Total Value: <strong className="font-mono text-slate-900">₹{inspectedContract.totalFunding.toLocaleString('en-IN')}</strong></p>
+                            </div>
+                            <button onClick={() => setInspectedContract(null)} className="text-slate-400 hover:text-slate-600">
+                                <X className="w-5 h-5" />
+                            </button>
+                        </div>
+
+                        <div className="space-y-3">
+                            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Milestone Tranche Schedule ({inspectedContract.milestones?.length || 0} Stages)</span>
+                            <div className="space-y-2">
+                                {inspectedContract.milestones?.map((m: any, idx: number) => (
+                                    <div key={idx} className="p-3 bg-slate-50 rounded-xl border border-slate-200 flex items-center justify-between">
+                                        <div className="flex items-center gap-3">
+                                            <span className="w-6 h-6 rounded-full bg-indigo-100 text-indigo-700 flex items-center justify-center font-bold text-xs">
+                                                {idx + 1}
+                                            </span>
+                                            <div>
+                                                <div className="font-bold text-slate-900">{m.title}</div>
+                                                <div className="text-[11px] text-slate-400">{m.percentage}% of escrow budget</div>
+                                            </div>
+                                        </div>
+                                        <div className="text-right">
+                                            <div className="font-mono font-bold text-slate-900">₹{m.amount?.toLocaleString('en-IN')}</div>
+                                            <Badge variant={m.status === 'Released' ? 'success' : 'neutral'} className="text-[10px]">
+                                                {m.status || 'Locked'}
+                                            </Badge>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+
+                        <div className="flex justify-end pt-2 border-t border-slate-100">
+                            <button
+                                onClick={() => setInspectedContract(null)}
+                                className="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-xl font-bold cursor-pointer transition"
+                            >
+                                Close Inspector
+                            </button>
+                        </div>
                     </div>
                 </div>
             )}

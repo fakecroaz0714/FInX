@@ -617,38 +617,9 @@ export default function LiveHackathonWorkflowEngine() {
                 </Card>
             )}
 
-            {/* STEP 4 & 5: MILESTONE FUNDING ESCROW & FRAUD DEMO PANEL */}
+            {/* STEP 4 & 5: MILESTONE FUNDING ESCROW PANEL */}
             {(currentStep === 4 || currentStep === 5) && (
                 <div className="space-y-6">
-                    {/* FRAUD DEMO CONTROL BAR FOR JUDGES */}
-                    <Card className="border border-amber-300 bg-amber-50/40 shadow-sm">
-                        <CardContent className="p-4">
-                            <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-3">
-                                <div>
-                                    <div className="font-bold text-amber-900 text-xs flex items-center gap-1.5">
-                                        <AlertTriangle className="w-4 h-4 text-amber-600" />
-                                        <span>{t('fraud_demo_title', 'Interactive Fraud Demo Controls for Hackathon Judges')}</span>
-                                    </div>
-                                    <p className="text-slate-600 text-xs mt-0.5">{t('fraud_demo_desc', 'Test real-time fraud blocking (Duplicate Image & GPS Mismatch distances > 100m).')}</p>
-                                </div>
-                                <div className="flex flex-wrap items-center gap-2 shrink-0">
-                                    <button
-                                        onClick={() => handleVerifyMilestone('duplicate_image')}
-                                        disabled={loading}
-                                        className="bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs px-3 py-1.5 rounded transition-all">
-                                        {t('demo1_duplicate_image', '🚨 Demo 1: Duplicate Image Fraud')}
-                                    </button>
-                                    <button
-                                        onClick={() => handleVerifyMilestone('gps_mismatch')}
-                                        disabled={loading}
-                                        className="bg-red-600 hover:bg-red-700 text-white font-bold text-xs px-3 py-1.5 rounded transition-all">
-                                        {t('demo2_gps_mismatch', '🚨 Demo 2: GPS Mismatch Fraud (>100m)')}
-                                    </button>
-                                </div>
-                            </div>
-                        </CardContent>
-                    </Card>
-
                     {/* MILESTONE ESCROW TIMELINE */}
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                         {/* Milestones List */}

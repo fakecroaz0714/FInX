@@ -6,7 +6,8 @@ import { Badge } from '@/components/ui/Badge';
 import {
     Network, ArrowRight, CheckCircle2, Zap, BrainCircuit, X, Check,
     Building2, MapPin, Target, Sparkles, ShieldCheck, Loader2, AlertCircle,
-    RotateCcw, Info, ChevronDown, ChevronUp, Layers, ExternalLink
+    RotateCcw, Info, ChevronDown, ChevronUp, Layers, ExternalLink,
+    FileText, Clock, Award, Users
 } from 'lucide-react';
 import Link from 'next/link';
 import { useLanguage } from '@/lib/LanguageContext';
@@ -33,6 +34,10 @@ export interface SynergyWorkflow {
         location: string;
         category: string;
         requestedBudget?: string;
+        signatures?: number;
+        targetSignatures?: number;
+        citizenRep?: string;
+        problem?: string;
     };
     ngo: {
         id?: string;
@@ -40,12 +45,17 @@ export interface SynergyWorkflow {
         rating: number;
         verified: boolean;
         validatorScore?: number;
+        darpanId?: string;
+        pan?: string;
+        experience?: string;
     };
     corporate: {
         id?: string;
         name: string;
         budget: string;
         matchScore: number;
+        lead?: string;
+        themeAlign?: string;
     };
     status: 'pending' | 'approve' | 'reject';
     confidenceScore?: number;
@@ -54,6 +64,7 @@ export interface SynergyWorkflow {
     approvedAt?: string;
     declinedAt?: string;
     escrowContractId?: string;
+    txHash?: string;
 }
 
 export interface MatchingKPI {
@@ -67,9 +78,35 @@ const INITIAL_WORKFLOWS: SynergyWorkflow[] = [
     {
         id: 1,
         matchKey: 'PET-101_NGO-1082_CORP-GREEN-001',
-        petition: { id: 'PET-101', title: 'Rural Solar Pumps', location: 'Nagpur, MH', category: 'Environment', requestedBudget: '₹4.0M' },
-        ngo: { id: 'NGO-1082', name: 'Green Earth Foundation', rating: 94, verified: true, validatorScore: 94 },
-        corporate: { id: 'CORP-GREEN-001', name: 'GreenFuture Energy', budget: '₹4.0M', matchScore: 98 },
+        petition: {
+            id: 'PET-101',
+            title: 'Rural Solar Pumps',
+            location: 'Nagpur, MH',
+            category: 'Environment',
+            requestedBudget: '₹4.0M',
+            signatures: 1420,
+            targetSignatures: 1500,
+            citizenRep: 'Kishore Deshmukh (Gram Panchayat)',
+            problem: 'Borewell pump failure leaves 450 farmer households without irrigation.'
+        },
+        ngo: {
+            id: 'NGO-1082',
+            name: 'Green Earth Foundation',
+            rating: 94,
+            verified: true,
+            validatorScore: 94,
+            darpanId: 'MH/2021/0088219',
+            pan: 'AAATG8124P',
+            experience: 'Completed 18 solar mini-grid installations in Vidarbha.'
+        },
+        corporate: {
+            id: 'CORP-GREEN-001',
+            name: 'GreenFuture Energy',
+            budget: '₹4.0M',
+            matchScore: 98,
+            lead: 'Pooja Verma (Head of Sustainability)',
+            themeAlign: 'SDG 7 & 13: Renewable Rural Micro-Grids'
+        },
         status: 'pending',
         confidenceScore: 98,
         scoreBreakdown: { category: 40, geographic: 20, ngo: 19, budget: 10, relevance: 9 },
@@ -78,9 +115,35 @@ const INITIAL_WORKFLOWS: SynergyWorkflow[] = [
     {
         id: 2,
         matchKey: 'PET-103_NGO-1099_CORP-TECH-003',
-        petition: { id: 'PET-103', title: 'Primary School Roof', location: 'Pune, MH', category: 'Education', requestedBudget: '₹1.5M' },
-        ngo: { id: 'NGO-1099', name: 'EduCare Org', rating: 88, verified: true, validatorScore: 88 },
-        corporate: { id: 'CORP-TECH-003', name: 'TechCorp India', budget: '₹1.5M', matchScore: 92 },
+        petition: {
+            id: 'PET-103',
+            title: 'Primary School Roof',
+            location: 'Pune, MH',
+            category: 'Education',
+            requestedBudget: '₹1.5M',
+            signatures: 980,
+            targetSignatures: 1000,
+            citizenRep: 'Sunita Patil (School Management Committee)',
+            problem: 'Monsoon leaks prevent classes for 320 primary school children.'
+        },
+        ngo: {
+            id: 'NGO-1099',
+            name: 'EduCare Org',
+            rating: 88,
+            verified: true,
+            validatorScore: 88,
+            darpanId: 'MH/2020/0045231',
+            pan: 'AAATE4910M',
+            experience: 'Constructed 24 pre-fab school classrooms across Pune rural.'
+        },
+        corporate: {
+            id: 'CORP-TECH-003',
+            name: 'TechCorp India',
+            budget: '₹1.5M',
+            matchScore: 92,
+            lead: 'Anand Kulkarni (CSR Lead)',
+            themeAlign: 'SDG 4: Quality Infrastructure for Primary Education'
+        },
         status: 'pending',
         confidenceScore: 92,
         scoreBreakdown: { category: 40, geographic: 20, ngo: 18, budget: 10, relevance: 4 },
@@ -89,32 +152,47 @@ const INITIAL_WORKFLOWS: SynergyWorkflow[] = [
     {
         id: 3,
         matchKey: 'PET-104_NGO-1105_CORP-PHARMA-004',
-        petition: { id: 'PET-104', title: 'Clinic Medical Supplies', location: 'Mumbai, MH', category: 'Healthcare', requestedBudget: '₹0.8M' },
-        ngo: { id: 'NGO-1105', name: 'Urban Health Initiative', rating: 45, verified: false, validatorScore: 45 },
-        corporate: { id: 'CORP-PHARMA-004', name: 'PharmaCare CSR', budget: '₹0.8M', matchScore: 78 },
+        petition: {
+            id: 'PET-104',
+            title: 'Clinic Medical Supplies',
+            location: 'Mumbai, MH',
+            category: 'Healthcare',
+            requestedBudget: '₹0.8M',
+            signatures: 640,
+            targetSignatures: 800,
+            citizenRep: 'Dr. A. B. Joshi (Primary Health Center)',
+            problem: 'Sub-district hospital lacks point-of-care diagnostic strips and vaccines.'
+        },
+        ngo: {
+            id: 'NGO-1105',
+            name: 'Urban Health Initiative',
+            rating: 45,
+            verified: false,
+            validatorScore: 45,
+            darpanId: 'MH/2024/0991823',
+            pan: 'AAATU1123J',
+            experience: 'New non-profit organization pending multi-signature audit validation.'
+        },
+        corporate: {
+            id: 'CORP-PHARMA-004',
+            name: 'PharmaCare CSR',
+            budget: '₹0.8M',
+            matchScore: 78,
+            lead: 'Dr. Meera Nambiar (CSR Medical Affairs)',
+            themeAlign: 'SDG 3: Essential Rural Healthcare & Diagnostics'
+        },
         status: 'pending',
         confidenceScore: 78,
-        scoreBreakdown: { category: 40, geographic: 20, ngo: 9, budget: 10, relevance: -1 },
-        explanation: 'Healthcare thematic match, but NGO validation remains pending (Risk: Unverified).'
-    },
-    {
-        id: 4,
-        matchKey: 'PET-102_NGO-1004_CORP-TATA-002',
-        petition: { id: 'PET-102', title: 'Drinking Water Pipeline', location: 'Nashik, MH', category: 'Sanitation', requestedBudget: '₹3.2M' },
-        ngo: { id: 'NGO-1004', name: 'Jal Seva NGO', rating: 91, verified: true, validatorScore: 91 },
-        corporate: { id: 'CORP-TATA-002', name: 'Tata Power CSR', budget: '₹3.2M', matchScore: 95 },
-        status: 'pending',
-        confidenceScore: 95,
-        scoreBreakdown: { category: 40, geographic: 18, ngo: 18, budget: 10, relevance: 9 },
-        explanation: 'Clean water & sanitation priority with Jal Seva verified track record and Tata Power rural mandate.'
+        scoreBreakdown: { category: 40, geographic: 10, ngo: 9, budget: 10, relevance: 9 },
+        explanation: 'Healthcare category alignment, but NGO verification score (45/100) requires human-in-the-loop review before escrow authorization.'
     }
 ];
 
 const INITIAL_KPI: MatchingKPI = {
     unresolvedPetitions: 1204,
-    availableCsrCapital: '₹82.5M',
+    availableCsrCapital: '₹48.2M',
     workflowSuccessRate: 91,
-    highConfidenceCount: 3
+    highConfidenceCount: 2
 };
 
 export default function MatchingEngine() {
@@ -129,6 +207,12 @@ export default function MatchingEngine() {
     const [expandedBreakdownId, setExpandedBreakdownId] = useState<number | null>(null);
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
     const [actionNotice, setActionNotice] = useState<string | null>(null);
+
+    // Entity Inspection Modal State
+    const [inspectedEntity, setInspectedEntity] = useState<{
+        type: 'petition' | 'ngo' | 'corporate';
+        match: SynergyWorkflow;
+    } | null>(null);
 
     // Load persisted workflows and metrics from storage on mount
     useEffect(() => {
@@ -210,7 +294,6 @@ export default function MatchingEngine() {
         }
 
         try {
-            // Send request to real backend matching engine with safe JSON wrapper
             const res = await safeJsonFetch<any>(`${BACKEND_URL}/api/matching/auto-match`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' }
@@ -229,7 +312,6 @@ export default function MatchingEngine() {
                 setActionNotice(`AI Auto-Match successfully executed. Found ${count} optimal synergy matches across Citizen Petitions, Verified NGOs & Corporate CSR Funds.`);
                 setTimeout(() => setActionNotice(null), 6000);
             } else {
-                // Fallback to client-side deterministic evaluation if backend returns error
                 console.warn('Backend matching API returned error, falling back to local multi-model calculation:', res.error);
                 executeLocalAutoMatch();
             }
@@ -242,7 +324,7 @@ export default function MatchingEngine() {
         }
     };
 
-    // Client-side fallback matching engine (100% resilient)
+    // Client-side fallback matching engine
     const executeLocalAutoMatch = () => {
         const updated = matches.map(m => {
             let score = m.confidenceScore || 90;
@@ -280,7 +362,6 @@ export default function MatchingEngine() {
         const targetWorkflow = matches.find(m => m.id === id);
         if (!targetWorkflow) return;
 
-        // Optimistically update React state immediately
         const updatedMatches = matches.map(m => {
             if (m.id === id) {
                 return {
@@ -296,7 +377,6 @@ export default function MatchingEngine() {
             return m;
         });
 
-        // Calculate updated KPI metrics
         const approvedCount = updatedMatches.filter(w => w.status === 'approve').length;
         const reviewedCount = updatedMatches.filter(w => w.status !== 'pending').length;
         const newSuccessRate = reviewedCount > 0 ? Math.round((approvedCount / reviewedCount) * 100) : 91;
@@ -319,7 +399,6 @@ export default function MatchingEngine() {
         }
         setTimeout(() => setActionNotice(null), 5000);
 
-        // Sync with backend asynchronously
         try {
             await safeJsonFetch(`${BACKEND_URL}/api/matching/workflows/${id}/${action}`, {
                 method: 'POST'
@@ -422,7 +501,7 @@ export default function MatchingEngine() {
                 </div>
             </header>
 
-            {/* Step 5: Live AI Matching Progress / Status Area */}
+            {/* Live AI Matching Progress / Status Area */}
             {(isRunning || (progressStep > 0 && progressStep <= 7)) && (
                 <Card className="border-2 border-indigo-200 bg-gradient-to-br from-indigo-50/70 via-white to-purple-50/50 shadow-sm overflow-hidden transition-all duration-300">
                     <CardContent className="p-5 md:p-6">
@@ -488,7 +567,7 @@ export default function MatchingEngine() {
                 </Card>
             )}
 
-            {/* Step 4: Live KPI Metrics Cards */}
+            {/* Live KPI Metrics Cards */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <Card className="shadow-sm border-slate-200 bg-white">
                     <CardContent className="p-6">
@@ -533,7 +612,7 @@ export default function MatchingEngine() {
                 </Card>
             </div>
 
-            {/* Step 4: Suggested Synergy Workflows */}
+            {/* Suggested Synergy Workflows */}
             <div className="space-y-6">
                 <div className="flex flex-col sm:flex-row justify-between sm:items-end gap-2">
                     <div>
@@ -617,14 +696,17 @@ export default function MatchingEngine() {
                                         <div className="absolute top-1/2 left-0 w-full h-0.5 bg-slate-100 -z-10 hidden md:block rounded-full" />
 
                                         {/* 1. Citizen Petition */}
-                                        <div className="flex-1 w-full bg-white border border-slate-200 p-4 rounded-xl shadow-xs relative z-10 hover:border-slate-300 transition">
+                                        <div
+                                            onClick={() => setInspectedEntity({ type: 'petition', match })}
+                                            className="flex-1 w-full bg-white border border-slate-200 p-4 rounded-xl shadow-xs relative z-10 hover:border-indigo-400 transition cursor-pointer group"
+                                        >
                                             <div className="flex justify-between items-start mb-2">
                                                 <Badge variant="neutral" className="bg-slate-100 text-slate-700 text-[10px] font-bold">
                                                     {t('step_petition', 'Step 1: Petition')}
                                                 </Badge>
-                                                <Target className="w-4 h-4 text-slate-400" />
+                                                <ExternalLink className="w-3.5 h-3.5 text-slate-300 group-hover:text-indigo-600 transition" />
                                             </div>
-                                            <h3 className="font-bold text-slate-900 text-sm">{match.petition.title}</h3>
+                                            <h3 className="font-bold text-slate-900 text-sm group-hover:text-indigo-600 transition">{match.petition.title}</h3>
                                             <div className="text-xs text-slate-500 mt-1 flex items-center gap-1">
                                                 <MapPin className="w-3 h-3 text-slate-400 shrink-0" />
                                                 <span>{match.petition.location}</span>
@@ -644,14 +726,17 @@ export default function MatchingEngine() {
                                         <ArrowRight className="w-6 h-6 text-indigo-300 hidden md:block shrink-0 bg-slate-50 rounded-full p-1" />
 
                                         {/* 2. Execution NGO */}
-                                        <div className="flex-1 w-full bg-white border border-slate-200 p-4 rounded-xl shadow-xs relative z-10 hover:border-slate-300 transition">
+                                        <div
+                                            onClick={() => setInspectedEntity({ type: 'ngo', match })}
+                                            className="flex-1 w-full bg-white border border-slate-200 p-4 rounded-xl shadow-xs relative z-10 hover:border-indigo-400 transition cursor-pointer group"
+                                        >
                                             <div className="flex justify-between items-start mb-2">
                                                 <Badge variant="neutral" className="bg-slate-100 text-slate-700 text-[10px] font-bold">
                                                     {t('step_execution', 'Step 2: Execution')}
                                                 </Badge>
-                                                <Building2 className="w-4 h-4 text-slate-400" />
+                                                <ExternalLink className="w-3.5 h-3.5 text-slate-300 group-hover:text-indigo-600 transition" />
                                             </div>
-                                            <h3 className="font-bold text-slate-900 text-sm">{match.ngo.name}</h3>
+                                            <h3 className="font-bold text-slate-900 text-sm group-hover:text-indigo-600 transition">{match.ngo.name}</h3>
                                             <div className="text-xs text-slate-500 mt-1 flex items-center gap-1">
                                                 {match.ngo.verified ? (
                                                     <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
@@ -675,14 +760,17 @@ export default function MatchingEngine() {
                                         <ArrowRight className="w-6 h-6 text-indigo-300 hidden md:block shrink-0 bg-slate-50 rounded-full p-1" />
 
                                         {/* 3. Corporate CSR Capital */}
-                                        <div className="flex-1 w-full bg-white border border-slate-200 p-4 rounded-xl shadow-xs relative z-10 hover:border-slate-300 transition">
+                                        <div
+                                            onClick={() => setInspectedEntity({ type: 'corporate', match })}
+                                            className="flex-1 w-full bg-white border border-slate-200 p-4 rounded-xl shadow-xs relative z-10 hover:border-indigo-400 transition cursor-pointer group"
+                                        >
                                             <div className="flex justify-between items-start mb-2">
                                                 <Badge variant="neutral" className="bg-slate-100 text-slate-700 text-[10px] font-bold">
                                                     {t('step_csr_capital', 'Step 3: CSR Capital')}
                                                 </Badge>
-                                                <Zap className="w-4 h-4 text-amber-500" />
+                                                <ExternalLink className="w-3.5 h-3.5 text-slate-300 group-hover:text-indigo-600 transition" />
                                             </div>
-                                            <h3 className="font-bold text-slate-900 text-sm">{match.corporate.name}</h3>
+                                            <h3 className="font-bold text-slate-900 text-sm group-hover:text-indigo-600 transition">{match.corporate.name}</h3>
                                             <div className="text-xs text-slate-600 mt-1 flex items-center gap-1 font-mono font-medium">
                                                 <span>{match.corporate.budget} {t('available_funds', 'Available')}</span>
                                             </div>
@@ -785,6 +873,115 @@ export default function MatchingEngine() {
                     })
                 )}
             </div>
+
+            {/* ENTITY INSPECTION MODAL */}
+            {inspectedEntity && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs">
+                    <div className="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-100">
+                        <div className="flex justify-between items-start border-b border-slate-100 pb-3 mb-4">
+                            <div>
+                                <span className="text-xs font-bold uppercase tracking-wider text-indigo-600">
+                                    {inspectedEntity.type === 'petition' ? 'Step 1: Citizen Petition Dossier' : inspectedEntity.type === 'ngo' ? 'Step 2: Implementing NGO Dossier' : 'Step 3: Corporate CSR Funder Dossier'}
+                                </span>
+                                <h3 className="text-lg font-bold text-slate-900 mt-1">
+                                    {inspectedEntity.type === 'petition' ? inspectedEntity.match.petition.title : inspectedEntity.type === 'ngo' ? inspectedEntity.match.ngo.name : inspectedEntity.match.corporate.name}
+                                </h3>
+                            </div>
+                            <button onClick={() => setInspectedEntity(null)} className="p-1 rounded-lg hover:bg-slate-100 text-slate-400 hover:text-slate-600">
+                                <X className="w-5 h-5" />
+                            </button>
+                        </div>
+
+                        {/* Petition Inspection */}
+                        {inspectedEntity.type === 'petition' && (
+                            <div className="space-y-3 text-xs">
+                                <div className="p-3 bg-slate-50 rounded-xl border border-slate-200">
+                                    <div className="text-slate-400 mb-1 font-semibold">Reported Citizen Problem:</div>
+                                    <p className="text-slate-700 leading-relaxed">
+                                        {inspectedEntity.match.petition.problem || "Groundwater salinity and pump outages severely impact daily life."}
+                                    </p>
+                                </div>
+                                <div className="grid grid-cols-2 gap-3">
+                                    <div className="p-3 bg-white border border-slate-200 rounded-lg">
+                                        <div className="text-slate-400">Location</div>
+                                        <div className="font-bold text-slate-800">{inspectedEntity.match.petition.location}</div>
+                                    </div>
+                                    <div className="p-3 bg-white border border-slate-200 rounded-lg">
+                                        <div className="text-slate-400">Citizen Signatures</div>
+                                        <div className="font-bold text-indigo-600">{inspectedEntity.match.petition.signatures || 1200} / {inspectedEntity.match.petition.targetSignatures || 1500}</div>
+                                    </div>
+                                </div>
+                                <div className="p-3 bg-white border border-slate-200 rounded-lg">
+                                    <div className="text-slate-400">Grassroots Citizen Lead</div>
+                                    <div className="font-bold text-slate-800">{inspectedEntity.match.petition.citizenRep || "Gram Panchayat Council"}</div>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* NGO Inspection */}
+                        {inspectedEntity.type === 'ngo' && (
+                            <div className="space-y-3 text-xs">
+                                <div className="p-3 bg-slate-50 rounded-xl border border-slate-200 flex justify-between items-center">
+                                    <div>
+                                        <div className="text-slate-400">FINX AI Trust Rating</div>
+                                        <div className="text-xl font-black text-indigo-600">{inspectedEntity.match.ngo.rating}/100</div>
+                                    </div>
+                                    <Badge variant={inspectedEntity.match.ngo.verified ? 'success' : 'warning'}>
+                                        {inspectedEntity.match.ngo.verified ? 'Verified Organization' : 'Pending Review'}
+                                    </Badge>
+                                </div>
+                                <div className="grid grid-cols-2 gap-3">
+                                    <div className="p-3 bg-white border border-slate-200 rounded-lg">
+                                        <div className="text-slate-400">Niti Aayog Darpan ID</div>
+                                        <div className="font-mono font-bold text-slate-800">{inspectedEntity.match.ngo.darpanId || "MH/2021/04910"}</div>
+                                    </div>
+                                    <div className="p-3 bg-white border border-slate-200 rounded-lg">
+                                        <div className="text-slate-400">Income Tax PAN</div>
+                                        <div className="font-mono font-bold text-slate-800">{inspectedEntity.match.ngo.pan || "AAATJ9999K"}</div>
+                                    </div>
+                                </div>
+                                <div className="p-3 bg-white border border-slate-200 rounded-lg">
+                                    <div className="text-slate-400">Track Record</div>
+                                    <div className="font-medium text-slate-800">{inspectedEntity.match.ngo.experience || "Proven execution in Maharashtra"}</div>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Corporate Inspection */}
+                        {inspectedEntity.type === 'corporate' && (
+                            <div className="space-y-3 text-xs">
+                                <div className="p-3 bg-slate-50 rounded-xl border border-slate-200 flex justify-between items-center">
+                                    <div>
+                                        <div className="text-slate-400">Available CSR Tranche</div>
+                                        <div className="text-xl font-mono font-bold text-slate-900">{inspectedEntity.match.corporate.budget}</div>
+                                    </div>
+                                    <div className="text-right">
+                                        <div className="text-slate-400">Thematic Match</div>
+                                        <div className="text-xl font-bold text-indigo-600">{inspectedEntity.match.corporate.matchScore}%</div>
+                                    </div>
+                                </div>
+                                <div className="p-3 bg-white border border-slate-200 rounded-lg">
+                                    <div className="text-slate-400">CSR Committee Lead</div>
+                                    <div className="font-bold text-slate-800">{inspectedEntity.match.corporate.lead || "Corporate CSR Committee"}</div>
+                                </div>
+                                <div className="p-3 bg-white border border-slate-200 rounded-lg">
+                                    <div className="text-slate-400">Strategic Alignment</div>
+                                    <div className="font-semibold text-slate-800">{inspectedEntity.match.corporate.themeAlign || "Schedule VII MCA Mandatory CSR"}</div>
+                                </div>
+                            </div>
+                        )}
+
+                        <div className="mt-6 pt-3 border-t border-slate-100 flex justify-end">
+                            <button
+                                onClick={() => setInspectedEntity(null)}
+                                className="px-4 py-2 font-semibold text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-lg transition text-xs cursor-pointer"
+                            >
+                                Close Inspection
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }
