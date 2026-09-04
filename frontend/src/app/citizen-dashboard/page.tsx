@@ -124,11 +124,11 @@ export default function CitizenDashboard() {
                     <div className="space-y-4">
                         {/* Status Definitions Key */}
                         <div className="bg-white p-3 rounded-xl border border-slate-200 shadow-sm flex flex-wrap gap-2 text-xs font-semibold items-center">
-                            <span className="text-slate-400 mr-2 uppercase tracking-wide">Status Roadmap:</span>
-                            <Badge variant="neutral">Submitted</Badge>&rarr;
-                            <Badge variant="warning">Verified</Badge>&rarr;
-                            <Badge variant="success">Adopted by NGO</Badge>&rarr;
-                            <Badge variant="default">Funded & Progressing</Badge>
+                            <span className="text-slate-400 mr-2 uppercase tracking-wide">{t('status_roadmap', 'Status Roadmap')}:</span>
+                            <Badge variant="neutral">{t('status_submitted', 'Submitted')}</Badge>&rarr;
+                            <Badge variant="warning">{t('status_verified', 'Verified')}</Badge>&rarr;
+                            <Badge variant="success">{t('status_adopted_ngo', 'Adopted by NGO')}</Badge>&rarr;
+                            <Badge variant="default">{t('status_funded_progressing', 'Funded & Progressing')}</Badge>
                         </div>
 
                         <Card className="border-emerald-200 shadow-sm">
@@ -225,21 +225,21 @@ export default function CitizenDashboard() {
                             <CardContent className="p-6 md:p-8 flex flex-col items-center justify-center text-center">
                                 <div className="p-4 bg-indigo-50 rounded-full mb-4"><HardDrive className="w-8 h-8 text-indigo-600" /></div>
                                 <div className="text-3xl font-bold text-slate-900 mb-1">2</div>
-                                <div className="text-sm font-semibold text-slate-500 tracking-wide uppercase">Active Petitions</div>
+                                <div className="text-sm font-semibold text-slate-500 tracking-wide uppercase">{t('active_petitions', 'Active Petitions')}</div>
                             </CardContent>
                         </Card>
                         <Card className="shadow-sm border-slate-200 bg-white hover:border-amber-300 transition-colors">
                             <CardContent className="p-6 md:p-8 flex flex-col items-center justify-center text-center">
                                 <div className="p-4 bg-amber-50 rounded-full mb-4"><Clock className="w-8 h-8 text-amber-600" /></div>
                                 <div className="text-3xl font-bold text-slate-900 mb-1">1</div>
-                                <div className="text-sm font-semibold text-slate-500 tracking-wide uppercase">Pending Review</div>
+                                <div className="text-sm font-semibold text-slate-500 tracking-wide uppercase">{t('pending_review', 'Pending Review')}</div>
                             </CardContent>
                         </Card>
                         <Card className="shadow-sm border-slate-200 bg-white hover:border-emerald-300 transition-colors">
                             <CardContent className="p-6 md:p-8 flex flex-col items-center justify-center text-center">
                                 <div className="p-4 bg-emerald-50 rounded-full mb-4"><CheckCircle2 className="w-8 h-8 text-emerald-600" /></div>
                                 <div className="text-3xl font-bold text-slate-900 mb-1">18</div>
-                                <div className="text-sm font-semibold text-slate-500 tracking-wide uppercase">Local Projects Completed</div>
+                                <div className="text-sm font-semibold text-slate-500 tracking-wide uppercase">{t('local_projects_completed', 'Local Projects Completed')}</div>
                             </CardContent>
                         </Card>
 
@@ -251,15 +251,15 @@ export default function CitizenDashboard() {
                                         <MapPin className="w-5 h-5" />
                                     </div>
                                     <div>
-                                        <h4 className="font-bold text-slate-900 text-sm">Nearby Community Impact Projects</h4>
-                                        <p className="text-xs text-slate-600 mt-0.5">Explore 5 verified grassroots projects around Pune on the interactive map.</p>
+                                        <h4 className="font-bold text-slate-900 text-sm">{t('nearby_impact_projects', 'Nearby Community Impact Projects')}</h4>
+                                        <p className="text-xs text-slate-600 mt-0.5">{t('nearby_projects_desc', 'Explore 5 verified grassroots projects around Pune on the interactive map.')}</p>
                                     </div>
                                 </div>
                                 <button
                                     onClick={() => setActiveTab('Nearby Projects')}
                                     className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-lg transition shadow-xs whitespace-nowrap"
                                 >
-                                    Open Nearby Projects Map &rarr;
+                                    {t('open_nearby_projects_map', 'Open Nearby Projects Map')} &rarr;
                                 </button>
                             </div>
                         </div>

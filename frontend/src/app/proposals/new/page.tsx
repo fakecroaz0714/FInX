@@ -132,30 +132,30 @@ export default function NewProposal() {
                 </CardHeader>
                 <CardContent className="p-6 space-y-4">
                     <div>
-                        <label className="block text-sm font-semibold text-slate-700 mb-1">Proposal Title *</label>
+                        <label className="block text-sm font-semibold text-slate-700 mb-1">{t('th_title', 'Proposal Title')} *</label>
                         <input name="title" value={formData.title} onChange={handleFormChange} required type="text" placeholder="e.g. Clean Water Expansion for Rural MH" className="w-full p-2.5 border border-slate-200 rounded-lg bg-white focus:ring-2 focus:ring-indigo-600 outline-none" />
                     </div>
                     <div className="grid grid-cols-2 gap-4">
                         <div>
-                            <label className="block text-sm font-semibold text-slate-700 mb-1">NGO Name *</label>
+                            <label className="block text-sm font-semibold text-slate-700 mb-1">{t('ngo_name_label', 'NGO Name')} *</label>
                             <input name="ngoName" value={formData.ngoName} onChange={handleFormChange} required type="text" className="w-full p-2.5 border border-slate-200 rounded-lg bg-white focus:ring-2 focus:ring-indigo-600 outline-none" />
                         </div>
                         <div>
-                            <label className="block text-sm font-semibold text-slate-700 mb-1">Registration Number</label>
+                            <label className="block text-sm font-semibold text-slate-700 mb-1">{t('reg_number', 'Registration Number')}</label>
                             <input name="ngoRegNum" value={formData.ngoRegNum} onChange={handleFormChange} type="text" className="w-full p-2.5 border border-slate-200 rounded-lg bg-white focus:ring-2 focus:ring-indigo-600 outline-none" />
                         </div>
                         <div>
-                            <label className="block text-sm font-semibold text-slate-700 mb-1">Project Category</label>
+                            <label className="block text-sm font-semibold text-slate-700 mb-1">{t('category_label', 'Project Category')}</label>
                             <select name="category" value={formData.category} onChange={handleFormChange} className="w-full p-2.5 border border-slate-200 rounded-lg bg-white focus:ring-2 focus:ring-indigo-600 outline-none">
-                                <option>Education</option>
-                                <option>Healthcare</option>
-                                <option>Environment</option>
-                                <option>Sanitation</option>
-                                <option>Infrastructure</option>
+                                <option value="Education">{t('category_education', 'Education')}</option>
+                                <option value="Healthcare">{t('category_healthcare', 'Healthcare')}</option>
+                                <option value="Environment">{t('category_environment', 'Environment')}</option>
+                                <option value="Sanitation">{t('category_sanitation', 'Sanitation')}</option>
+                                <option value="Infrastructure">{t('category_infrastructure', 'Infrastructure')}</option>
                             </select>
                         </div>
                         <div>
-                            <label className="block text-sm font-semibold text-slate-700 mb-1">Project Location</label>
+                            <label className="block text-sm font-semibold text-slate-700 mb-1">{t('state_district', 'Project Location')}</label>
                             <input name="location" value={formData.location} onChange={handleFormChange} type="text" className="w-full p-2.5 border border-slate-200 rounded-lg bg-white focus:ring-2 focus:ring-indigo-600 outline-none" />
                         </div>
                     </div>
@@ -168,20 +168,20 @@ export default function NewProposal() {
                 </CardHeader>
                 <CardContent className="p-6 space-y-4">
                     <div>
-                        <label className="block text-sm font-semibold text-slate-700 mb-1">Problem Statement</label>
+                        <label className="block text-sm font-semibold text-slate-700 mb-1">{t('problem_statement', 'Problem Statement')}</label>
                         <textarea name="problem" value={formData.problem} onChange={handleFormChange} rows={3} className="w-full p-2.5 border border-slate-200 rounded-lg bg-white focus:ring-2 focus:ring-indigo-600 outline-none resize-none"></textarea>
                     </div>
                     <div>
-                        <label className="block text-sm font-semibold text-slate-700 mb-1">Proposed Solution</label>
+                        <label className="block text-sm font-semibold text-slate-700 mb-1">{t('proposed_solution', 'Proposed Solution')}</label>
                         <textarea name="solution" value={formData.solution} onChange={handleFormChange} rows={3} className="w-full p-2.5 border border-slate-200 rounded-lg bg-white focus:ring-2 focus:ring-indigo-600 outline-none resize-none"></textarea>
                     </div>
                     <div className="grid grid-cols-2 gap-4">
                         <div>
-                            <label className="block text-sm font-semibold text-slate-700 mb-1">Beneficiaries (Expected Impact)</label>
+                            <label className="block text-sm font-semibold text-slate-700 mb-1">{t('est_beneficiaries', 'Beneficiaries (Expected Impact)')}</label>
                             <input name="beneficiaries" value={formData.beneficiaries} onChange={handleFormChange} type="number" className="w-full p-2.5 border border-slate-200 rounded-lg bg-white focus:ring-2 focus:ring-indigo-600 outline-none" />
                         </div>
                         <div>
-                            <label className="block text-sm font-semibold text-slate-700 mb-1">Expected Completion Date</label>
+                            <label className="block text-sm font-semibold text-slate-700 mb-1">{t('expected_completion_date', 'Expected Completion Date')}</label>
                             <input name="targetDate" value={formData.targetDate} onChange={handleFormChange} type="date" className="w-full p-2.5 border border-slate-200 rounded-lg bg-white focus:ring-2 focus:ring-indigo-600 outline-none" />
                         </div>
                     </div>
@@ -199,15 +199,15 @@ export default function NewProposal() {
                 </CardHeader>
                 <CardContent className="p-6">
                     <div className="mb-6">
-                        <label className="block text-sm font-semibold text-slate-700 mb-2">Total Funding Required (₹) *</label>
+                        <label className="block text-sm font-semibold text-slate-700 mb-2">{t('total_funding_required', 'Total Funding Required (₹)')} *</label>
                         <input name="totalFunding" value={formData.totalFunding} onChange={handleFormChange} type="number" placeholder="e.g. 500000" className="w-full text-lg font-mono p-3 border border-indigo-200 rounded-lg bg-white focus:ring-2 focus:ring-indigo-600 outline-none" />
                     </div>
 
                     <div className="space-y-3">
                         <div className="flex justify-between items-end mb-2">
-                            <label className="block text-sm font-semibold text-slate-700">Funding Milestones (Escrow Driven)</label>
+                            <label className="block text-sm font-semibold text-slate-700">{t('funding_milestones', 'Funding Milestones (Escrow Driven)')}</label>
                             <button onClick={() => setMilestones([...milestones, { title: '', percentage: 0 }])} className="text-xs text-indigo-600 flex items-center font-bold gap-1 hover:underline">
-                                <Plus className="w-3 h-3" /> Add Milestone
+                                <Plus className="w-3 h-3" /> {t('add_milestone', 'Add Milestone')}
                             </button>
                         </div>
 

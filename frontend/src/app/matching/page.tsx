@@ -439,8 +439,8 @@ export default function MatchingEngine() {
                                     </h3>
                                     <p className="text-[11px] text-slate-500 font-medium">
                                         {progressStep === 7
-                                            ? `${kpi.highConfidenceCount} High-Confidence Matches Found & ready for approval`
-                                            : 'Evaluating Citizen Petitions, Verified NGOs & Corporate CSR Funds'}
+                                            ? `${kpi.highConfidenceCount} ${t('matches_ready_approval', 'High-Confidence Matches Found & ready for approval')}`
+                                            : t('matches_evaluating', 'Evaluating Citizen Petitions, Verified NGOs & Corporate CSR Funds')}
                                     </p>
                                 </div>
                             </div>
@@ -456,32 +456,32 @@ export default function MatchingEngine() {
                         <div className="grid grid-cols-2 md:grid-cols-3 gap-2.5 text-xs font-medium">
                             <div className={`p-2.5 rounded-lg border flex items-center gap-2 ${progressStep >= 1 ? 'bg-emerald-50/80 border-emerald-200 text-emerald-900' : 'bg-slate-50 border-slate-200 text-slate-400'}`}>
                                 {progressStep > 1 ? <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" /> : progressStep === 1 ? <Loader2 className="w-4 h-4 text-indigo-600 animate-spin shrink-0" /> : <span className="w-4 h-4 rounded-full border border-slate-300 shrink-0" />}
-                                <span>Loading citizen petitions</span>
+                                <span>{t('step_load_petitions', 'Loading citizen petitions')}</span>
                             </div>
 
                             <div className={`p-2.5 rounded-lg border flex items-center gap-2 ${progressStep >= 2 ? 'bg-emerald-50/80 border-emerald-200 text-emerald-900' : 'bg-slate-50 border-slate-200 text-slate-400'}`}>
                                 {progressStep > 2 ? <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" /> : progressStep === 2 ? <Loader2 className="w-4 h-4 text-indigo-600 animate-spin shrink-0" /> : <span className="w-4 h-4 rounded-full border border-slate-300 shrink-0" />}
-                                <span>Checking verified NGOs</span>
+                                <span>{t('step_check_ngos', 'Checking verified NGOs')}</span>
                             </div>
 
                             <div className={`p-2.5 rounded-lg border flex items-center gap-2 ${progressStep >= 3 ? 'bg-emerald-50/80 border-emerald-200 text-emerald-900' : 'bg-slate-50 border-slate-200 text-slate-400'}`}>
                                 {progressStep > 3 ? <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" /> : progressStep === 3 ? <Loader2 className="w-4 h-4 text-indigo-600 animate-spin shrink-0" /> : <span className="w-4 h-4 rounded-full border border-slate-300 shrink-0" />}
-                                <span>Comparing SDG categories</span>
+                                <span>{t('step_compare_sdg', 'Comparing SDG categories')}</span>
                             </div>
 
                             <div className={`p-2.5 rounded-lg border flex items-center gap-2 ${progressStep >= 4 ? 'bg-emerald-50/80 border-emerald-200 text-emerald-900' : 'bg-slate-50 border-slate-200 text-slate-400'}`}>
                                 {progressStep > 4 ? <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" /> : progressStep === 4 ? <Loader2 className="w-4 h-4 text-indigo-600 animate-spin shrink-0" /> : <span className="w-4 h-4 rounded-full border border-slate-300 shrink-0" />}
-                                <span>Checking geographic compatibility</span>
+                                <span>{t('step_check_geo', 'Checking geographic compatibility')}</span>
                             </div>
 
                             <div className={`p-2.5 rounded-lg border flex items-center gap-2 ${progressStep >= 5 ? 'bg-emerald-50/80 border-emerald-200 text-emerald-900' : 'bg-slate-50 border-slate-200 text-slate-400'}`}>
                                 {progressStep > 5 ? <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" /> : progressStep === 5 ? <Loader2 className="w-4 h-4 text-indigo-600 animate-spin shrink-0" /> : <span className="w-4 h-4 rounded-full border border-slate-300 shrink-0" />}
-                                <span>Checking CSR budgets</span>
+                                <span>{t('step_check_budget', 'Checking CSR budgets')}</span>
                             </div>
 
                             <div className={`p-2.5 rounded-lg border flex items-center gap-2 ${progressStep >= 6 ? 'bg-emerald-50/80 border-emerald-200 text-emerald-900' : 'bg-slate-50 border-slate-200 text-slate-400'}`}>
                                 {progressStep >= 7 ? <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" /> : progressStep === 6 ? <Loader2 className="w-4 h-4 text-indigo-600 animate-spin shrink-0" /> : <span className="w-4 h-4 rounded-full border border-slate-300 shrink-0" />}
-                                <span>Generating high-confidence matches</span>
+                                <span>{t('step_generate_matches', 'Generating high-confidence matches')}</span>
                             </div>
                         </div>
                     </CardContent>
@@ -499,7 +499,7 @@ export default function MatchingEngine() {
                             {kpi.unresolvedPetitions.toLocaleString()}
                         </div>
                         <div className="mt-2 text-xs font-semibold text-indigo-600 flex items-center gap-1">
-                            {t('this_week_increase', '+42 this week')} &bull; Grassroots Pipeline
+                            {t('this_week_increase', '+42 this week')} &bull; {t('grassroots_pipeline', 'Grassroots Pipeline')}
                         </div>
                     </CardContent>
                 </Card>
@@ -513,7 +513,7 @@ export default function MatchingEngine() {
                             {kpi.availableCsrCapital}
                         </div>
                         <div className="mt-2 text-xs font-semibold text-emerald-600 flex items-center gap-1">
-                            {t('across_14_corporates', 'Across 14 Corporates')} &bull; Unlocked Escrow
+                            {t('across_14_corporates', 'Across 14 Corporates')} &bull; {t('unlocked_escrow', 'Unlocked Escrow')}
                         </div>
                     </CardContent>
                 </Card>
@@ -521,13 +521,13 @@ export default function MatchingEngine() {
                 <Card className="shadow-sm border-slate-200 bg-white">
                     <CardContent className="p-6">
                         <div className="text-sm font-semibold text-slate-500 uppercase tracking-wider">
-                            Workflow Success Rate
+                            {t('workflow_success_rate', 'Workflow Success Rate')}
                         </div>
                         <div className="text-3xl font-extrabold text-indigo-600 mt-2">
                             {kpi.workflowSuccessRate}%
                         </div>
                         <div className="mt-2 text-xs font-semibold text-slate-500 flex items-center gap-1">
-                            Matches converting to Escrow Controls
+                            {t('matches_converting_escrow', 'Matches converting to Escrow Controls')}
                         </div>
                     </CardContent>
                 </Card>
@@ -538,10 +538,10 @@ export default function MatchingEngine() {
                 <div className="flex flex-col sm:flex-row justify-between sm:items-end gap-2">
                     <div>
                         <h2 className="text-xl font-extrabold text-slate-900 tracking-tight">
-                            Suggested Synergy Workflows
+                            {t('synergy_workflows_title', 'Suggested Synergy Workflows')}
                         </h2>
                         <p className="text-xs text-slate-500 mt-0.5">
-                            AI-evaluated triage pairings across citizen petitions, verified field NGOs, and corporate CSR capital.
+                            {t('synergy_workflows_sub', 'AI-evaluated triage pairings across citizen petitions, verified field NGOs, and corporate CSR capital.')}
                         </p>
                     </div>
                     <span className="text-xs font-bold bg-indigo-50 text-indigo-700 border border-indigo-200 px-3 py-1 rounded-full whitespace-nowrap">
@@ -607,7 +607,7 @@ export default function MatchingEngine() {
                                 {isRejected && (
                                     <div className="bg-slate-500 text-white px-4 py-1 text-xs font-semibold flex items-center gap-1.5">
                                         <X className="w-3.5 h-3.5" />
-                                        <span>Declined by Admin — Archived</span>
+                                        <span>{t('declined_by_admin', 'Declined by Admin — Archived')}</span>
                                     </div>
                                 )}
 
@@ -620,7 +620,7 @@ export default function MatchingEngine() {
                                         <div className="flex-1 w-full bg-white border border-slate-200 p-4 rounded-xl shadow-xs relative z-10 hover:border-slate-300 transition">
                                             <div className="flex justify-between items-start mb-2">
                                                 <Badge variant="neutral" className="bg-slate-100 text-slate-700 text-[10px] font-bold">
-                                                    Step 1: Petition
+                                                    {t('step_petition', 'Step 1: Petition')}
                                                 </Badge>
                                                 <Target className="w-4 h-4 text-slate-400" />
                                             </div>
@@ -647,7 +647,7 @@ export default function MatchingEngine() {
                                         <div className="flex-1 w-full bg-white border border-slate-200 p-4 rounded-xl shadow-xs relative z-10 hover:border-slate-300 transition">
                                             <div className="flex justify-between items-start mb-2">
                                                 <Badge variant="neutral" className="bg-slate-100 text-slate-700 text-[10px] font-bold">
-                                                    Step 2: Execution
+                                                    {t('step_execution', 'Step 2: Execution')}
                                                 </Badge>
                                                 <Building2 className="w-4 h-4 text-slate-400" />
                                             </div>
@@ -659,15 +659,15 @@ export default function MatchingEngine() {
                                                     <X className="w-3.5 h-3.5 text-rose-500" />
                                                 )}
                                                 <span className={match.ngo.verified ? 'text-emerald-700 font-semibold' : 'text-rose-600 font-semibold'}>
-                                                    {match.ngo.verified ? 'Verified Organization' : 'Pending Verification'}
+                                                    {match.ngo.verified ? t('status_verified_org', 'Verified Organization') : t('status_pending_verification', 'Pending Verification')}
                                                 </span>
                                             </div>
                                             <div className="flex items-center justify-between mt-3 pt-2 border-t border-slate-50">
                                                 <div className="text-[10px] font-extrabold text-emerald-600 uppercase tracking-widest">
-                                                    Validator Score: {match.ngo.validatorScore || match.ngo.rating}
+                                                    {t('validator_score', 'Validator Score')}: {match.ngo.validatorScore || match.ngo.rating}
                                                 </div>
                                                 <span className="text-[9px] bg-emerald-50 text-emerald-700 border border-emerald-200 px-1.5 py-0.5 rounded font-bold">
-                                                    Trust Verified
+                                                    {t('trust_verified', 'Trust Verified')}
                                                 </span>
                                             </div>
                                         </div>
@@ -678,17 +678,17 @@ export default function MatchingEngine() {
                                         <div className="flex-1 w-full bg-white border border-slate-200 p-4 rounded-xl shadow-xs relative z-10 hover:border-slate-300 transition">
                                             <div className="flex justify-between items-start mb-2">
                                                 <Badge variant="neutral" className="bg-slate-100 text-slate-700 text-[10px] font-bold">
-                                                    Step 3: CSR Capital
+                                                    {t('step_csr_capital', 'Step 3: CSR Capital')}
                                                 </Badge>
                                                 <Zap className="w-4 h-4 text-amber-500" />
                                             </div>
                                             <h3 className="font-bold text-slate-900 text-sm">{match.corporate.name}</h3>
                                             <div className="text-xs text-slate-600 mt-1 flex items-center gap-1 font-mono font-medium">
-                                                <span>{match.corporate.budget} Available</span>
+                                                <span>{match.corporate.budget} {t('available_funds', 'Available')}</span>
                                             </div>
                                             <div className="flex items-center justify-between mt-3 pt-2 border-t border-slate-50">
                                                 <div className="text-[10px] font-extrabold text-indigo-600 uppercase tracking-widest">
-                                                    ESG MATCH: {score}%
+                                                    {t('esg_match', 'ESG MATCH')}: {score}%
                                                 </div>
                                                 <span className={`text-[10px] font-extrabold px-1.5 py-0.5 rounded ${score >= 90
                                                     ? 'bg-emerald-100 text-emerald-800'
@@ -696,7 +696,7 @@ export default function MatchingEngine() {
                                                         ? 'bg-indigo-100 text-indigo-800'
                                                         : 'bg-amber-100 text-amber-800'
                                                     }`}>
-                                                    {score >= 90 ? 'Optimal' : score >= 80 ? 'Strong' : 'Review'}
+                                                    {score >= 90 ? t('optimal_match', 'Optimal') : score >= 80 ? t('strong_match', 'Strong') : t('review_match', 'Review')}
                                                 </span>
                                             </div>
                                         </div>
@@ -714,7 +714,7 @@ export default function MatchingEngine() {
                                                     onClick={() => setExpandedBreakdownId(isExpanded ? null : match.id)}
                                                     className="text-indigo-600 hover:text-indigo-800 font-semibold flex items-center gap-1 text-[11px] cursor-pointer"
                                                 >
-                                                    <span>Scoring Model (100%)</span>
+                                                    <span>{t('scoring_model_title', 'Scoring Model (100%)')}</span>
                                                     {isExpanded ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
                                                 </button>
                                             )}
@@ -723,23 +723,23 @@ export default function MatchingEngine() {
                                         {isExpanded && match.scoreBreakdown && (
                                             <div className="bg-slate-50 p-3.5 rounded-xl border border-slate-200 mt-2 grid grid-cols-2 sm:grid-cols-5 gap-3 text-center text-xs animate-in fade-in duration-200">
                                                 <div className="p-2 bg-white rounded-lg border border-slate-200/80">
-                                                    <div className="text-[10px] text-slate-400 font-bold uppercase">SDG Category</div>
+                                                    <div className="text-[10px] text-slate-400 font-bold uppercase">{t('score_category_sdg', 'SDG Category')}</div>
                                                     <div className="text-base font-extrabold text-indigo-700 mt-0.5">{match.scoreBreakdown.category}/40</div>
                                                 </div>
                                                 <div className="p-2 bg-white rounded-lg border border-slate-200/80">
-                                                    <div className="text-[10px] text-slate-400 font-bold uppercase">Geographic</div>
+                                                    <div className="text-[10px] text-slate-400 font-bold uppercase">{t('score_geographic', 'Geographic')}</div>
                                                     <div className="text-base font-extrabold text-indigo-700 mt-0.5">{match.scoreBreakdown.geographic}/20</div>
                                                 </div>
                                                 <div className="p-2 bg-white rounded-lg border border-slate-200/80">
-                                                    <div className="text-[10px] text-slate-400 font-bold uppercase">NGO Trust</div>
+                                                    <div className="text-[10px] text-slate-400 font-bold uppercase">{t('score_ngo_track', 'NGO Trust')}</div>
                                                     <div className="text-base font-extrabold text-indigo-700 mt-0.5">{match.scoreBreakdown.ngo}/20</div>
                                                 </div>
                                                 <div className="p-2 bg-white rounded-lg border border-slate-200/80">
-                                                    <div className="text-[10px] text-slate-400 font-bold uppercase">CSR Budget</div>
+                                                    <div className="text-[10px] text-slate-400 font-bold uppercase">{t('score_budget_match', 'CSR Budget')}</div>
                                                     <div className="text-base font-extrabold text-indigo-700 mt-0.5">{match.scoreBreakdown.budget}/10</div>
                                                 </div>
                                                 <div className="p-2 bg-white rounded-lg border border-slate-200/80 col-span-2 sm:col-span-1">
-                                                    <div className="text-[10px] text-slate-400 font-bold uppercase">Relevance</div>
+                                                    <div className="text-[10px] text-slate-400 font-bold uppercase">{t('score_relevance', 'Relevance')}</div>
                                                     <div className="text-base font-extrabold text-indigo-700 mt-0.5">{match.scoreBreakdown.relevance}/10</div>
                                                 </div>
                                             </div>
@@ -753,13 +753,13 @@ export default function MatchingEngine() {
                                                 onClick={() => handleAction(match.id, 'reject')}
                                                 className="bg-white border border-slate-300 text-slate-700 hover:bg-slate-50 hover:text-rose-600 px-4 py-2 rounded-lg font-bold transition text-xs flex items-center gap-1.5 cursor-pointer"
                                             >
-                                                <X className="w-3.5 h-3.5" /> Decline
+                                                <X className="w-3.5 h-3.5" /> {t('btn_decline', 'Decline')}
                                             </button>
                                             <button
                                                 onClick={() => handleAction(match.id, 'approve')}
                                                 className="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2 rounded-lg font-bold shadow-sm transition text-xs flex items-center gap-1.5 cursor-pointer active:scale-95"
                                             >
-                                                <Check className="w-3.5 h-3.5" /> Approve Workflow
+                                                <Check className="w-3.5 h-3.5" /> {t('btn_approve_workflow', 'Approve Workflow')}
                                             </button>
                                         </div>
                                     )}
@@ -769,13 +769,13 @@ export default function MatchingEngine() {
                                         <div className="pt-4 mt-3 border-t border-emerald-100 flex items-center justify-between text-xs">
                                             <span className="text-emerald-700 font-semibold flex items-center gap-1.5">
                                                 <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-                                                CSR Workflow Locked & Assigned to Escrow Milestone Engine
+                                                {t('workflow_locked_assigned', 'CSR Workflow Locked & Assigned to Escrow Milestone Engine')}
                                             </span>
                                             <Link
                                                 href="/escrow"
                                                 className="px-4 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg font-bold transition flex items-center gap-1 cursor-pointer"
                                             >
-                                                Manage Escrow <ExternalLink className="w-3 h-3" />
+                                                {t('manage_escrow', 'Manage Escrow')} <ExternalLink className="w-3 h-3" />
                                             </Link>
                                         </div>
                                     )}

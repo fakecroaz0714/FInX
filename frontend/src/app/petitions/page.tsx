@@ -63,14 +63,14 @@ export default function PetitionsPage() {
                                                 <MapPin className="w-4 h-4" /> {petition.location}
                                             </span>
                                             <span className="flex items-center gap-1">
-                                                <Users className="w-4 h-4" /> {petition.signatures} / {petition.target} Signatures
+                                                <Users className="w-4 h-4" /> {petition.signatures} / {petition.target} {t('signatures_label', 'Signatures')}
                                             </span>
                                         </div>
                                     </div>
                                     <Badge
                                         variant={petition.status === 'Validated' || petition.status === 'Verified' ? 'success' : 'warning'}
                                     >
-                                        {petition.status}
+                                        {petition.status === 'Validated' ? t('status_validated', 'Validated') : petition.status === 'Verified' ? t('status_verified', 'Verified') : t('status_needs_review', 'Needs Review')}
                                     </Badge>
                                 </div>
 
@@ -80,11 +80,11 @@ export default function PetitionsPage() {
 
                                 <div className="flex items-center justify-between pt-4 border-t border-slate-100">
                                     <div className="text-sm">
-                                        <span className="text-slate-500">Matched NGO: </span>
+                                        <span className="text-slate-500">{t('matched_ngo_label', 'Matched NGO')}: </span>
                                         <span className="font-semibold text-slate-900">{petition.matchedNGO}</span>
                                     </div>
                                     <button className="text-indigo-600 font-semibold text-sm flex items-center gap-1 hover:underline">
-                                        View Details <ArrowRight className="w-4 h-4" />
+                                        {t('view_details', 'View Details')} <ArrowRight className="w-4 h-4" />
                                     </button>
                                 </div>
                             </CardContent>
@@ -95,7 +95,7 @@ export default function PetitionsPage() {
                 <div className="space-y-6">
                     <Card className="border border-slate-200 shadow-sm">
                         <CardHeader className="border-b border-slate-100 bg-slate-50/50 pb-4">
-                            <CardTitle className="text-lg">Map Overview</CardTitle>
+                            <CardTitle className="text-lg">{t('tab_active_projects_map', 'Map Overview')}</CardTitle>
                             <CardDescription>Hotspots of community needs</CardDescription>
                         </CardHeader>
                         <CardContent className="p-0">
@@ -109,20 +109,20 @@ export default function PetitionsPage() {
 
                     <Card className="border border-slate-200 shadow-sm">
                         <CardHeader className="border-b border-slate-100 pb-4">
-                            <CardTitle className="text-lg">Top NGO Matches</CardTitle>
+                            <CardTitle className="text-lg">{t('top_ngo_matches', 'Top NGO Matches')}</CardTitle>
                         </CardHeader>
                         <CardContent className="p-5 space-y-4">
                             <div className="flex justify-between items-center">
                                 <span className="text-sm font-medium text-slate-900">Jal Seva NGO</span>
-                                <Badge variant="success">Verified</Badge>
+                                <Badge variant="success">{t('status_verified', 'Verified')}</Badge>
                             </div>
                             <div className="flex justify-between items-center">
                                 <span className="text-sm font-medium text-slate-900">Green Earth</span>
-                                <Badge variant="success">Verified</Badge>
+                                <Badge variant="success">{t('status_verified', 'Verified')}</Badge>
                             </div>
                             <div className="flex justify-between items-center">
                                 <span className="text-sm font-medium text-slate-900">EduCare Org</span>
-                                <Badge variant="warning">Review</Badge>
+                                <Badge variant="warning">{t('status_needs_review', 'Review')}</Badge>
                             </div>
                         </CardContent>
                     </Card>

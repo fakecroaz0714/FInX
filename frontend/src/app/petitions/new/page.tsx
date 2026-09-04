@@ -88,7 +88,7 @@ export default function NewPetitionPage() {
 
                         <div className="pt-4 flex justify-end gap-4 border-t border-slate-100">
                             <Link href="/petitions" className="px-6 py-2.5 border border-slate-300 text-slate-700 rounded-lg font-medium hover:bg-slate-50 transition-colors">
-                                Cancel
+                                {t('btn_cancel', 'Cancel')}
                             </Link>
                             <button
                                 type="submit"
@@ -96,7 +96,7 @@ export default function NewPetitionPage() {
                                 className="px-6 py-2.5 bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-700 transition-colors flex items-center gap-2 disabled:bg-indigo-400"
                             >
                                 {isSubmitting ? (
-                                    <span className="animate-pulse">Submitting...</span>
+                                    <span className="animate-pulse">{t('submitting', 'Submitting...')}</span>
                                 ) : (
                                     <>
                                         <Save className="w-5 h-5" /> {t('btn_submit_community_petition', 'Submit Petition')}

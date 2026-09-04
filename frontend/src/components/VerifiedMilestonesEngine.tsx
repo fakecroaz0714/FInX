@@ -347,25 +347,25 @@ export default function VerifiedMilestonesEngine() {
                 <CardContent className="p-6 bg-slate-50/50">
                     <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
                         <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
-                            <div className="text-xs text-slate-500 font-semibold mb-1">Released Amount</div>
+                            <div className="text-xs text-slate-500 font-semibold mb-1">{t('released_amount_label', 'Released Amount')}</div>
                             <div className="text-xl font-bold text-emerald-600 font-mono">₹{summary.releasedAmount.toLocaleString()}</div>
                             <div className="text-xs text-slate-400 mt-1">{((summary.releasedAmount / summary.totalBudget) * 100).toFixed(0)}% of total</div>
                         </div>
 
                         <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
-                            <div className="text-xs text-slate-500 font-semibold mb-1">Locked Amount</div>
+                            <div className="text-xs text-slate-500 font-semibold mb-1">{t('locked_amount_label', 'Locked Amount')}</div>
                             <div className="text-xl font-bold text-slate-900 font-mono">₹{summary.lockedAmount.toLocaleString()}</div>
                             <div className="text-xs text-slate-400 mt-1">Escrow Protected</div>
                         </div>
 
                         <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
-                            <div className="text-xs text-slate-500 font-semibold mb-1">Current Stage</div>
+                            <div className="text-xs text-slate-500 font-semibold mb-1">{t('current_phase', 'Current Stage')}</div>
                             <div className="text-sm font-bold text-indigo-700 truncate">{summary.currentMilestoneTitle}</div>
                             <div className="text-xs text-slate-400 mt-1">Status: {summary.currentMilestoneStatus}</div>
                         </div>
 
                         <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
-                            <div className="text-xs text-slate-500 font-semibold mb-1">Verification Score</div>
+                            <div className="text-xs text-slate-500 font-semibold mb-1">{t('verification_score_label', 'Verification Score')}</div>
                             <div className="flex items-center gap-2">
                                 <span className={`text-xl font-bold font-mono ${summary.verificationScore >= 85 ? 'text-emerald-600' : summary.verificationScore >= 70 ? 'text-amber-600' : 'text-red-600'}`}>
                                     {summary.verificationScore}%
@@ -378,7 +378,7 @@ export default function VerifiedMilestonesEngine() {
                         </div>
 
                         <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
-                            <div className="text-xs text-slate-500 font-semibold mb-1">Risk Level</div>
+                            <div className="text-xs text-slate-500 font-semibold mb-1">{t('risk_level_label', 'Risk Level')}</div>
                             <div className="flex items-center gap-1.5 mt-0.5">
                                 <Badge variant={summary.riskLevel === 'LOW' ? 'success' : summary.riskLevel === 'MEDIUM' ? 'warning' : 'danger'} className="text-xs font-bold px-2 py-0.5">
                                     {summary.riskLevel}
@@ -389,7 +389,7 @@ export default function VerifiedMilestonesEngine() {
                         </div>
 
                         <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
-                            <div className="text-xs text-slate-500 font-semibold mb-1">Physical Progress</div>
+                            <div className="text-xs text-slate-500 font-semibold mb-1">{t('physical_progress_label', 'Physical Progress')}</div>
                             <div className="text-xl font-bold text-slate-900 font-mono">{summary.projectProgress}%</div>
                             <div className="w-full bg-slate-100 rounded-full h-1.5 mt-1.5 overflow-hidden">
                                 <div className="bg-indigo-600 h-full rounded-full transition-all" style={{ width: `${summary.projectProgress}%` }}></div>
@@ -406,9 +406,9 @@ export default function VerifiedMilestonesEngine() {
                         <div>
                             <CardTitle className="text-lg flex items-center gap-2">
                                 <History className="w-5 h-5 text-indigo-600" />
-                                Geotagged Evidence Timeline
+                                {t('geotagged_timeline_title', 'Geotagged Evidence Timeline')}
                             </CardTitle>
-                            <CardDescription>Click any stage to inspect physical photo proof, GPS verification & AI analysis scores.</CardDescription>
+                            <CardDescription>{t('geotagged_timeline_sub', 'Click any stage to inspect physical photo proof, GPS verification & AI analysis scores.')}</CardDescription>
                         </div>
                         <Badge variant="neutral" className="text-xs">Baseline GPS: {project.latitude}, {project.longitude}</Badge>
                     </div>
@@ -487,13 +487,13 @@ export default function VerifiedMilestonesEngine() {
                         <CardHeader className="border-b border-slate-100 pb-4 bg-slate-50/50">
                             <div className="flex justify-between items-center">
                                 <div>
-                                    <CardTitle className="text-lg">Project Milestones Schedule</CardTitle>
-                                    <CardDescription>Server-validated status machine & fund release controls.</CardDescription>
+                                    <CardTitle className="text-lg">{t('milestones_schedule_title', 'Project Milestones Schedule')}</CardTitle>
+                                    <CardDescription>{t('milestones_schedule_sub', 'Server-validated status machine & fund release controls.')}</CardDescription>
                                 </div>
                                 <button
                                     onClick={() => setShowSubmitModal(true)}
                                     className="bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold px-4 py-2 rounded-lg transition-colors flex items-center gap-1.5 shadow-sm">
-                                    <UploadCloud className="w-4 h-4" /> Submit Milestone Evidence
+                                    <UploadCloud className="w-4 h-4" /> {t('submit_milestone_evidence_btn', 'Submit Milestone Evidence')}
                                 </button>
                             </div>
                         </CardHeader>

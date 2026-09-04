@@ -384,9 +384,9 @@ export default function ValidatorDashboard() {
                                         <ShieldCheck className="w-5 h-5" />
                                     </div>
                                     <div>
-                                        <h4 className="font-bold text-slate-900 text-sm">Field Geo-Verification Map Active</h4>
+                                        <h4 className="font-bold text-slate-900 text-sm">{t('field_geo_map_active', 'Field Geo-Verification Map Active')}</h4>
                                         <p className="text-xs text-slate-600 mt-0.5">
-                                            5 active NGO projects undergoing physical GPS audits, drone tree checks, and milestone inspection across Maharashtra.
+                                            {t('field_geo_map_desc', '5 active NGO projects undergoing physical GPS audits, drone tree checks, and milestone inspection across Maharashtra.')}
                                         </p>
                                     </div>
                                 </div>
@@ -394,32 +394,32 @@ export default function ValidatorDashboard() {
                                     onClick={() => setActiveTab('Active Projects Map')}
                                     className="px-4 py-2 bg-blue-700 hover:bg-blue-800 text-white text-xs font-bold rounded-lg transition shadow-xs whitespace-nowrap flex items-center gap-1.5 cursor-pointer"
                                 >
-                                    <Compass className="w-3.5 h-3.5" /> Open Field Verification Map &rarr;
+                                    <Compass className="w-3.5 h-3.5" /> {t('open_field_map', 'Open Field Verification Map')} &rarr;
                                 </button>
                             </div>
                             {/* Verification Statistics Panel */}
                             <div>
                                 <h3 className="text-sm font-bold text-slate-800 uppercase tracking-wider mb-4 flex items-center gap-2">
-                                    <BarChart3 className="w-4 h-4 text-indigo-600" /> Verification Overview
+                                    <BarChart3 className="w-4 h-4 text-indigo-600" /> {t('verification_overview', 'Verification Overview')}
                                 </h3>
                                 <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
                                     <div className="p-4 bg-slate-50 rounded-xl border border-slate-200">
-                                        <span className="text-xs text-slate-500 font-semibold block mb-1">Verification Rate</span>
+                                        <span className="text-xs text-slate-500 font-semibold block mb-1">{t('kpi_verified_rate', 'Verification Rate')}</span>
                                         <span className="text-2xl font-bold font-mono text-emerald-600">{stats.verificationRate}%</span>
                                         <p className="text-[11px] text-slate-400 mt-1">Compliant & approved</p>
                                     </div>
                                     <div className="p-4 bg-slate-50 rounded-xl border border-slate-200">
-                                        <span className="text-xs text-slate-500 font-semibold block mb-1">Pending Reviews</span>
+                                        <span className="text-xs text-slate-500 font-semibold block mb-1">{t('pending_reviews_label', 'Pending Reviews')}</span>
                                         <span className="text-2xl font-bold font-mono text-amber-600">{stats.needsReview}</span>
                                         <p className="text-[11px] text-slate-400 mt-1">In validation pipeline</p>
                                     </div>
                                     <div className="p-4 bg-slate-50 rounded-xl border border-slate-200">
-                                        <span className="text-xs text-slate-500 font-semibold block mb-1">High Risk Percentage</span>
+                                        <span className="text-xs text-slate-500 font-semibold block mb-1">{t('high_risk_pct', 'High Risk Percentage')}</span>
                                         <span className="text-2xl font-bold font-mono text-rose-600">{stats.highRiskRate}%</span>
                                         <p className="text-[11px] text-slate-400 mt-1">Flagged for legal issues</p>
                                     </div>
                                     <div className="p-4 bg-slate-50 rounded-xl border border-slate-200">
-                                        <span className="text-xs text-slate-500 font-semibold block mb-1">Average Risk Score</span>
+                                        <span className="text-xs text-slate-500 font-semibold block mb-1">{t('avg_risk_score', 'Average Risk Score')}</span>
                                         <span className="text-2xl font-bold font-mono text-slate-900">{stats.avgScore} / 100</span>
                                         <p className="text-[11px] text-slate-400 mt-1">Assisted Transparency Index</p>
                                     </div>
@@ -430,13 +430,13 @@ export default function ValidatorDashboard() {
                             <div>
                                 <div className="flex justify-between items-center mb-3">
                                     <h3 className="text-sm font-bold text-slate-800 uppercase tracking-wider flex items-center gap-2">
-                                        <Clock className="w-4 h-4 text-indigo-600" /> Recent Validation Activity
+                                        <Clock className="w-4 h-4 text-indigo-600" /> {t('recent_validation_activity', 'Recent Validation Activity')}
                                     </h3>
                                     <button
                                         onClick={() => setActiveTab('Audit Logs')}
                                         className="text-xs font-bold text-indigo-600 hover:text-indigo-800 flex items-center gap-1"
                                     >
-                                        View Full Audit Trail <ArrowUpRight className="w-3.5 h-3.5" />
+                                        {t('view_audit_trail', 'View Full Audit Trail')} <ArrowUpRight className="w-3.5 h-3.5" />
                                     </button>
                                 </div>
                                 <div className="space-y-2.5">

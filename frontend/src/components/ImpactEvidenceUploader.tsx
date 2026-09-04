@@ -19,6 +19,7 @@ import {
 } from 'lucide-react';
 import { validateImageFile, compressImage, formatFileSize } from '@/lib/imageUtils';
 import { useProposals } from '@/lib/ProposalContext';
+import { useLanguage } from '@/lib/LanguageContext';
 
 export interface ImageMeta {
     fileName: string;
@@ -51,6 +52,7 @@ const DEFAULT_PROJECT_NAME = 'School Rebuilding & Solar Infrastructure';
 
 export default function ImpactEvidenceUploader() {
     const { proposals } = useProposals();
+    const { t } = useLanguage();
 
     // Available projects for evidence association
     const availableProjects = [
@@ -288,19 +290,19 @@ export default function ImpactEvidenceUploader() {
         switch (evidence.status) {
             case 'Pending Verification':
                 return <Badge variant="warning" className="text-xs px-2.5 py-1 flex items-center gap-1 font-bold">
-                    <Clock className="w-3.5 h-3.5" /> Pending Verification
+                    <Clock className="w-3.5 h-3.5" /> {t('status_pending_verification', 'Pending Verification')}
                 </Badge>;
             case 'Evidence Submitted':
                 return <Badge variant="default" className="text-xs px-2.5 py-1 flex items-center gap-1 font-bold bg-indigo-600 text-white">
-                    <CheckCircle2 className="w-3.5 h-3.5" /> Evidence Submitted
+                    <CheckCircle2 className="w-3.5 h-3.5" /> {t('status_evidence_submitted', 'Evidence Submitted')}
                 </Badge>;
             case 'After Evidence Pending':
                 return <Badge variant="warning" className="text-xs px-2.5 py-1 flex items-center gap-1 font-bold">
-                    <AlertCircle className="w-3.5 h-3.5" /> After Evidence Pending
+                    <AlertCircle className="w-3.5 h-3.5" /> {t('status_after_pending', 'After Evidence Pending')}
                 </Badge>;
             default:
                 return <Badge variant="neutral" className="text-xs px-2.5 py-1 flex items-center gap-1 font-semibold">
-                    <Clock className="w-3.5 h-3.5 text-slate-400" /> Evidence Pending
+                    <Clock className="w-3.5 h-3.5 text-slate-400" /> {t('status_evidence_pending', 'Evidence Pending')}
                 </Badge>;
         }
     };
@@ -311,18 +313,18 @@ export default function ImpactEvidenceUploader() {
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
                     <div>
                         <div className="flex items-center gap-2 mb-1">
-                            <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Impact Evidence Proofs</span>
+                            <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">{t('impact_evidence_proofs', 'Impact Evidence Proofs')}</span>
                             {renderStatusBadge()}
                         </div>
                         <CardTitle className="text-lg font-bold text-slate-900 flex items-center gap-2">
-                            Before & After Evidence ({evidence.projectName})
+                            {t('before_after_evidence', 'Before & After Evidence')} ({evidence.projectName})
                         </CardTitle>
                     </div>
 
                     {/* Project Selector */}
                     <div className="flex items-center gap-2">
                         <label htmlFor="evidence-project-select" className="text-xs font-semibold text-slate-600 shrink-0">
-                            Project:
+                            {t('project_label', 'Project')}:
                         </label>
                         <select
                             id="evidence-project-select"
@@ -366,7 +368,7 @@ export default function ImpactEvidenceUploader() {
                     <div className="flex items-center gap-4 text-slate-600">
                         <span className="flex items-center gap-1.5 font-semibold">
                             <Calendar className="w-3.5 h-3.5 text-slate-500" />
-                            Timeline: <span className="font-bold text-slate-900">{evidence.beforeDate}</span> → <span className="font-bold text-slate-900">{evidence.afterDate}</span>
+                            {t('timeline_label', 'Timeline')}: <span className="font-bold text-slate-900">{evidence.beforeDate}</span> → <span className="font-bold text-slate-900">{evidence.afterDate}</span>
                         </span>
                     </div>
                     {!isEditingDates ? (
@@ -375,7 +377,7 @@ export default function ImpactEvidenceUploader() {
                             onClick={() => setIsEditingDates(true)}
                             className="text-indigo-600 hover:text-indigo-800 font-bold text-xs underline"
                         >
-                            Edit Dates
+                            {t('edit_dates', 'Edit Dates')}
                         </button>
                     ) : (
                         <form onSubmit={handleSaveDates} className="flex items-center gap-2">
@@ -396,8 +398,8 @@ export default function ImpactEvidenceUploader() {
                                 className="w-24 px-2 py-1 border border-slate-200 rounded text-xs"
                                 aria-label="After Date"
                             />
-                            <button type="submit" className="bg-indigo-600 text-white px-2 py-1 rounded text-xs font-bold">Save</button>
-                            <button type="button" onClick={() => setIsEditingDates(false)} className="text-slate-500 text-xs">Cancel</button>
+                            <button type="submit" className="bg-indigo-600 text-white px-2 py-1 rounded text-xs font-bold">{t('save', 'Save')}</button>
+                            <button type="button" onClick={() => setIsEditingDates(false)} className="text-slate-500 text-xs">{t('btn_cancel', 'Cancel')}</button>
                         </form>
                     )}
                 </div>
@@ -434,7 +436,7 @@ export default function ImpactEvidenceUploader() {
                                         className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                                     />
                                     <span className="absolute top-3 left-3 bg-slate-900/90 text-white text-xs font-bold px-3 py-1 rounded-md tracking-wider shadow-md">
-                                        BEFORE: {evidence.beforeDate}
+                                        {t('before_label', 'BEFORE')}: {evidence.beforeDate}
                                     </span>
                                 </div>
 
@@ -455,7 +457,7 @@ export default function ImpactEvidenceUploader() {
                                             className="px-2.5 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-lg transition flex items-center gap-1.5 cursor-pointer"
                                             aria-label="Change Before Photo"
                                         >
-                                            <RefreshCw className="w-3 h-3" /> Change Photo
+                                            <RefreshCw className="w-3 h-3" /> {t('change_photo', 'Change Photo')}
                                         </button>
                                         <button
                                             type="button"
@@ -463,7 +465,7 @@ export default function ImpactEvidenceUploader() {
                                             className="px-2.5 py-1.5 bg-rose-50 hover:bg-rose-100 text-rose-700 font-semibold rounded-lg transition flex items-center gap-1.5 cursor-pointer"
                                             aria-label="Remove Before Photo"
                                         >
-                                            <Trash2 className="w-3 h-3" /> Remove
+                                            <Trash2 className="w-3 h-3" /> {t('remove_label', 'Remove')}
                                         </button>
                                     </div>
                                 </div>
@@ -491,7 +493,7 @@ export default function ImpactEvidenceUploader() {
                                 aria-label="Upload Before Photo area. Click or drag an image here."
                             >
                                 <span className="absolute top-3 left-3 bg-slate-800 text-white text-xs px-2.5 py-1 rounded font-bold">
-                                    BEFORE: {evidence.beforeDate}
+                                    {t('before_label', 'BEFORE')}: {evidence.beforeDate}
                                 </span>
 
                                 <div className="p-3 bg-slate-200/80 rounded-full mb-3 text-slate-600 group-hover:text-indigo-600">
@@ -501,16 +503,16 @@ export default function ImpactEvidenceUploader() {
                                 {isProcessing === 'before' ? (
                                     <div className="space-y-1">
                                         <div className="text-xs font-bold text-indigo-600 flex items-center justify-center gap-1.5">
-                                            <RefreshCw className="w-3.5 h-3.5 animate-spin" /> Compressing & Optimizing...
+                                            <RefreshCw className="w-3.5 h-3.5 animate-spin" /> {t('compressing_optimizing', 'Compressing & Optimizing...')}
                                         </div>
                                         <p className="text-[11px] text-slate-400">Preparing high-resolution proof</p>
                                     </div>
                                 ) : dragOverType === 'before' ? (
-                                    <p className="text-sm font-bold text-indigo-600">Drop image here</p>
+                                    <p className="text-sm font-bold text-indigo-600">{t('drop_image_here', 'Drop image here')}</p>
                                 ) : (
                                     <div className="space-y-1">
-                                        <p className="text-sm font-bold text-slate-800">Upload Before Photo</p>
-                                        <p className="text-xs text-slate-500 font-medium">Click to select image or drag & drop</p>
+                                        <p className="text-sm font-bold text-slate-800">{t('upload_before_photo', 'Upload Before Photo')}</p>
+                                        <p className="text-xs text-slate-500 font-medium">{t('drag_drop_click', 'Click to select image or drag & drop')}</p>
                                         <p className="text-[11px] text-slate-400 font-medium pt-1">JPG, PNG or WEBP • Max 10MB</p>
                                     </div>
                                 )}
@@ -547,7 +549,7 @@ export default function ImpactEvidenceUploader() {
                                         className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                                     />
                                     <span className="absolute top-3 left-3 bg-emerald-600 text-white text-xs font-bold px-3 py-1 rounded-md tracking-wider shadow-md">
-                                        AFTER: {evidence.afterDate}
+                                        {t('after_label', 'AFTER')}: {evidence.afterDate}
                                     </span>
                                 </div>
 
@@ -568,7 +570,7 @@ export default function ImpactEvidenceUploader() {
                                             className="px-2.5 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-lg transition flex items-center gap-1.5 cursor-pointer"
                                             aria-label="Change After Photo"
                                         >
-                                            <RefreshCw className="w-3 h-3" /> Change Photo
+                                            <RefreshCw className="w-3 h-3" /> {t('change_photo', 'Change Photo')}
                                         </button>
                                         <button
                                             type="button"
@@ -576,7 +578,7 @@ export default function ImpactEvidenceUploader() {
                                             className="px-2.5 py-1.5 bg-rose-50 hover:bg-rose-100 text-rose-700 font-semibold rounded-lg transition flex items-center gap-1.5 cursor-pointer"
                                             aria-label="Remove After Photo"
                                         >
-                                            <Trash2 className="w-3 h-3" /> Remove
+                                            <Trash2 className="w-3 h-3" /> {t('remove_label', 'Remove')}
                                         </button>
                                     </div>
                                 </div>
@@ -604,7 +606,7 @@ export default function ImpactEvidenceUploader() {
                                 aria-label="Upload After Photo area. Click or drag an image here."
                             >
                                 <span className="absolute top-3 left-3 bg-emerald-600 text-white text-xs px-2.5 py-1 rounded font-bold">
-                                    AFTER: {evidence.afterDate}
+                                    {t('after_label', 'AFTER')}: {evidence.afterDate}
                                 </span>
 
                                 <div className="p-3 bg-slate-200/80 rounded-full mb-3 text-slate-600 group-hover:text-indigo-600">
@@ -614,16 +616,16 @@ export default function ImpactEvidenceUploader() {
                                 {isProcessing === 'after' ? (
                                     <div className="space-y-1">
                                         <div className="text-xs font-bold text-indigo-600 flex items-center justify-center gap-1.5">
-                                            <RefreshCw className="w-3.5 h-3.5 animate-spin" /> Compressing & Optimizing...
+                                            <RefreshCw className="w-3.5 h-3.5 animate-spin" /> {t('compressing_optimizing', 'Compressing & Optimizing...')}
                                         </div>
                                         <p className="text-[11px] text-slate-400">Preparing high-resolution proof</p>
                                     </div>
                                 ) : dragOverType === 'after' ? (
-                                    <p className="text-sm font-bold text-indigo-600">Drop image here</p>
+                                    <p className="text-sm font-bold text-indigo-600">{t('drop_image_here', 'Drop image here')}</p>
                                 ) : (
                                     <div className="space-y-1">
-                                        <p className="text-sm font-bold text-slate-800">Upload After Photo</p>
-                                        <p className="text-xs text-slate-500 font-medium">Click to select image or drag & drop</p>
+                                        <p className="text-sm font-bold text-slate-800">{t('upload_after_photo', 'Upload After Photo')}</p>
+                                        <p className="text-xs text-slate-500 font-medium">{t('drag_drop_click', 'Click to select image or drag & drop')}</p>
                                         <p className="text-[11px] text-slate-400 font-medium pt-1">JPG, PNG or WEBP • Max 10MB</p>
                                     </div>
                                 )}
@@ -639,20 +641,20 @@ export default function ImpactEvidenceUploader() {
                     <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 flex flex-col md:flex-row md:items-center justify-between gap-4">
                         <div className="space-y-1.5">
                             <div className="flex items-center gap-2">
-                                <span className="text-xs font-bold text-slate-700 uppercase tracking-wider">Verification Checklist:</span>
+                                <span className="text-xs font-bold text-slate-700 uppercase tracking-wider">{t('verification_checklist', 'Verification Checklist')}:</span>
                                 <span className="text-xs text-slate-500">
-                                    Status: <strong className="text-slate-900">{evidence.status}</strong>
+                                    {t('status_label', 'Status')}: <strong className="text-slate-900">{evidence.status}</strong>
                                 </span>
                             </div>
 
                             <div className="flex flex-wrap gap-4 text-xs font-medium">
                                 <span className={`flex items-center gap-1.5 ${evidence.beforeImage ? 'text-emerald-700 font-bold' : 'text-slate-400'}`}>
                                     <CheckCircle2 className={`w-4 h-4 ${evidence.beforeImage ? 'text-emerald-600' : 'text-slate-300'}`} />
-                                    Before photo {evidence.beforeImage ? `(${evidence.beforeMeta?.fileName || 'uploaded'})` : 'pending'}
+                                    {t('before_label', 'BEFORE')} {t('evidence_label', 'Photo')} {evidence.beforeImage ? `(${evidence.beforeMeta?.fileName || 'uploaded'})` : 'pending'}
                                 </span>
                                 <span className={`flex items-center gap-1.5 ${evidence.afterImage ? 'text-emerald-700 font-bold' : 'text-slate-400'}`}>
                                     <CheckCircle2 className={`w-4 h-4 ${evidence.afterImage ? 'text-emerald-600' : 'text-slate-300'}`} />
-                                    After photo {evidence.afterImage ? `(${evidence.afterMeta?.fileName || 'uploaded'})` : 'pending'}
+                                    {t('after_label', 'AFTER')} {t('evidence_label', 'Photo')} {evidence.afterImage ? `(${evidence.afterMeta?.fileName || 'uploaded'})` : 'pending'}
                                 </span>
                             </div>
                         </div>
@@ -662,7 +664,7 @@ export default function ImpactEvidenceUploader() {
                             {evidence.status === 'Pending Verification' ? (
                                 <div className="flex items-center gap-2 bg-amber-50 border border-amber-200 text-amber-800 px-4 py-2 rounded-xl text-xs font-bold">
                                     <Clock className="w-4 h-4 text-amber-600 shrink-0" />
-                                    <span>Pending Independent Verification</span>
+                                    <span>{t('pending_verification_badge', 'Pending Independent Verification')}</span>
                                 </div>
                             ) : (
                                 <button
@@ -675,7 +677,7 @@ export default function ImpactEvidenceUploader() {
                                             : 'bg-slate-200 text-slate-400 cursor-not-allowed'
                                     }`}
                                 >
-                                    <FileCheck className="w-4 h-4" /> Submit Evidence for Verification
+                                    <FileCheck className="w-4 h-4" /> {t('submit_evidence_btn', 'Submit Evidence for Verification')}
                                 </button>
                             )}
                         </div>
@@ -685,9 +687,9 @@ export default function ImpactEvidenceUploader() {
                         <div className="mt-3 p-3 bg-indigo-50/70 border border-indigo-100 rounded-xl flex items-start gap-2.5 text-xs text-indigo-900">
                             <Sparkles className="w-4 h-4 text-indigo-600 shrink-0 mt-0.5" />
                             <div>
-                                <p className="font-bold">Evidence submitted for Independent Validator Audit</p>
+                                <p className="font-bold">{t('evidence_audit_in_progress', 'Evidence submitted for Independent Validator Audit')}</p>
                                 <p className="text-slate-600 text-[11px] mt-0.5">
-                                    Field officers and automated GPS geo-hash checks are inspecting the uploaded physical evidence. Escrow funds will remain locked until validator sign-off.
+                                    {t('evidence_audit_desc', 'Field officers and automated GPS geo-hash checks are inspecting the uploaded physical evidence. Escrow funds will remain locked until validator sign-off.')}
                                 </p>
                             </div>
                         </div>

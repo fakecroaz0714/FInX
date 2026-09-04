@@ -4,6 +4,7 @@ import React, { useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { useAuth, Role, CorporateProfile, NGOProfile, CitizenProfile, AdminProfile } from '@/lib/AuthContext';
+import { useLanguage, Language } from '@/lib/LanguageContext';
 import {
     ShieldCheck,
     Building2,
@@ -14,7 +15,8 @@ import {
     AlertCircle,
     CheckCircle2,
     FileText,
-    ArrowRight
+    ArrowRight,
+    Globe
 } from 'lucide-react';
 
 const CSR_CATEGORIES = [
@@ -31,6 +33,7 @@ function SignupContent() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const { signup } = useAuth();
+    const { t, lang, setLang } = useLanguage();
 
     const paramRole = searchParams.get('role') as Role;
     const initialRole: Role = (paramRole && ['Admin', 'Corporate', 'NGO', 'Citizen'].includes(paramRole))
@@ -284,21 +287,37 @@ function SignupContent() {
     return (
         <div className="min-h-screen bg-slate-50 py-10 px-4 sm:px-6 lg:px-8">
             <div className="max-w-4xl mx-auto">
+                {/* Language Switcher Bar at Top */}
+                <div className="flex items-center justify-end gap-1.5 mb-6 pb-2 border-b border-slate-200">
+                    <Globe className="w-3.5 h-3.5 text-slate-400" />
+                    <select
+                        value={lang}
+                        onChange={(e) => setLang(e.target.value as Language)}
+                        className="text-xs font-bold text-slate-700 bg-white border border-slate-200 rounded-lg px-2 py-1 outline-none focus:ring-1 focus:ring-indigo-500 cursor-pointer shadow-xs"
+                    >
+                        <option value="en">🇺🇸 English</option>
+                        <option value="ta">🇮🇳 தமிழ் (Tamil)</option>
+                        <option value="hi">🇮🇳 हिन्दी (Hindi)</option>
+                        <option value="mr">🇮🇳 मराठी (Marathi)</option>
+                        <option value="te">🇮🇳 తెలుగు (Telugu)</option>
+                    </select>
+                </div>
+
                 {/* Header */}
                 <div className="text-center mb-8">
                     <div className="inline-flex items-center justify-center w-14 h-14 bg-indigo-600 rounded-2xl mb-3 shadow-md shadow-indigo-200">
                         <ShieldCheck className="w-8 h-8 text-white" />
                     </div>
-                    <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">Create your FINX account</h1>
+                    <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">{t('create_account', 'Create your FINX account')}</h1>
                     <p className="text-sm text-slate-600 mt-2 max-w-md mx-auto">
-                        Join India's verified CSR & Milestone Funding Infrastructure. Select your account type to begin onboarding.
+                        {t('sign_in_sub', "Join India's verified CSR & Milestone Funding Infrastructure. Select your account type to begin onboarding.")}
                     </p>
                 </div>
 
                 {/* Role Selection Tabs */}
                 <div className="bg-white rounded-2xl p-4 shadow-sm border border-slate-200 mb-8">
                     <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-3 text-center sm:text-left">
-                        Select Account Type:
+                        {t('select_account_type', 'Select Account Type:')}
                     </label>
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                         <button
@@ -311,7 +330,7 @@ function SignupContent() {
                             }`}
                         >
                             <Building2 className={`w-6 h-6 mb-1.5 ${selectedRole === 'Corporate' ? 'text-indigo-600' : 'text-slate-500'}`} />
-                            <span className={`text-xs font-bold ${selectedRole === 'Corporate' ? 'text-indigo-900' : 'text-slate-800'}`}>Corporate Funder</span>
+                            <span className={`text-xs font-bold ${selectedRole === 'Corporate' ? 'text-indigo-900' : 'text-slate-800'}`}>{t('corp_funder_title', 'Corporate Funder')}</span>
                             <span className="text-[10px] text-slate-500 mt-0.5">CSR Mandate & Escrow</span>
                         </button>
 
@@ -325,7 +344,7 @@ function SignupContent() {
                             }`}
                         >
                             <HeartHandshake className={`w-6 h-6 mb-1.5 ${selectedRole === 'NGO' ? 'text-indigo-600' : 'text-slate-500'}`} />
-                            <span className={`text-xs font-bold ${selectedRole === 'NGO' ? 'text-indigo-900' : 'text-slate-800'}`}>NGO Organization</span>
+                            <span className={`text-xs font-bold ${selectedRole === 'NGO' ? 'text-indigo-900' : 'text-slate-800'}`}>{t('ngo_org_title', 'NGO Organization')}</span>
                             <span className="text-[10px] text-slate-500 mt-0.5">Verified Execution</span>
                         </button>
 
@@ -339,7 +358,7 @@ function SignupContent() {
                             }`}
                         >
                             <Users className={`w-6 h-6 mb-1.5 ${selectedRole === 'Citizen' ? 'text-indigo-600' : 'text-slate-500'}`} />
-                            <span className={`text-xs font-bold ${selectedRole === 'Citizen' ? 'text-indigo-900' : 'text-slate-800'}`}>Citizen / User</span>
+                            <span className={`text-xs font-bold ${selectedRole === 'Citizen' ? 'text-indigo-900' : 'text-slate-800'}`}>{t('citizen_user_title', 'Citizen / User')}</span>
                             <span className="text-[10px] text-slate-500 mt-0.5">Village Petitions & Proof</span>
                         </button>
 
@@ -353,7 +372,7 @@ function SignupContent() {
                             }`}
                         >
                             <Shield className={`w-6 h-6 mb-1.5 ${selectedRole === 'Admin' ? 'text-indigo-600' : 'text-slate-500'}`} />
-                            <span className={`text-xs font-bold ${selectedRole === 'Admin' ? 'text-indigo-900' : 'text-slate-800'}`}>Platform Admin</span>
+                            <span className={`text-xs font-bold ${selectedRole === 'Admin' ? 'text-indigo-900' : 'text-slate-800'}`}>{t('role_admin', 'Platform Admin')}</span>
                             <span className="text-[10px] text-slate-500 mt-0.5">Reviewer & Matcher</span>
                         </button>
                     </div>

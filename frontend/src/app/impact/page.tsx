@@ -68,15 +68,15 @@ export default function ImpactPage() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 <Card className="border border-slate-200 shadow-sm">
                     <CardHeader className="border-b border-slate-100 pb-4">
-                        <CardTitle className="text-lg">Sustainable Development Goals (SDG) Alignment</CardTitle>
+                        <CardTitle className="text-lg">{t('sdg_alignment', 'Sustainable Development Goals (SDG) Alignment')}</CardTitle>
                     </CardHeader>
                     <CardContent className="p-6">
                         <div className="space-y-6">
                             {[
-                                { name: "No Poverty (SDG 1)", percent: 65, color: "bg-red-500" },
-                                { name: "Quality Education (SDG 4)", percent: 80, color: "bg-rose-500" },
-                                { name: "Clean Water & Sanitation (SDG 6)", percent: 92, color: "bg-cyan-500" },
-                                { name: "Climate Action (SDG 13)", percent: 75, color: "bg-emerald-500" },
+                                { name: t('sdg_1', 'No Poverty (SDG 1)'), percent: 65, color: "bg-red-500" },
+                                { name: t('sdg_4', 'Quality Education (SDG 4)'), percent: 80, color: "bg-rose-500" },
+                                { name: t('sdg_6', 'Clean Water & Sanitation (SDG 6)'), percent: 92, color: "bg-cyan-500" },
+                                { name: t('sdg_13', 'Climate Action (SDG 13)'), percent: 75, color: "bg-emerald-500" },
                             ].map((goal, i) => (
                                 <div key={i}>
                                     <div className="flex justify-between text-sm mb-2">
@@ -94,7 +94,7 @@ export default function ImpactPage() {
 
                 <Card className="border border-slate-200 shadow-sm">
                     <CardHeader className="border-b border-slate-100 pb-4">
-                        <CardTitle className="text-lg">Funds Disbursed vs Impact Generated (MoM)</CardTitle>
+                        <CardTitle className="text-lg">{t('sdg_funds_vs_impact', 'Funds Disbursed vs Impact Generated (MoM)')}</CardTitle>
                     </CardHeader>
                     <CardContent className="p-6">
                         <DashboardChart />

@@ -139,7 +139,7 @@ export default function NGODashboardPage() {
                         <Card className="border border-slate-200 shadow-sm">
                             <CardContent className="p-4">
                                 <div className="text-xs font-semibold text-slate-500 mb-1">{t('kpi_assigned_projects', 'Assigned Projects')}</div>
-                                <div className="text-2xl font-black text-slate-900">3 Active</div>
+                                <div className="text-2xl font-black text-slate-900">3 {t('status_active', 'Active')}</div>
                                 <div className="text-[10px] text-indigo-600 font-semibold mt-1">₹80L Allocated</div>
                             </CardContent>
                         </Card>
@@ -148,7 +148,7 @@ export default function NGODashboardPage() {
                             <CardContent className="p-4">
                                 <div className="text-xs font-semibold text-slate-500 mb-1">{t('kpi_trust_score', 'Trust Score')}</div>
                                 <div className="text-2xl font-black text-emerald-600">94 / 100</div>
-                                <div className="text-[10px] text-emerald-600 font-semibold mt-1">High Credibility</div>
+                                <div className="text-[10px] text-emerald-600 font-semibold mt-1">{t('high_credibility', 'High Credibility')}</div>
                             </CardContent>
                         </Card>
 
@@ -156,7 +156,7 @@ export default function NGODashboardPage() {
                             <CardContent className="p-4">
                                 <div className="text-xs font-semibold text-slate-500 mb-1">{t('kpi_beneficiary_reach', 'Beneficiary Reach')}</div>
                                 <div className="text-2xl font-black text-slate-900 font-mono">{reach}</div>
-                                <div className="text-[10px] text-slate-500 mt-1">Documented Impact</div>
+                                <div className="text-[10px] text-slate-500 mt-1">{t('documented_impact', 'Documented Impact')}</div>
                             </CardContent>
                         </Card>
 
@@ -164,7 +164,7 @@ export default function NGODashboardPage() {
                             <CardContent className="p-4">
                                 <div className="text-xs font-semibold text-slate-500 mb-1">{t('kpi_track_record', 'Track Record')}</div>
                                 <div className="text-2xl font-black text-slate-900">{experience}</div>
-                                <div className="text-[10px] text-slate-500 mt-1">Community Delivery</div>
+                                <div className="text-[10px] text-slate-500 mt-1">{t('community_delivery', 'Community Delivery')}</div>
                             </CardContent>
                         </Card>
                     </div>
@@ -196,16 +196,16 @@ export default function NGODashboardPage() {
                                         <tr key={i} className="hover:bg-slate-50/80 transition-colors">
                                             <td className="p-3.5">
                                                 <div className="font-bold text-slate-900">{p.title}</div>
-                                                <div className="text-[11px] text-slate-400 font-normal">Funder: {p.corporate}</div>
+                                                <div className="text-[11px] text-slate-400 font-normal">{t('th_funder', 'Funder')}: {p.corporate}</div>
                                             </td>
                                             <td className="p-3.5 font-mono text-slate-800">{p.stage}</td>
                                             <td className="p-3.5 text-right font-bold text-slate-900">{p.budget}</td>
                                             <td className="p-3.5 text-center">
                                                 <Badge
-                                                    variant={p.status === 'Tranche Verified' || p.status === 'Completed' ? 'success' : 'warning'}
+                                                    variant={p.status === 'Tranche Verified' || p.status === 'Completed' || p.status === 'Verified' ? 'success' : 'warning'}
                                                     className="text-[10px]"
                                                 >
-                                                    {p.status}
+                                                    {p.status === 'Evidence Needed' ? t('evidence_needed', 'Evidence Needed') : p.status === 'Verified' ? t('status_verified', 'Verified') : t('status_active', 'Active')}
                                                 </Badge>
                                             </td>
                                             <td className="p-3.5 text-right">

@@ -486,10 +486,10 @@ export default function LiveHackathonWorkflowEngine() {
                             <div className="flex justify-between items-center border-b border-slate-800 pb-2.5">
                                 <div className="flex items-center gap-2">
                                     <Activity className="w-4 h-4 text-indigo-400 animate-pulse" />
-                                    <span className="font-bold text-xs uppercase tracking-wider text-white">8-Stage Multi-Model Verification Pipeline</span>
+                                    <span className="font-bold text-xs uppercase tracking-wider text-white">{t('eight_stage_pipeline_active', '8-Stage Multi-Model Verification Pipeline')}</span>
                                 </div>
                                 <Badge className={!aiVerifying && form1Report ? "bg-emerald-500/30 text-emerald-300 border-emerald-400" : "bg-indigo-500/30 text-indigo-300 border-indigo-400"}>
-                                    {!aiVerifying && form1Report ? "All 8 Stages Complete" : `Executing Stage ${aiStage} of 8...`}
+                                    {!aiVerifying && form1Report ? t('all_8_stages_complete', "All 8 Stages Complete") : `Executing Stage ${aiStage} of 8...`}
                                 </Badge>
                             </div>
 
@@ -514,10 +514,10 @@ export default function LiveHackathonWorkflowEngine() {
                                             </div>
                                             <div className="min-w-0">
                                                 <div className="font-bold text-[11px] flex items-center gap-1.5">
-                                                    <span>{st.name}</span>
+                                                    <span>{t(`stage_${st.num}_name`, st.name)}</span>
                                                     {isDone && <span className="text-emerald-400 text-xs font-bold">✓</span>}
                                                 </div>
-                                                <div className="text-[10px] text-slate-400 truncate">{st.desc}</div>
+                                                <div className="text-[10px] text-slate-400 truncate">{t(`stage_${st.num}_desc`, st.desc)}</div>
                                             </div>
                                         </div>
                                     );
@@ -532,9 +532,9 @@ export default function LiveHackathonWorkflowEngine() {
                                     <div className="flex justify-between items-center border-b border-slate-800 pb-2">
                                         <div className="flex items-center gap-2">
                                             <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0" />
-                                            <span className="text-emerald-400 font-extrabold text-sm uppercase tracking-wider">FINX AI VERIFICATION COMPLETE</span>
+                                            <span className="text-emerald-400 font-extrabold text-sm uppercase tracking-wider">{t('finx_ai_verif_complete', 'FINX AI VERIFICATION COMPLETE')}</span>
                                         </div>
-                                        <Badge variant="success" className="text-xs px-2.5 py-0.5">PASSED / HUMAN REVIEW</Badge>
+                                        <Badge variant="success" className="text-xs px-2.5 py-0.5">{t('passed_human_review', 'PASSED / HUMAN REVIEW')}</Badge>
                                     </div>
 
                                     <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-center">

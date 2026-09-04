@@ -134,10 +134,10 @@ export default function CorporateDashboard() {
                                         </RechartsPie>
                                     </ResponsiveContainer>
                                     <div className="text-xs text-slate-500 font-medium mt-2 flex gap-4">
-                                        <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-blue-500"></span> Education</span>
-                                        <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-emerald-500"></span> Environment</span>
-                                        <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-purple-500"></span> Healthcare</span>
-                                        <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-slate-200"></span> Buffer</span>
+                                        <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-blue-500"></span> {t('category_education', 'Education')}</span>
+                                        <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-emerald-500"></span> {t('category_environment', 'Environment')}</span>
+                                        <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-purple-500"></span> {t('category_healthcare', 'Healthcare')}</span>
+                                        <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-slate-200"></span> {t('category_remaining', 'Buffer')}</span>
                                     </div>
                                 </div>
                             </CardContent>
@@ -243,9 +243,9 @@ export default function CorporateDashboard() {
                 return (
                     <div className="space-y-6">
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                            <Card className="bg-emerald-50 border-emerald-200"><CardContent className="p-6"><div className="text-emerald-700 font-bold mb-1">Total Beneficiaries</div><div className="text-3xl font-bold font-mono">14,500+</div></CardContent></Card>
-                            <Card className="bg-indigo-50 border-indigo-200"><CardContent className="p-6"><div className="text-indigo-700 font-bold mb-1">Fund Utilization</div><div className="text-3xl font-bold font-mono">92%</div></CardContent></Card>
-                            <Card className="bg-amber-50 border-amber-200"><CardContent className="p-6"><div className="text-amber-700 font-bold mb-1">Active Regions</div><div className="text-3xl font-bold font-mono">8 States</div></CardContent></Card>
+                            <Card className="bg-emerald-50 border-emerald-200"><CardContent className="p-6"><div className="text-emerald-700 font-bold mb-1">{t('total_beneficiaries', 'Total Beneficiaries')}</div><div className="text-3xl font-bold font-mono">14,500+</div></CardContent></Card>
+                            <Card className="bg-indigo-50 border-indigo-200"><CardContent className="p-6"><div className="text-indigo-700 font-bold mb-1">{t('fund_utilization', 'Fund Utilization')}</div><div className="text-3xl font-bold font-mono">92%</div></CardContent></Card>
+                            <Card className="bg-amber-50 border-amber-200"><CardContent className="p-6"><div className="text-amber-700 font-bold mb-1">{t('active_regions', 'Active Regions')}</div><div className="text-3xl font-bold font-mono">8 States</div></CardContent></Card>
                         </div>
                         <ImpactEvidenceUploader />
                     </div>
@@ -258,33 +258,33 @@ export default function CorporateDashboard() {
                         <Card className="md:col-span-1 shadow-sm border-slate-200">
                             <CardContent className="p-6">
                                 <div className="p-3 bg-indigo-100 rounded-lg w-max mb-4"><Coins className="w-6 h-6 text-indigo-600" /></div>
-                                <div className="text-sm font-semibold text-slate-500">Declared CSR Budget</div>
+                                <div className="text-sm font-semibold text-slate-500">{t('declared_csr_budget', 'Declared CSR Budget')}</div>
                                 <div className="text-2xl font-bold text-slate-900 mt-1 font-mono">{formattedBudget}</div>
-                                <div className="text-[11px] text-slate-400 mt-1">Available for matching</div>
+                                <div className="text-[11px] text-slate-400 mt-1">{t('available_matching', 'Available for matching')}</div>
                             </CardContent>
                         </Card>
                         <Card className="md:col-span-1 shadow-sm border-slate-200">
                             <CardContent className="p-6">
                                 <div className="p-3 bg-emerald-100 rounded-lg w-max mb-4"><ShieldCheck className="w-6 h-6 text-emerald-600" /></div>
-                                <div className="text-sm font-semibold text-slate-500">Active Projects</div>
+                                <div className="text-sm font-semibold text-slate-500">{t('active_projects', 'Active Projects')}</div>
                                 <div className="text-2xl font-bold text-slate-900 mt-1 font-mono">12</div>
-                                <div className="text-[11px] text-emerald-600 font-medium mt-1">100% On-Chain escrow</div>
+                                <div className="text-[11px] text-emerald-600 font-medium mt-1">{t('on_chain_escrow', '100% On-Chain escrow')}</div>
                             </CardContent>
                         </Card>
                         <Card className="md:col-span-1 shadow-sm border-slate-200">
                             <CardContent className="p-6">
                                 <div className="p-3 bg-amber-100 rounded-lg w-max mb-4"><FileSignature className="w-6 h-6 text-amber-600" /></div>
-                                <div className="text-sm font-semibold text-slate-500">Pending Applications</div>
+                                <div className="text-sm font-semibold text-slate-500">{t('pending_applications', 'Pending Applications')}</div>
                                 <div className="text-2xl font-bold text-slate-900 mt-1 font-mono">4</div>
-                                <div className="text-[11px] text-amber-600 font-medium mt-1">NGO verified proofs</div>
+                                <div className="text-[11px] text-amber-600 font-medium mt-1">{t('ngo_verified_proofs', 'NGO verified proofs')}</div>
                             </CardContent>
                         </Card>
                         <Card className="md:col-span-1 shadow-sm border-slate-200">
                             <CardContent className="p-6">
                                 <div className="p-3 bg-blue-100 rounded-lg w-max mb-4"><Users className="w-6 h-6 text-blue-600" /></div>
-                                <div className="text-sm font-semibold text-slate-500">Impact Reach</div>
+                                <div className="text-sm font-semibold text-slate-500">{t('impact_reach', 'Impact Reach')}</div>
                                 <div className="text-2xl font-bold text-slate-900 mt-1 font-mono">14K+</div>
-                                <div className="text-[11px] text-blue-600 font-medium mt-1">Direct rural beneficiaries</div>
+                                <div className="text-[11px] text-blue-600 font-medium mt-1">{t('direct_beneficiaries', 'Direct rural beneficiaries')}</div>
                             </CardContent>
                         </Card>
 
@@ -296,9 +296,9 @@ export default function CorporateDashboard() {
                                         <Briefcase className="w-5 h-5" />
                                     </div>
                                     <div>
-                                        <h4 className="font-bold text-slate-900 text-sm md:text-base">Active Corporate CSR Investment Map</h4>
+                                        <h4 className="font-bold text-slate-900 text-sm md:text-base">{t('corp_map_banner_title', 'Active Corporate CSR Investment Map')}</h4>
                                         <p className="text-xs text-slate-600 mt-0.5">
-                                            Track smart escrow deployments, released tranches, and SDG outcomes across 5 regional project sites.
+                                            {t('corp_map_banner_desc', 'Track smart escrow deployments, released tranches, and SDG outcomes across 5 regional project sites.')}
                                         </p>
                                     </div>
                                 </div>
@@ -306,7 +306,7 @@ export default function CorporateDashboard() {
                                     onClick={() => setActiveTab('Active Projects Map')}
                                     className="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-xl transition shadow-xs whitespace-nowrap flex items-center gap-1.5"
                                 >
-                                    Open Portfolio Map &rarr;
+                                    {t('open_portfolio_map', 'Open Portfolio Map')} &rarr;
                                 </button>
                             </div>
                         </div>

@@ -94,7 +94,7 @@ export default function Sidebar() {
                     </div>
                     <div>
                         <h1 className="text-lg font-extrabold text-slate-900 tracking-tight leading-none">FINX</h1>
-                        <p className="text-[9px] text-slate-400 font-semibold tracking-wider uppercase mt-0.5">CSR Platform</p>
+                        <p className="text-[9px] text-slate-400 font-semibold tracking-wider uppercase mt-0.5">{t('csr_platform', 'CSR Platform')}</p>
                     </div>
                 </div>
             </div>
@@ -102,8 +102,8 @@ export default function Sidebar() {
             {/* Menu */}
             <div className="flex-1 overflow-y-auto p-3 space-y-1">
                 <div className="text-[10px] font-bold text-slate-400 mb-2 px-2.5 uppercase tracking-widest flex justify-between items-center">
-                    <span>{activeRoleKey} Menu</span>
-                    <span className="text-[9px] bg-slate-100 text-slate-600 px-1.5 py-0.5 rounded font-mono font-medium">Active</span>
+                    <span>{t('role_' + activeRoleKey.toLowerCase())} {t('menu', 'Menu')}</span>
+                    <span className="text-[9px] bg-slate-100 text-slate-600 px-1.5 py-0.5 rounded font-mono font-medium">{t('active', 'Active')}</span>
                 </div>
                 {activeNavItems.map((item) => {
                     const isActive = item.href === '/'
@@ -159,7 +159,7 @@ export default function Sidebar() {
                         <div className="flex items-center gap-2 mt-1">
                             <span className="text-base select-none">{activeConfig.icon}</span>
                             <span className="text-xs font-bold text-slate-900 leading-tight">
-                                {activeConfig.label}
+                                {t('role_' + activeRoleKey.toLowerCase()) || activeConfig.label}
                             </span>
                         </div>
                         {user?.name && (
@@ -174,7 +174,7 @@ export default function Sidebar() {
                         className="w-full flex items-center justify-center gap-1.5 py-1.5 px-3 rounded-lg text-xs font-bold text-rose-600 hover:text-rose-700 bg-rose-50 hover:bg-rose-100 border border-rose-200/80 transition shadow-2xs cursor-pointer"
                     >
                         <LogOut className="w-3.5 h-3.5" />
-                        <span>{t('logout_reset', 'Logout')}</span>
+                        <span>{t('logout', 'Logout')}</span>
                     </button>
                 </div>
             </div>

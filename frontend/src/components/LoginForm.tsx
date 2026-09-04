@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { useAuth, Role } from '@/lib/AuthContext';
-import { useLanguage } from '@/lib/LanguageContext';
+import { useLanguage, Language } from '@/lib/LanguageContext';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import {
@@ -13,7 +13,8 @@ import {
     Shield,
     ArrowRight,
     AlertCircle,
-    Loader2
+    Loader2,
+    Globe
 } from 'lucide-react';
 
 interface LoginFormProps {
@@ -23,7 +24,7 @@ interface LoginFormProps {
 
 export default function LoginForm({ defaultRole, redirectOnSuccess = true }: LoginFormProps) {
     const { login } = useAuth();
-    const { t } = useLanguage();
+    const { t, lang, setLang } = useLanguage();
     const router = useRouter();
     const searchParams = useSearchParams();
 
@@ -43,12 +44,12 @@ export default function LoginForm({ defaultRole, redirectOnSuccess = true }: Log
         setError('');
 
         if (!email.trim()) {
-            setError('Please enter your email address.');
+            setError(t('err_enter_email', 'Please enter your email address.'));
             return;
         }
 
         if (!password) {
-            setError('Please enter your password.');
+            setError(t('err_enter_password', 'Please enter your password.'));
             return;
         }
 
@@ -72,7 +73,7 @@ export default function LoginForm({ defaultRole, redirectOnSuccess = true }: Log
             }
         } catch (err) {
             console.error('Login error:', err);
-            setError('An error occurred while signing in. Please try again.');
+            setError(t('err_login_failed', 'An error occurred while signing in. Please try again.'));
             setSubmitting(false);
         }
     };
@@ -84,11 +85,8 @@ export default function LoginForm({ defaultRole, redirectOnSuccess = true }: Log
         Admin: <Shield className="w-5 h-5 text-indigo-600" />
     };
 
-    const roleLabels: Record<Role, string> = {
-        Corporate: 'Corporate CSR Funder',
-        NGO: 'NGO Partner / Inspector',
-        Citizen: 'Citizen / Village User',
-        Admin: 'Admin / Reviewer'
+    const getRoleLabel = (r: Role) => {
+        return t('role_' + r.toLowerCase()) || (r === 'Corporate' ? 'Corporate CSR Funder' : r === 'NGO' ? 'NGO Partner / Inspector' : r === 'Citizen' ? 'Citizen / Village User' : 'Admin / Reviewer');
     };
 
     const roleRedirectHints: Record<Role, string> = {
@@ -107,7 +105,23 @@ export default function LoginForm({ defaultRole, redirectOnSuccess = true }: Log
 
     return (
         <div className="flex min-h-screen items-center justify-center bg-slate-900/95 py-12 px-4 w-full select-none">
-            <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-2xl shadow-2xl border border-slate-100/20 backdrop-blur-sm">
+            <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-2xl shadow-2xl border border-slate-100/20 backdrop-blur-sm relative">
+                {/* Language Switcher Bar at Top Right */}
+                <div className="flex items-center justify-end gap-1.5 pb-2 border-b border-slate-100">
+                    <Globe className="w-3.5 h-3.5 text-slate-400" />
+                    <select
+                        value={lang}
+                        onChange={(e) => setLang(e.target.value as Language)}
+                        className="text-xs font-bold text-slate-700 bg-slate-50 border border-slate-200 rounded-lg px-2 py-1 outline-none focus:ring-1 focus:ring-indigo-500 cursor-pointer"
+                    >
+                        <option value="en">🇺🇸 English</option>
+                        <option value="ta">🇮🇳 தமிழ் (Tamil)</option>
+                        <option value="hi">🇮🇳 हिन्दी (Hindi)</option>
+                        <option value="mr">🇮🇳 मराठी (Marathi)</option>
+                        <option value="te">🇮🇳 తెలుగు (Telugu)</option>
+                    </select>
+                </div>
+
                 <div className="text-center">
                     <div className="inline-flex items-center justify-center w-14 h-14 bg-gradient-to-tr from-indigo-600 to-indigo-700 rounded-2xl mb-4 shadow-lg shadow-indigo-500/30 ring-4 ring-indigo-50">
                         <ShieldCheck className="w-8 h-8 text-white" />
@@ -146,24 +160,24 @@ export default function LoginForm({ defaultRole, redirectOnSuccess = true }: Log
                                     }
                                 }}
                             >
-                                <option value="Corporate">🏢 Corporate CSR Funder</option>
-                                <option value="NGO">🌱 NGO Partner / Inspector</option>
-                                <option value="Citizen">🏘️ Citizen / Village User</option>
-                                <option value="Admin">🛡️ Admin / Reviewer</option>
+                                <option value="Corporate">🏢 {getRoleLabel('Corporate')}</option>
+                                <option value="NGO">🌱 {getRoleLabel('NGO')}</option>
+                                <option value="Citizen">🏘️ {getRoleLabel('Citizen')}</option>
+                                <option value="Admin">🛡️ {getRoleLabel('Admin')}</option>
                             </select>
                             <div className="absolute left-3 top-2.5 pointer-events-none">
                                 {roleIcons[role]}
                             </div>
                         </div>
                         <p className="text-[11px] text-slate-400 mt-1.5 font-medium">
-                            Target Dashboard: <span className="text-indigo-600 font-semibold">{roleRedirectHints[role]}</span>
+                            {t('target_dashboard', 'Target Dashboard')}: <span className="text-indigo-600 font-semibold">{roleRedirectHints[role]}</span>
                         </p>
                     </div>
 
                     {/* Email */}
                     <div>
                         <label className="block text-xs font-semibold text-slate-700 mb-1">
-                            {role === 'Corporate' ? 'Work Email' : role === 'Admin' ? 'Admin Official Email' : role === 'NGO' ? 'Official NGO Email' : t('email_address', 'Email address')}
+                            {role === 'Corporate' ? t('work_email', 'Work Email') : role === 'Admin' ? t('admin_email', 'Admin Official Email') : role === 'NGO' ? t('ngo_email', 'Official NGO Email') : t('email_address', 'Email address')}
                         </label>
                         <input
                             required
@@ -179,7 +193,7 @@ export default function LoginForm({ defaultRole, redirectOnSuccess = true }: Log
                     <div>
                         <div className="flex justify-between items-center mb-1">
                             <label className="block text-xs font-semibold text-slate-700">{t('password', 'Password')}</label>
-                            <span className="text-[11px] text-slate-400">Demo password accepted</span>
+                            <span className="text-[11px] text-slate-400">{t('demo_password_accepted', 'Demo password accepted')}</span>
                         </div>
                         <input
                             required
@@ -204,7 +218,7 @@ export default function LoginForm({ defaultRole, redirectOnSuccess = true }: Log
                             </>
                         ) : (
                             <>
-                                <span>{t('sign_in_button', 'Sign In as')} {roleLabels[role]}</span>
+                                <span>{t('sign_in_button', 'Sign In as')} {getRoleLabel(role)}</span>
                                 <ArrowRight className="w-4 h-4" />
                             </>
                         )}
@@ -217,7 +231,7 @@ export default function LoginForm({ defaultRole, redirectOnSuccess = true }: Log
                         href={`/auth/signup?role=${role}`}
                         className="text-indigo-600 hover:text-indigo-700 hover:underline font-bold"
                     >
-                        Register as {roleLabels[role]}
+                        {t('register_as', 'Register as')} {getRoleLabel(role)}
                     </Link>
                 </div>
             </div>

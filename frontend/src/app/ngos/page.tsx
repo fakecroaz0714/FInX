@@ -57,28 +57,28 @@ export default function NGOsPage() {
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
                 <Card className="border border-slate-200 shadow-sm leading-normal">
                     <CardContent className="p-6">
-                        <div className="text-sm font-medium text-slate-500 mb-1">Total Registered</div>
+                        <div className="text-sm font-medium text-slate-500 mb-1">{t('total_registered', 'Total Registered')}</div>
                         <div className="text-3xl font-bold text-slate-900 mb-1">142</div>
                         <div className="text-xs text-slate-400">On the network</div>
                     </CardContent>
                 </Card>
                 <Card className="border border-slate-200 shadow-sm leading-normal">
                     <CardContent className="p-6">
-                        <div className="text-sm font-medium text-slate-500 mb-1">Verified NGOs</div>
+                        <div className="text-sm font-medium text-slate-500 mb-1">{t('verified_ngos', 'Verified NGOs')}</div>
                         <div className="text-3xl font-bold text-emerald-600 mb-1">89</div>
                         <div className="text-xs text-slate-400">Ready for CSR matching</div>
                     </CardContent>
                 </Card>
                 <Card className="border border-slate-200 shadow-sm leading-normal">
                     <CardContent className="p-6">
-                        <div className="text-sm font-medium text-slate-500 mb-1">Pending Review</div>
+                        <div className="text-sm font-medium text-slate-500 mb-1">{t('pending_review', 'Pending Review')}</div>
                         <div className="text-3xl font-bold text-amber-500 mb-1">45</div>
                         <div className="text-xs text-slate-400">Documents submitted</div>
                     </CardContent>
                 </Card>
                 <Card className="border border-slate-200 shadow-sm leading-normal">
                     <CardContent className="p-6">
-                        <div className="text-sm font-medium text-slate-500 mb-1">High Risk</div>
+                        <div className="text-sm font-medium text-slate-500 mb-1">{t('high_risk', 'High Risk')}</div>
                         <div className="text-3xl font-bold text-red-500 mb-1">8</div>
                         <div className="text-xs text-slate-400">Suspended / Rejected</div>
                     </CardContent>
@@ -87,7 +87,7 @@ export default function NGOsPage() {
 
             <Card className="border border-slate-200 shadow-sm">
                 <CardHeader className="border-b border-slate-100 bg-slate-50/50 pb-4">
-                    <CardTitle className="text-lg">NGO Directory</CardTitle>
+                    <CardTitle className="text-lg">{t('nav_ngo_dir', 'NGO Directory')}</CardTitle>
                     <CardDescription>Filter and manage non-governmental organizations.</CardDescription>
                 </CardHeader>
                 <CardContent className="p-0">
@@ -95,12 +95,12 @@ export default function NGOsPage() {
                         <table className="w-full text-left text-sm text-slate-600">
                             <thead className="bg-slate-50 text-slate-500 border-b border-slate-100">
                                 <tr>
-                                    <th className="px-6 py-4 font-semibold">NGO Name & Focus</th>
-                                    <th className="px-6 py-4 font-semibold">Validation Status</th>
-                                    <th className="px-6 py-4 font-semibold">Trust Score</th>
-                                    <th className="px-6 py-4 font-semibold">Active Projects</th>
-                                    <th className="px-6 py-4 font-semibold">Total Funds Escrowed</th>
-                                    <th className="px-6 py-4 font-semibold text-right">Action</th>
+                                    <th className="px-6 py-4 font-semibold">{t('th_ngo_focus', 'NGO Name & Focus')}</th>
+                                    <th className="px-6 py-4 font-semibold">{t('th_validation_status', 'Validation Status')}</th>
+                                    <th className="px-6 py-4 font-semibold">{t('th_trust_score', 'Trust Score')}</th>
+                                    <th className="px-6 py-4 font-semibold">{t('th_active_projects', 'Active Projects')}</th>
+                                    <th className="px-6 py-4 font-semibold">{t('th_total_escrowed', 'Total Funds Escrowed')}</th>
+                                    <th className="px-6 py-4 font-semibold text-right">{t('th_action', 'Action')}</th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-slate-100">
@@ -116,7 +116,7 @@ export default function NGOsPage() {
                                             >
                                                 {ngo.status === 'Verified' && <CheckCircle className="w-3 h-3 mr-1 inline" />}
                                                 {ngo.status === 'High Risk' && <ShieldAlert className="w-3 h-3 mr-1 inline" />}
-                                                {ngo.status}
+                                                {ngo.status === 'Verified' ? t('status_verified', 'Verified') : ngo.status === 'Needs Review' ? t('status_needs_review', 'Needs Review') : t('status_high_risk', 'High Risk')}
                                             </Badge>
                                         </td>
                                         <td className="px-6 py-4">
@@ -134,7 +134,7 @@ export default function NGOsPage() {
                                         <td className="px-6 py-4 font-medium">{ngo.totalFunds}</td>
                                         <td className="px-6 py-4 text-right">
                                             <button className="text-indigo-600 font-semibold hover:underline flex items-center gap-1 ml-auto">
-                                                View Profile <ExternalLink className="w-3 h-3" />
+                                                {t('view_profile', 'View Profile')} <ExternalLink className="w-3 h-3" />
                                             </button>
                                         </td>
                                     </tr>
